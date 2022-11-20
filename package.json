@@ -12,5 +12,8 @@
   "devDependencies": {
     "@types/node": "^18.11.9",
     "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "prettier": "^2.7.1"
   }
 }
