@@ -20,7 +20,7 @@ export class Employee {
     if (foundEmployee) {
       return "Duplicated employee";
     }
-    this.listOfEmployees.push({ name: name, role: role, isFree: false });
+    this.listOfEmployees.push({ name: name, role: role, isFree: true });
 
     return "Employee added to the list";
   }
