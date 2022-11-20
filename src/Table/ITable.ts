@@ -1,5 +1,5 @@
 export interface ITable {
-  numberOfTable: number;
+  tableNumber: number;
   isFree: boolean;
   numberOfSeats: number;
 }
