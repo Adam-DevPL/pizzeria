@@ -30,7 +30,7 @@ export class Ingredients {
       price: price,
       quantity: quantity,
     });
-    return "Ingredient add to the list";
+    return "Ingredient added to the list";
   }
 
   public changeProperty(
@@ -40,12 +40,16 @@ export class Ingredients {
   ) {
     this.listOfIngredients.forEach((ingredient) => {
       if (ingredient.name === ingredientName) {
-        console.log({ ingredient });
-
         Object.assign(ingredient, {
           [propertyName]: value,
         });
       }
     });
+  }
+
+  public removeIngredient(name: string) {
+    this.listOfIngredients = this.listOfIngredients.filter(
+      (ingredient) => ingredient.name !== name
+    );
   }
 }
