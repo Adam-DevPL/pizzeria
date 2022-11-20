@@ -14,24 +14,36 @@ export class Ingredients {
     return Ingredients.instance;
   }
 
-  public addNewIngredient(name: string, price: number, quantity: number = 1) {
+  public addNewIngredient(
+    name: string,
+    price: number,
+    quantity: number = 1
+  ): string {
+    const foundIngredient = this.listOfIngredients.find(
+      (ingredient) => ingredient.name === name
+    );
+    if (foundIngredient) {
+      return "Duplicated ingredient";
+    }
     this.listOfIngredients.push({
-      id: uuid(),
       name: name,
       price: price,
       quantity: quantity,
     });
+    return "Ingredient add to the list";
   }
 
   public changeProperty(
-    id: string,
-    name: PropertyName,
-    value: string | number
+    ingredientName: string,
+    propertyName: PropertyName,
+    value: number
   ) {
     this.listOfIngredients.forEach((ingredient) => {
-      if (ingredient.id === id) {
+      if (ingredient.name === ingredientName) {
+        console.log({ ingredient });
+
         Object.assign(ingredient, {
-          [name]: value,
+          [propertyName]: value,
         });
       }
     });
