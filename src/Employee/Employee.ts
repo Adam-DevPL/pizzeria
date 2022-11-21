@@ -2,7 +2,7 @@ import { IEmployee, Role } from "./IEmployee";
 
 export class Employee {
   private static instance: Employee;
-  private listOfEmployees: IEmployee[] = [];
+  public listOfEmployees: IEmployee[] = [];
 
   private constructor() {}
 
