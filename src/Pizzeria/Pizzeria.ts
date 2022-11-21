@@ -11,15 +11,15 @@ export class Pizzeria {
   private ingredients: Ingredients;
   private employees: Employee;
   private tables: Table;
-  private ordersOpened: IOrder[];
-  private ordersFinished: IOrder[];
+  private ordersInProgress: IOrder[];
+  private ordersInLine: IOrder[];
 
   private constructor() {
     this.ingredients = Ingredients.getInstance();
     this.employees = Employee.getInstance();
     this.tables = Table.getInstance();
-    this.ordersOpened = [];
-    this.ordersFinished = [];
+    this.ordersInProgress = [];
+    this.ordersInLine = [];
   }
 
   public static getInstance(): Pizzeria {
@@ -67,13 +67,14 @@ export class Pizzeria {
 
     if (!assignChef) {
       console.log("There is no free chef.Your order will go into the queue");
+      this.ordersInLine.push(newOrder);
     } else {
       this.employees.changeStatusOfEmployee(assignChef.name);
       newOrder.addChef(assignChef);
-      this.ordersOpened.push(newOrder);
+      this.ordersInProgress.push(newOrder);
     }
 
     newOrder.addPizzas(pizzas);
-    console.log("Final price for order is: " + newOrder.getTotalPrice); 
+    console.log("Final price for order is: " + newOrder.getTotalPrice);
   }
 }
