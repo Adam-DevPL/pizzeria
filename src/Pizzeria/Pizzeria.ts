@@ -1,9 +1,11 @@
 import { Employee } from "../Employee/Employee";
 import { Role } from "../Employee/IEmployee";
+import { IIngredient } from "../Ingredient/IIngredient";
 import { Ingredients } from "../Ingredient/Ingredients";
 import { IOrder } from "../Order/IOrder";
 import { Order } from "../Order/Order";
 import { IPizza } from "../Pizza/IPizza";
+import { Pizza } from "../Pizza/Pizza";
 import { Table } from "../Table/Table";
 
 export class Pizzeria {
@@ -13,6 +15,7 @@ export class Pizzeria {
   private tables: Table;
   private ordersInProgress: IOrder[];
   private ordersInLine: IOrder[];
+  private pizzas: IPizza[];
 
   private constructor() {
     this.ingredients = Ingredients.getInstance();
@@ -20,6 +23,7 @@ export class Pizzeria {
     this.tables = Table.getInstance();
     this.ordersInProgress = [];
     this.ordersInLine = [];
+    this.pizzas = [];
   }
 
   public static getInstance(): Pizzeria {
@@ -43,6 +47,11 @@ export class Pizzeria {
     pricePerItem: number
   ) {
     this.ingredients.addNewIngredient(name, pricePerItem, quantity);
+  }
+
+  public createPizza(name: string, ingredients: IIngredient[]) {
+    const newPizza = new Pizza(name);
+    newPizza.addIngredientToPizza(ingredients);
   }
 
   public makeNewOrder(id: number, seatsNo: number, pizzas: IPizza[]) {

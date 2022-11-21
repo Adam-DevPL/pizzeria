@@ -13,8 +13,8 @@ export class Pizza implements IPizza {
     this.price = 0;
   }
 
-  addIngredientToPizza(ingredient: IIngredient) {
-    this.ingredients.push(ingredient);
+  addIngredientToPizza(ingredients: IIngredient[]) {
+    this.ingredients.push(...ingredients);
     this.price = this.ingredients.reduce(
       (total, ingredient) => total + ingredient.price,
       0
