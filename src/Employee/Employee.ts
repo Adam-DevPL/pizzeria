@@ -38,4 +38,8 @@ export class Employee {
       }
     });
   }
+
+  findEmployee(role: Role) {
+    return this.listOfEmployees.find(employee => employee.role === role && employee.isFree === true);
+  }
 }

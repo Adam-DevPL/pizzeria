@@ -2,7 +2,7 @@ import { ITable } from "./ITable";
 
 export class Table {
   private static instance: Table;
-  private listOfTables: ITable[] = [];
+  public listOfTables: ITable[] = [];
 
   private constructor() {}
 
@@ -41,5 +41,11 @@ export class Table {
         table.isFree = !table.isFree;
       }
     });
+  }
+
+  findFreeTable(seatsNo: number) {
+    return this.listOfTables.find(
+      (table) => table.isFree === true && table.numberOfSeats === seatsNo
+    );
   }
 }

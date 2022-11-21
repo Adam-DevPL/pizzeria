@@ -30,8 +30,12 @@ export class Order implements IOrder {
     this.tableAssigned = table;
   }
 
-  addPizzas(pizzas: Pizza[]) {
+  addPizzas(pizzas: IPizza[]) {
     this.pizzasOrdered.push(...pizzas);
     this.finalPrice = this.pizzasOrdered.reduce((total, pizza) => total + pizza.price, 0);
+  }
+
+  getTotalPrice() {
+    return this.finalPrice;
   }
 }

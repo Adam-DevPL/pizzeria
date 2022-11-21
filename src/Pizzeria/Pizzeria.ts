@@ -3,6 +3,7 @@ import { Role } from "../Employee/IEmployee";
 import { Ingredients } from "../Ingredient/Ingredients";
 import { IOrder } from "../Order/IOrder";
 import { Order } from "../Order/Order";
+import { IPizza } from "../Pizza/IPizza";
 import { Table } from "../Table/Table";
 
 export class Pizzeria {
@@ -36,19 +37,43 @@ export class Pizzeria {
     this.tables.addNewTable(tableNo, seatsNo);
   }
 
-  public purchaseIngredients(name: string, quantity: number, pricePerItem: number) {
+  public purchaseIngredients(
+    name: string,
+    quantity: number,
+    pricePerItem: number
+  ) {
     this.ingredients.addNewIngredient(name, pricePerItem, quantity);
   }
 
-  public makeNewOrder(id: number) {
-    const assignWaiter = this.employees.listOfEmployees.find(
-      (employee) => employee.isFree === true && employee.role === "waiter"
-    );
+  public makeNewOrder(id: number, seatsNo: number, pizzas: IPizza[]) {
+    const assignWaiter = this.employees.findEmployee("waiter");
 
     if (!assignWaiter) {
-      return "There is no waiter to take up the order"
-    } 
+      return "There is no waiter to take up the order";
+    }
 
     const newOrder = new Order(id, assignWaiter);
+
+    const assignTable = this.tables.findFreeTable(seatsNo);
+
+    if (!assignTable) {
+      return "No free table. Can not take the order";
+    }
+
+    this.tables.changeStatusOfTable(assignTable.tableNumber);
+    newOrder.addTable(assignTable);
+
+    const assignChef = this.employees.findEmployee("chef");
+
+    if (!assignChef) {
+      console.log("There is no free chef.Your order will go into the queue");
+    } else {
+      this.employees.changeStatusOfEmployee(assignChef.name);
+      newOrder.addChef(assignChef);
+      this.ordersOpened.push(newOrder);
+    }
+
+    newOrder.addPizzas(pizzas);
+    console.log("Final price for order is: " + newOrder.getTotalPrice); 
   }
 }
