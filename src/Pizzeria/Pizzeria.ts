@@ -41,14 +41,6 @@ export class Pizzeria {
     this.tables.addNewTable(tableNo, seatsNo);
   }
 
-  public purchaseIngredients(
-    name: string,
-    quantity: number,
-    pricePerItem: number
-  ) {
-    this.ingredients.addNewIngredient(name, pricePerItem, quantity);
-  }
-
   public createPizza(name: string, ingredients: IIngredient[]) {
     const newPizza = new Pizza(name);
     newPizza.addIngredientToPizza(ingredients);
