@@ -1,6 +1,6 @@
 import { Employee } from "../Employee/Employee";
 import { Role } from "../Employee/IEmployee";
-import { IIngredient } from "../Ingredient/IIngredient";
+import { IIngredient, IngredientsBase } from "../Ingredient/IIngredient";
 import { Ingredients } from "../Ingredient/Ingredients";
 import { IOrder } from "../Order/IOrder";
 import { Order } from "../Order/Order";
@@ -41,9 +41,22 @@ export class Pizzeria {
     this.tables.addNewTable(tableNo, seatsNo);
   }
 
-  public createPizza(name: string, ingredients: IIngredient[]) {
-    const newPizza = new Pizza(name);
-    newPizza.addIngredientToPizza(ingredients);
+  public purchaseIngredients(
+    ingredient: IngredientsBase,
+    quantity: number,
+    price: number
+  ) {
+    this.ingredients.purchaseIngredients(ingredient, price, quantity);
+  }
+
+  public createPizza(
+    name: string,
+    ingredients: IIngredient[],
+    margin: number = 0
+  ) {
+    const newPizza = new Pizza(name, ingredients);
+    newPizza.addMargins(margin);
+    this.pizzas.push(newPizza);
   }
 
   public makeNewOrder(id: number, seatsNo: number, pizzas: IPizza[]) {
