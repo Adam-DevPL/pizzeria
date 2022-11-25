@@ -6,6 +6,7 @@ export class Pizza implements IPizza {
   ingredients: IIngredient[];
   price: number;
 
+
   constructor(name: string, ingredients: IIngredient[]) {
     this.name = name;
     this.ingredients = [...ingredients];

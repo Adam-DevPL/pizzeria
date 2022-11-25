@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { IIngredient, PropertyName } from "./IIngredient";
+import { IIngredient, IngredientsBase, PropertyName } from "./IIngredient";
 
 export class Ingredients {
   private static instance: Ingredients;
@@ -14,42 +14,28 @@ export class Ingredients {
     return Ingredients.instance;
   }
 
-  public addNewIngredient(
-    name: string,
+  public purchaseIngredients(
+    name: IngredientsBase,
     price: number,
     quantity: number = 1
   ): string {
     const foundIngredient = this.listOfIngredients.find(
       (ingredient) => ingredient.name === name
     );
-    if (foundIngredient) {
-      return "Duplicated ingredient";
+    if (!foundIngredient) {
+      this.listOfIngredients.push({
+        name: name,
+        price: price,
+        quantity: quantity,
+      });
+      return "New ingredient added to the list";
     }
-    this.listOfIngredients.push({
-      name: name,
-      price: price,
-      quantity: quantity,
-    });
-    return "Ingredient added to the list";
-  }
-
-  public changeProperty(
-    ingredientName: string,
-    propertyName: PropertyName,
-    value: number
-  ) {
     this.listOfIngredients.forEach((ingredient) => {
-      if (ingredient.name === ingredientName) {
-        Object.assign(ingredient, {
-          [propertyName]: value,
-        });
+      if (ingredient.name === name) {
+        ingredient.quantity += quantity;
       }
     });
-  }
 
-  public removeIngredient(name: string) {
-    this.listOfIngredients = this.listOfIngredients.filter(
-      (ingredient) => ingredient.name !== name
-    );
+    return "Ingredients purchased.";
   }
 }
