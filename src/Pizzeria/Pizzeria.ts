@@ -1,6 +1,10 @@
 import { Employee } from "../Employee/Employee";
 import { Role } from "../Employee/IEmployee";
-import { IIngredient, IngredientsBase } from "../Ingredient/IIngredient";
+import {
+  IIngredient,
+  IngredientsBase,
+  ReceipeIngredient,
+} from "../Ingredient/IIngredient";
 import { Ingredients } from "../Ingredient/Ingredients";
 import { IOrder } from "../Order/IOrder";
 import { Order } from "../Order/Order";
@@ -10,7 +14,7 @@ import { Table } from "../Table/Table";
 
 export class Pizzeria {
   private static instance: Pizzeria;
-  private ingredients: Ingredients;
+  ingredients: Ingredients;
   private employees: Employee;
   private tables: Table;
   private ordersInProgress: IOrder[];
@@ -51,11 +55,13 @@ export class Pizzeria {
 
   public createPizza(
     name: string,
-    ingredients: IIngredient[],
+    ingredients: ReceipeIngredient[],
     margin: number = 0
   ) {
     const newPizza = new Pizza(name, ingredients);
-    newPizza.addMargins(margin);
+    newPizza.addMargins(
+      this.ingredients.calculateIngredientsCosts(ingredients) + margin
+    );
     this.pizzas.push(newPizza);
   }
 

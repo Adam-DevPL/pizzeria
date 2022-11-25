@@ -1,7 +1,7 @@
-import { IIngredient } from "../Ingredient/IIngredient";
+import { IIngredient, ReceipeIngredient } from "../Ingredient/IIngredient";
 
 export interface IPizza {
   name: string;
-  ingredients: IIngredient[];
+  ingredients: ReceipeIngredient[];
   price: number;
 }
