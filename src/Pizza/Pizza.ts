@@ -3,10 +3,12 @@ import { Ingredients } from "../Ingredient/Ingredients";
 import { IPizza } from "./IPizza";
 
 export class Pizza implements IPizza {
+  name: string;
   ingredients: IIngredient[];
   price: number;
 
-  constructor() {
+  constructor(name: string) {
+    this.name = name;
     this.ingredients = [];
     this.price = 0;
   }
