@@ -19,7 +19,7 @@ export class Pizzeria {
   private tables: Table;
   private ordersInProgress: IOrder[];
   private ordersInLine: IOrder[];
-  private pizzas: IPizza[];
+  pizzas: IPizza[];
 
   private constructor() {
     this.ingredients = Ingredients.getInstance();
@@ -95,6 +95,6 @@ export class Pizzeria {
     }
 
     newOrder.addPizzas(pizzas);
-    console.log("Final price for order is: " + newOrder.getTotalPrice);
+    console.log("Final price for order is: " + newOrder.getTotalPrice());
   }
 }
