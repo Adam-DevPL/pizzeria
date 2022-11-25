@@ -6,6 +6,8 @@ const pizzeria = Pizzeria.getInstance();
 pizzeria.hireNewEmployee("Adam", "waiter");
 pizzeria.hireNewEmployee("Majenka", "chef");
 pizzeria.purchaseNewTable(1, 4);
-pizzeria.purchaseIngredients(IngredientsBase.potato, 4, 4);
-pizzeria.createPizza("Marghariat", [{name: IngredientsBase.tomato, quantity: 2}])
+pizzeria.purchaseIngredients(IngredientsBase.tomato, 4, 4);
+pizzeria.createPizza("Marghariat", [{name: IngredientsBase.tomato, quantity: 2}]);
+console.log(pizzeria);
+
 

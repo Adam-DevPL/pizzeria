@@ -60,9 +60,10 @@ export class Ingredients {
       let foundIngredient = this.listOfIngredients.find(
         (ingredientFromList) => ingredientFromList.name === ingredient.name
       );
-      if (foundIngredient) {
-        costs += foundIngredient.price;
+      if (!foundIngredient) {
+        throw new Error("Ingredient does not found");
       }
+      costs += foundIngredient.price * ingredient.quantity;
     });
 
     return costs;
