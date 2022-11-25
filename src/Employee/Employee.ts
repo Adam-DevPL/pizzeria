@@ -2,7 +2,7 @@ import { IEmployee, Role } from "./IEmployee";
 
 export class Employee {
   private static instance: Employee;
-  private listOfEmployees: IEmployee[] = [];
+  public listOfEmployees: IEmployee[] = [];
 
   private constructor() {}
 
@@ -37,5 +37,9 @@ export class Employee {
         employee.isFree = !employee.isFree;
       }
     });
+  }
+
+  findEmployee(role: Role) {
+    return this.listOfEmployees.find(employee => employee.role === role && employee.isFree === true);
   }
 }
