@@ -32,7 +32,7 @@ export class Order implements IOrder {
 
   addPizzas(pizzas: IPizza[]) {
     this.pizzasOrdered.push(...pizzas);
-    this.finalPrice = this.pizzasOrdered.reduce((total, pizza) => total + pizza.price, 0);
+    this.finalPrice = this.pizzasOrdered.reduce((total, pizza) => total + pizza.price, 0);    
   }
 
   getTotalPrice() {

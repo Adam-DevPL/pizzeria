@@ -1,5 +1,10 @@
 import { v4 as uuid } from "uuid";
-import { IIngredient, IngredientsBase, PropertyName } from "./IIngredient";
+import {
+  IIngredient,
+  IngredientsBase,
+  PropertyName,
+  ReceipeIngredient,
+} from "./IIngredient";
 
 export class Ingredients {
   private static instance: Ingredients;
@@ -12,6 +17,16 @@ export class Ingredients {
       Ingredients.instance = new Ingredients();
     }
     return Ingredients.instance;
+  }
+
+  public getIngredients(ingredients: IngredientsBase[]) {
+    return this.listOfIngredients.filter((ingredient) => {
+      ingredients.forEach((ingr) => {
+        if (ingr === ingredient.name) {
+          return ingredient;
+        }
+      });
+    });
   }
 
   public purchaseIngredients(
@@ -37,5 +52,20 @@ export class Ingredients {
     });
 
     return "Ingredients purchased.";
+  }
+
+  public calculateIngredientsCosts(ingredients: ReceipeIngredient[]) {
+    let costs = 0;
+    ingredients.forEach((ingredient) => {
+      let foundIngredient = this.listOfIngredients.find(
+        (ingredientFromList) => ingredientFromList.name === ingredient.name
+      );
+      if (!foundIngredient) {
+        throw new Error("Ingredient does not found");
+      }
+      costs += foundIngredient.price * ingredient.quantity;
+    });
+
+    return costs;
   }
 }

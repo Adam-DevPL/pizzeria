@@ -1,6 +1,10 @@
 import { Employee } from "../Employee/Employee";
 import { Role } from "../Employee/IEmployee";
-import { IIngredient } from "../Ingredient/IIngredient";
+import {
+  IIngredient,
+  IngredientsBase,
+  ReceipeIngredient,
+} from "../Ingredient/IIngredient";
 import { Ingredients } from "../Ingredient/Ingredients";
 import { IOrder } from "../Order/IOrder";
 import { Order } from "../Order/Order";
@@ -10,12 +14,12 @@ import { Table } from "../Table/Table";
 
 export class Pizzeria {
   private static instance: Pizzeria;
-  private ingredients: Ingredients;
+  ingredients: Ingredients;
   private employees: Employee;
   private tables: Table;
   private ordersInProgress: IOrder[];
   private ordersInLine: IOrder[];
-  private pizzas: IPizza[];
+  pizzas: IPizza[];
 
   private constructor() {
     this.ingredients = Ingredients.getInstance();
@@ -41,9 +45,24 @@ export class Pizzeria {
     this.tables.addNewTable(tableNo, seatsNo);
   }
 
-  public createPizza(name: string, ingredients: IIngredient[]) {
-    const newPizza = new Pizza(name);
-    newPizza.addIngredientToPizza(ingredients);
+  public purchaseIngredients(
+    ingredient: IngredientsBase,
+    quantity: number,
+    price: number
+  ) {
+    this.ingredients.purchaseIngredients(ingredient, price, quantity);
+  }
+
+  public createPizza(
+    name: string,
+    ingredients: ReceipeIngredient[],
+    margin: number = 0
+  ) {
+    const newPizza = new Pizza(name, ingredients);
+    newPizza.addMargins(
+      this.ingredients.calculateIngredientsCosts(ingredients) + margin
+    );
+    this.pizzas.push(newPizza);
   }
 
   public makeNewOrder(id: number, seatsNo: number, pizzas: IPizza[]) {
@@ -76,6 +95,6 @@ export class Pizzeria {
     }
 
     newOrder.addPizzas(pizzas);
-    console.log("Final price for order is: " + newOrder.getTotalPrice);
+    console.log("Final price for order is: " + newOrder.getTotalPrice());
   }
 }
