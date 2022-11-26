@@ -4,18 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node index.ts"
+    "start": "ts-node index.ts",
+    "test": "mocha --require ts-node/register test/**/*test.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^4.3.4",
+    "@types/mocha": "^10.0.0",
     "@types/node": "^18.11.9",
     "@types/uuid": "^8.3.4",
+    "chai": "^4.3.7",
+    "mocha": "^10.1.0",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "chai": "^4.3.7",
     "prettier": "^2.7.1",
     "uuid": "^9.0.0"
   }
