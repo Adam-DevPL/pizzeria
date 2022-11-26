@@ -56,6 +56,10 @@ export class Pizzeria {
     this.ingredients.purchaseIngredients(ingredient, price, quantity);
   }
 
+  public addNewVoucher(name: string, discount: number) {
+    this.vouchers.addVoucher(name, discount);
+  }
+
   public createPizza(
     name: string,
     ingredients: ReceipeIngredient[],
@@ -106,7 +110,7 @@ export class Pizzeria {
     console.log(
       "Final price for order is: " +
         (newOrder.getTotalPrice() -
-          (newOrder.getTotalPrice() -
+          (newOrder.getTotalPrice() *
             this.vouchers.calcDiscount(voucherName) / 100))
     );
   }
