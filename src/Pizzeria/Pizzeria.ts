@@ -11,12 +11,14 @@ import { Order } from "../Order/Order";
 import { IPizza } from "../Pizza/IPizza";
 import { Pizza } from "../Pizza/Pizza";
 import { Table } from "../Table/Table";
+import { Vouchers } from "../Voucher/Vouchers";
 
 export class Pizzeria {
   private static instance: Pizzeria;
   ingredients: Ingredients;
   private employees: Employee;
   private tables: Table;
+  private vouchers: Vouchers;
   private ordersInProgress: IOrder[];
   private ordersInLine: IOrder[];
   pizzas: IPizza[];
@@ -25,6 +27,7 @@ export class Pizzeria {
     this.ingredients = Ingredients.getInstance();
     this.employees = Employee.getInstance();
     this.tables = Table.getInstance();
+    this.vouchers = Vouchers.getInstance();
     this.ordersInProgress = [];
     this.ordersInLine = [];
     this.pizzas = [];
@@ -65,7 +68,7 @@ export class Pizzeria {
     this.pizzas.push(newPizza);
   }
 
-  public makeNewOrder(id: number, seatsNo: number, pizzas: IPizza[]) {
+  public makeNewOrder(id: number, seatsNo: number, pizzas: IPizza[], voucherName: string) {
     const assignWaiter = this.employees.findEmployee("waiter");
 
     if (!assignWaiter) {
