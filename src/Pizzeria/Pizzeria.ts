@@ -68,7 +68,12 @@ export class Pizzeria {
     this.pizzas.push(newPizza);
   }
 
-  public makeNewOrder(id: number, seatsNo: number, pizzas: IPizza[], voucherName: string) {
+  public makeNewOrder(
+    id: number,
+    seatsNo: number,
+    pizzas: IPizza[],
+    voucherName: string
+  ) {
     const assignWaiter = this.employees.findEmployee("waiter");
 
     if (!assignWaiter) {
@@ -98,6 +103,11 @@ export class Pizzeria {
     }
 
     newOrder.addPizzas(pizzas);
-    console.log("Final price for order is: " + newOrder.getTotalPrice());
+    console.log(
+      "Final price for order is: " +
+        (newOrder.getTotalPrice() -
+          (newOrder.getTotalPrice() -
+            this.vouchers.calcDiscount(voucherName) / 100))
+    );
   }
 }
