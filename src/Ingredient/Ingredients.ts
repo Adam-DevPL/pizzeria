@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+import { Validator } from "../Validator/Validator";
 import {
   IIngredient,
   IngredientsBase,
@@ -8,7 +9,7 @@ import {
 
 export class Ingredients {
   private static instance: Ingredients;
-  private listOfIngredients: IIngredient[] = [];
+  listOfIngredients: IIngredient[] = [];
 
   private constructor() {}
 
@@ -20,18 +21,16 @@ export class Ingredients {
   }
 
   public getIngredients(ingredients: IngredientsBase[]) {
-    const ingredientsNotFound: IngredientsBase[] = [];
     const ingredientsFound = this.listOfIngredients.filter((ingredient) => {
-      return ingredients.find((ingr) => {
-        if (ingr === ingredient.name) {
-          return 1;
-        } else {
-          ingredientsNotFound.push(ingr);
-          return 0;
-        }
-      });
+      return ingredients.find((ingr) => ingr === ingredient.name);
     });
-
+    const ingredientsNotFound: IngredientsBase[] = ingredients.filter(ingredient => {
+      const foundIngredient = ingredientsFound.find(ingr => ingr.name === ingredient);
+      if (foundIngredient) {
+        return 0;
+      }
+      return 1;
+    })
     return { ingredientsFound, ingredientsNotFound };
   }
 
@@ -40,6 +39,9 @@ export class Ingredients {
     price: number,
     quantity: number = 1
   ): string {
+    Validator.validatePriceIfMoreThenZero(price);
+    Validator.validateQuantityIfMoreThenZero(quantity);
+
     const foundIngredient = this.listOfIngredients.find(
       (ingredient) => ingredient.name === name
     );
@@ -61,17 +63,21 @@ export class Ingredients {
   }
 
   public calculateIngredientsCosts(ingredients: ReceipeIngredient[]) {
-    let costs = 0;
-    ingredients.forEach((ingredient) => {
-      let foundIngredient = this.listOfIngredients.find(
-        (ingredientFromList) => ingredientFromList.name === ingredient.name
-      );
-      if (!foundIngredient) {
-        throw new Error("Ingredient does not found");
-      }
-      costs += foundIngredient.price * ingredient.quantity;
-    });
+    const ingredientsBase = ingredients.map((ingredient) => ingredient.name);
+    const foundIngredientsInStorage = this.getIngredients(ingredientsBase);
 
-    return costs;
+    if (foundIngredientsInStorage.ingredientsNotFound.length !== 0) {
+      return 0;
+    }
+
+    return foundIngredientsInStorage.ingredientsFound.reduce(
+      (total, ingredient) => {
+        const ingredientQuantity =
+          ingredients.find((ingr) => ingr.name === ingredient.name)?.quantity ??
+          0;
+        return total + ingredient.price * ingredientQuantity;
+      },
+      0
+    );
   }
 }

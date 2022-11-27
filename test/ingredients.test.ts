@@ -1,7 +1,10 @@
 import "mocha";
 import { expect } from "chai";
 import { Ingredients } from "../src/Ingredient/Ingredients";
-import { IngredientsBase } from "../src/Ingredient/IIngredient";
+import {
+  IngredientsBase,
+  ReceipeIngredient,
+} from "../src/Ingredient/IIngredient";
 
 describe("Ingredients", () => {
   describe("Get ingredients with price from the storage", () => {
@@ -35,7 +38,7 @@ describe("Ingredients", () => {
       const ingredientsWeWant: IngredientsBase[] = [
         IngredientsBase.olives,
         IngredientsBase.ananas,
-        IngredientsBase.paprika
+        IngredientsBase.paprika,
       ];
 
       const ingredientsWeGet = ingredients.getIngredients(ingredientsWeWant);
@@ -75,6 +78,68 @@ describe("Ingredients", () => {
 
       expect(salad).to.equal(undefined);
       expect(potato).to.equal(undefined);
+    });
+  });
+
+  describe("Purchasing ingredients", () => {
+    it("Truthy - add new ingredient", () => {
+      const ingredients = Ingredients.getInstance();
+      const returnMsg = ingredients.purchaseIngredients(
+        IngredientsBase.potato,
+        4,
+        1
+      );
+      expect(returnMsg).to.equal("New ingredient added to the list");
+    });
+    it("Truthy - increase quantity of the existing ingredient", () => {
+      const ingredients = Ingredients.getInstance();
+      const returnMsg = ingredients.purchaseIngredients(
+        IngredientsBase.potato,
+        4,
+        1
+      );
+      const potatoQuantity = ingredients.listOfIngredients.find(
+        (ingredient) => ingredient.name === IngredientsBase.potato
+      )?.quantity;
+      expect(returnMsg).to.equal("Ingredients purchased.");
+      expect(potatoQuantity).to.equal(2);
+    });
+    it("Falsy - the price of ingredient is less or equal to zero", () => {
+      const ingredients = Ingredients.getInstance();
+      expect(function () {
+        ingredients.purchaseIngredients(IngredientsBase.potato, -1, 1);
+      }).to.throw(Error);
+    });
+    it("Falsy - the quantity of ingredient is less then zero", () => {
+      const ingredients = Ingredients.getInstance();
+      expect(function () {
+        ingredients.purchaseIngredients(IngredientsBase.potato, 1, -1);
+      }).to.throw(Error);
+    });
+  });
+
+  describe("Calculating costs of ingredients", () => {
+    it("Truthy - all ingredients were found and the costs was return", () => {
+      const ingredients = Ingredients.getInstance();
+      const ingredientsNeedeForPizza: ReceipeIngredient[] = [
+        { name: IngredientsBase.ananas, quantity: 1 },
+        { name: IngredientsBase.olives, quantity: 1 },
+      ];
+      const costOfIngredientsForPizza = ingredients.calculateIngredientsCosts(ingredientsNeedeForPizza);
+      const properCosts = 8;
+
+      expect(costOfIngredientsForPizza).to.equal(properCosts);
+    });
+    it("Falsy - some ingredients for pizza weren't found, can't calculate the costs, return 0", () => {
+      const ingredients = Ingredients.getInstance();
+      const ingredientsNeedeForPizza: ReceipeIngredient[] = [
+        { name: IngredientsBase.ananas, quantity: 1 },
+        { name: IngredientsBase.tomato, quantity: 1 },
+      ];
+      const costOfIngredientsForPizza = ingredients.calculateIngredientsCosts(ingredientsNeedeForPizza);
+      const properCosts = 0;
+
+      expect(costOfIngredientsForPizza).to.equal(properCosts);
     });
   });
 });

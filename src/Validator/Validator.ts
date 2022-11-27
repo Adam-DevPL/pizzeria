@@ -7,11 +7,14 @@ export class Validator {
     return 1;
   }
 
-  public static validateNumberNotToBeLessThenZero(value: number) {
+  public static validatePriceIfMoreThenZero(value: number) {
     if (value < 0) {
-      return 0;
+      throw new Error("The price must be more tehn zero");
     }
-
-    return 1;
+  }
+  public static validateQuantityIfMoreThenZero(value: number) {
+    if (value < 0) {
+      throw new Error("The quantity is less then zero!");
+    }
   }
 }
