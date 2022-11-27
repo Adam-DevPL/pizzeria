@@ -78,7 +78,7 @@ export class Pizzeria {
     pizzas: IPizza[],
     voucherName: string
   ) {
-    const assignWaiter = this.employees.findEmployee("waiter");
+    const assignWaiter = this.employees.findEmployeeByRole("waiter");
 
     if (!assignWaiter) {
       return "There is no waiter to take up the order";
@@ -95,7 +95,7 @@ export class Pizzeria {
     this.tables.changeStatusOfTable(assignTable.tableNumber);
     newOrder.addTable(assignTable);
 
-    const assignChef = this.employees.findEmployee("chef");
+    const assignChef = this.employees.findEmployeeByRole("chef");
 
     if (!assignChef) {
       console.log("There is no free chef.Your order will go into the queue");

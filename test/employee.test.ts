@@ -35,7 +35,7 @@ describe("Employee", () => {
     employees.addNewEmployee("Adam", "waiter");
     employees.addNewEmployee("Dawid", "chef");
 
-    const foundEmployee = employees.findEmployee("chef");
+    const foundEmployee = employees.findEmployeeByRole("chef");
     expect(foundEmployee?.name).to.equal("Dawid");
   })
 });
