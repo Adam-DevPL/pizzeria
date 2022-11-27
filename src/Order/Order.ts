@@ -1,7 +1,7 @@
 import { Employee } from "../Employee/Employee";
 import { IEmployee } from "../Employee/IEmployee";
 import { IPizza } from "../Pizza/IPizza";
-import { Pizza } from "../Pizza/Pizza";
+import { Pizzas } from "../Pizza/Pizza";
 import { ITable } from "../Table/ITable";
 import { Table } from "../Table/Table";
 import { IOrder, SpecialVouchers } from "./IOrder";

@@ -22,7 +22,7 @@ export class Validator {
       throw new Error("The number must be greater than zero!");
     }
   }
-  public static validateVoucherName(value: string) {
+  public static validateName(value: string) {
     if (value.length === 0) {
       throw new Error("The name can't be empty");
     }
