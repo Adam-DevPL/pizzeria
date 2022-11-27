@@ -22,4 +22,14 @@ export class Validator {
       throw new Error("The number must be greater than zero!");
     }
   }
+  public static validateVoucherName(value: string) {
+    if (value.length === 0) {
+      throw new Error("The name can't be empty");
+    }
+  }
+  public static validateDiscount(value: number) {
+    if (value < 0 || value > 100) {
+      throw new Error("Discount can't be less then zero or greater then 100");
+    }
+  }
 }
