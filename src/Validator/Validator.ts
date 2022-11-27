@@ -4,6 +4,14 @@ export class Validator {
       return 0;
     }
 
-    else return 1;
+    return 1;
+  }
+
+  public static validateNumberNotToBeLessThenZero(value: number) {
+    if (value < 0) {
+      return 0;
+    }
+
+    return 1;
   }
 }

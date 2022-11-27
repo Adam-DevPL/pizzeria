@@ -20,13 +20,19 @@ export class Ingredients {
   }
 
   public getIngredients(ingredients: IngredientsBase[]) {
-    return this.listOfIngredients.filter((ingredient) => {
-      ingredients.forEach((ingr) => {
+    const ingredientsNotFound: IngredientsBase[] = [];
+    const ingredientsFound = this.listOfIngredients.filter((ingredient) => {
+      return ingredients.find((ingr) => {
         if (ingr === ingredient.name) {
-          return ingredient;
+          return 1;
+        } else {
+          ingredientsNotFound.push(ingr);
+          return 0;
         }
       });
     });
+
+    return { ingredientsFound, ingredientsNotFound };
   }
 
   public purchaseIngredients(
