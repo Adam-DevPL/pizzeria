@@ -43,4 +43,38 @@ describe("Voucher module", () => {
       }).to.throw(Error);
     });
   });
+
+  describe("Calculate amount of discount", () => {
+    it("Truthy - get proper discount based on voucher", () => {
+      const vouchers = Vouchers.getInstance();
+      const voucherName = "special";
+      const discountIShouldGet = 20;
+      const amountOfDiscount = vouchers.calcDiscount(voucherName);
+
+      expect(amountOfDiscount).to.equal(discountIShouldGet);
+    });
+    it("Truthy - check if exist student and 10yo vouchers", () => {
+      const vouchers = Vouchers.getInstance();
+      const studentVoucherName = "student";
+      const studentVoucherDiscount = 40;
+      const voucher10yoName = "10yo";
+      const voucher10yoDiscount = 10;
+
+      const studentVoucher = vouchers.listOfVouchers.find(v => v.name === studentVoucherName);
+      const voucherFor10yo = vouchers.listOfVouchers.find(v => v.name === voucher10yoName);      
+
+      expect(studentVoucher?.name).to.equal(studentVoucherName);
+      expect(studentVoucher?.discount).to.equal(studentVoucherDiscount);
+      expect(voucherFor10yo?.name).to.equal(voucher10yoName);
+      expect(voucherFor10yo?.discount).to.equal(voucher10yoDiscount);
+    });
+    it("Falsy - voucher doesn't exist in database", () => {
+      const vouchers = Vouchers.getInstance();
+      const voucherName = "test";
+      const discountIShouldGet = 0;
+      const amountOfDiscount = vouchers.calcDiscount(voucherName);
+
+      expect(amountOfDiscount).to.equal(discountIShouldGet);
+    });
+  });
 });

@@ -5,14 +5,13 @@ export class Vouchers {
   private static instance: Vouchers;
   listOfVouchers: IVoucher[] = [];
 
-  private costructor() {
-    this.listOfVouchers.push({ name: "10yo", discount: 10 });
-    this.listOfVouchers.push({ name: "student", discount: 40 });
-  }
+  private costructor() {}
 
   public static getInstance(): Vouchers {
     if (!Vouchers.instance) {
       Vouchers.instance = new Vouchers();
+      Vouchers.instance.listOfVouchers.push({ name: "10yo", discount: 10 });
+      Vouchers.instance.listOfVouchers.push({ name: "student", discount: 40 });
     }
     return Vouchers.instance;
   }
@@ -50,9 +49,7 @@ export class Vouchers {
     const d = new Date();
     const currentDay = weekday[d.getDay()];
 
-    const foundVoucher = this.listOfVouchers.find(
-      (voucherFromList) => voucherFromList.name === voucher
-    );
+    const foundVoucher = this.findVoucher(voucher);
 
     if (!foundVoucher) {
       return 0;
