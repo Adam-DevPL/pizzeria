@@ -8,13 +8,18 @@ export class Validator {
   }
 
   public static validatePriceIfMoreThenZero(value: number) {
-    if (value < 0) {
+    if (value <= 0) {
       throw new Error("The price must be more tehn zero");
     }
   }
   public static validateQuantityIfMoreThenZero(value: number) {
     if (value < 0) {
       throw new Error("The quantity is less then zero!");
+    }
+  }
+  public static validateNumberMoreOrEqualZero(value: number) {
+    if (value <= 0) {
+      throw new Error("The number must be greater than zero!");
     }
   }
 }
