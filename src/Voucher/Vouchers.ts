@@ -1,23 +1,34 @@
+import { Validator } from "../Validator/Validator";
 import { IVoucher } from "./IVoucher";
 
 export class Vouchers {
   private static instance: Vouchers;
-  private listOfVouchers: IVoucher[] = [];
+  listOfVouchers: IVoucher[] = [];
 
-  private costructor() {
-    this.listOfVouchers.push({ name: "10yo", discount: 10 });
-    this.listOfVouchers.push({ name: "student", discount: 40 });
-  }
+  private costructor() {}
 
   public static getInstance(): Vouchers {
     if (!Vouchers.instance) {
       Vouchers.instance = new Vouchers();
+      Vouchers.instance.listOfVouchers.push({ name: "10yo", discount: 10 });
+      Vouchers.instance.listOfVouchers.push({ name: "student", discount: 40 });
     }
     return Vouchers.instance;
   }
 
+  private findVoucher(name: string): IVoucher | null {
+    return this.listOfVouchers.find((v) => v.name === name) ?? null;
+  }
+
   public addVoucher(name: string, discount: number) {
+    Validator.validateVoucherName(name);
+    Validator.validateDiscount(discount);
+    if (this.findVoucher(name)) {
+      return `This voucher ${name} exist in database`;
+    }
     this.listOfVouchers.push({ name, discount });
+
+    return `Voucher ${name} added successfully`;
   }
 
   public calcDiscount(voucher: string | null = null): number {
@@ -38,9 +49,7 @@ export class Vouchers {
     const d = new Date();
     const currentDay = weekday[d.getDay()];
 
-    const foundVoucher = this.listOfVouchers.find(
-      (voucherFromList) => voucherFromList.name === voucher
-    );
+    const foundVoucher = this.findVoucher(voucher);
 
     if (!foundVoucher) {
       return 0;
