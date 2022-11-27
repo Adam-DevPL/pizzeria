@@ -9,7 +9,7 @@ import { Ingredients } from "../Ingredient/Ingredients";
 import { IOrder } from "../Order/IOrder";
 import { Order } from "../Order/Order";
 import { IPizza } from "../Pizza/IPizza";
-import { Pizza } from "../Pizza/Pizza";
+import { Pizzas } from "../Pizza/Pizza";
 import { Table } from "../Table/Table";
 import { Vouchers } from "../Voucher/Vouchers";
 
@@ -65,7 +65,7 @@ export class Pizzeria {
     ingredients: ReceipeIngredient[],
     margin: number = 0
   ) {
-    const newPizza = new Pizza(name, ingredients);
+    const newPizza = new Pizzas(name, ingredients);
     newPizza.addMargins(
       this.ingredients.calculateIngredientsCosts(ingredients) + margin
     );

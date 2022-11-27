@@ -21,7 +21,7 @@ export class Vouchers {
   }
 
   public addVoucher(name: string, discount: number) {
-    Validator.validateVoucherName(name);
+    Validator.validateName(name);
     Validator.validateDiscount(discount);
     if (this.findVoucher(name)) {
       return `This voucher ${name} exist in database`;
