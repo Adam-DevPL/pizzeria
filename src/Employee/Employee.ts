@@ -1,3 +1,4 @@
+import { Validator } from "../Validator/Validator";
 import { IEmployee, Role } from "./IEmployee";
 
 export class Employee {
@@ -14,6 +15,9 @@ export class Employee {
   }
 
   addNewEmployee(name: string, role: Role) {
+    if (!Validator.validateStringNotEmpty(name)) {
+      return "Employee can't be added - no name passed."
+    }
     const foundEmployee = this.listOfEmployees.find(
       (employee) => employee.name === name
     );
