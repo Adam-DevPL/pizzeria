@@ -6,36 +6,39 @@ import { ITable } from "../Table/ITable";
 import { Table } from "../Table/Table";
 import { IOrder, SpecialVouchers } from "./IOrder";
 
-export class Order implements IOrder {
-  id: number;
-  isFinished = false;
-  // vouchers: string[];
-  // specialVouchers: SpecialVouchers;
-  chefAssigned: IEmployee | null = null;
-  waiterAssigned: IEmployee;
-  tableAssigned: ITable | null = null;
-  pizzasOrdered: IPizza[] = [];
-  finalPrice: number = 0;
+export class Orders {
+  private static instance: Orders;
+  listOfOrders: IOrder[] = [];
 
-  constructor(id: number, waiter: IEmployee) {
-    this.id = id;
-    this.waiterAssigned = waiter;
+  private constructor() {}
+
+  public static getInstance(): Orders {
+    if (!Orders.instance) {
+      Orders.instance = new Orders();
+    }
+    return Orders.instance;
   }
 
-  addChef(chef: IEmployee) {
-    this.chefAssigned = chef;
+  public findOrder(orderId: number) {
+    return this.listOfOrders.find((o) => o.id === orderId) ?? null;
   }
 
-  addTable(table: ITable) {
-    this.tableAssigned = table;
-  }
-
-  addPizzas(pizzas: IPizza[]) {
-    this.pizzasOrdered.push(...pizzas);
-    this.finalPrice = this.pizzasOrdered.reduce((total, pizza) => total + pizza.price, 0);    
-  }
-
-  getTotalPrice() {
-    return this.finalPrice;
+  public addNewOrder(
+    id: number,
+    chefAssigned: IEmployee | null,
+    waiterAssigned: IEmployee,
+    tableAssigned: ITable | null,
+    pizzasOrdered: IPizza[],
+    finalPrice: number
+  ) {
+    this.listOfOrders.push({
+      id,
+      isFinished: false,
+      chefAssigned,
+      waiterAssigned,
+      tableAssigned,
+      pizzasOrdered,
+      finalPrice,
+    });
   }
 }
