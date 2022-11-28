@@ -4,7 +4,7 @@ import { ITable } from "../Table/ITable";
 
 export interface IOrder {
   id: number;
-  isFinished: boolean;
+  inQueue?: boolean;
   chefAssigned?: IEmployee | null;
   waiterAssigned: IEmployee;
   tableAssigned?: ITable | null;

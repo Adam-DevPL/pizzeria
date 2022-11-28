@@ -76,7 +76,7 @@ describe("Employee", () => {
       const employees = Employee.getInstance();      
 
       const foundEmployee = employees.findEmployeeByRole("waiter");
-      expect(foundEmployee).to.equal(undefined);
+      expect(foundEmployee).to.null;
     });
   });
 });

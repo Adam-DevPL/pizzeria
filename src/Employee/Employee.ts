@@ -15,13 +15,13 @@ export class Employee {
   }
 
   private findEmployeeByName(name: string) {
-    return this.listOfEmployees.find((employee) => employee.name === name);
+    return this.listOfEmployees.find((employee) => employee.name === name) ?? null;
   }
 
   findEmployeeByRole(role: Role) {
     return this.listOfEmployees.find(
       (employee) => employee.role === role && employee.isFree === true
-    );
+    ) ?? null
   }
 
   addNewEmployee(name: string, role: Role) {
