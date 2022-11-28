@@ -17,7 +17,7 @@ const response = pizzeria.makeNewOrder(
   [
     {
       name: "Marghariat",
-      ingredients: [{ name: IngredientsBase.tomato, quantity: 2 }],
+      ingredients: [{ name: IngredientsBase.tomato, quantity: 4 }],
     },
   ],
   "special",

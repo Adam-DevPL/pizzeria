@@ -127,4 +127,20 @@ export class Pizzeria {
       }`;
     }
   }
+
+  public assignChefIfFree(orderId: number) {
+    const foundOrder = this.orders.findOrder(orderId);
+    if (!foundOrder) {
+      return `There is no order - ${orderId}`;
+    }
+    const assignChef = this.employees.findEmployeeByRole("chef");
+
+    if (!assignChef) {
+      return "There is still no free chef";
+    }
+    this.orders.toQueue(orderId);
+    foundOrder.chefAssigned = assignChef;
+
+    return "Your order will be realised now";
+  }
 }
