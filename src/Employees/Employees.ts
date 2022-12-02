@@ -42,15 +42,15 @@ export class Employees {
     return foundEmployee;
   }
 
-  addNewEmployee(name: string, role: Role): Employee | string {
+  addNewEmployee(name: string, role: Role): Employee | null {
     Validator.validateStringNotEmpty(name);
 
     const foundEmployee: IEmployee | null = this.findEmployeeByName(name);
 
     if (foundEmployee) {
-      return foundEmployee.id;
+      return null;
     }
-    const newId = uuid();
+    const newId: string = uuid();
     const newEmployee: Employee = new Employee(newId, name, role);
     this.listOfEmployees.set(newId, newEmployee);
 
@@ -68,5 +68,9 @@ export class Employees {
     }
     employee.isFree = !employee.isFree;
     return true;
+  }
+
+  getAllEmployees(): Map<string, Employee> {
+    return this.listOfEmployees;
   }
 }
