@@ -1,62 +1,72 @@
 import { Validator } from "../Validator/Validator";
 import { IEmployee, Role } from "./IEmployee";
+import { v4 as uuid } from "uuid";
+import { Employee } from "./Employee";
 
-export class Employee {
-  private static instance: Employee;
-  public listOfEmployees: IEmployee[] = [];
+export class Employees {
+  private static instance: Employees;
+  private listOfEmployees: Map<string, Employee> = new Map();
 
   private constructor() {}
 
-  public static getInstance(): Employee {
-    if (!Employee.instance) {
-      Employee.instance = new Employee();
+  public static getInstance(): Employees {
+    if (!Employees.instance) {
+      Employees.instance = new Employees();
     }
-    return Employee.instance;
+    return Employees.instance;
   }
 
-  private findEmployeeByName(name: string) {
-    return this.listOfEmployees.find((employee) => employee.name === name) ?? null;
+  findEmployeeById(employeeId: string): Employee | null {
+    return this.listOfEmployees.get(employeeId) ?? null;
   }
 
-  findEmployeeByRole(role: Role) {
-    return this.listOfEmployees.find(
-      (employee) => employee.role === role && employee.isFree === true
-    ) ?? null
-  }
-
-  addNewEmployee(name: string, role: Role) {
-    if (!Validator.validateStringNotEmpty(name)) {
-      return "Employee can't be added - no name passed.";
-    }
-    const foundEmployee = this.findEmployeeByName(name);
-
-    if (foundEmployee) {
-      return "Duplicated employee";
-    }
-    this.listOfEmployees.push({ name: name, role: role, isFree: true });
-
-    return "Employee added to the list";
-  }
-
-  removeEmployee(name: string) {
-    if (!this.findEmployeeByName(name)) {
-      return "Employee wasn't found";
-    }
-    this.listOfEmployees = this.listOfEmployees.filter(
-      (employee) => employee.name !== name
-    );
-    return "Employee sussesfully removed";
-  }
-
-  changeStatusOfEmployee(name: string) {
-    if (!this.findEmployeeByName(name)) {
-      return "Employee wasn't found";
-    }
+  private findEmployeeByName(employeeName: string): Employee | null {
+    let foundEmployee: IEmployee | null = null;
     this.listOfEmployees.forEach((employee) => {
-      if (employee.name === name) {
-        employee.isFree = !employee.isFree;
+      if (employee.name === employeeName) {
+        foundEmployee = employee;
+        return;
       }
     });
-    return "Employee's status was changed";
+    return foundEmployee;
+  }
+
+  findEmployeeByRole(role: Role): Employee | null {
+    let foundEmployee: IEmployee | null = null;
+    this.listOfEmployees.forEach((employee) => {
+      if (employee.role === role) {
+        foundEmployee = employee;
+        return;
+      }
+    });
+    return foundEmployee;
+  }
+
+  addNewEmployee(name: string, role: Role): Employee | string {
+    Validator.validateStringNotEmpty(name);
+
+    const foundEmployee: IEmployee | null = this.findEmployeeByName(name);
+
+    if (foundEmployee) {
+      return foundEmployee.id;
+    }
+    const newId = uuid();
+    const newEmployee: Employee = new Employee(newId, name, role);
+    this.listOfEmployees.set(newId, newEmployee);
+
+    return newEmployee;
+  }
+
+  removeEmployee(employeeId: string): boolean {
+    return this.listOfEmployees.delete(employeeId);
+  }
+
+  changeStatusOfEmployee(employeeId: string): boolean {
+    const employee: Employee | null = this.findEmployeeById(employeeId);
+    if (!employee) {
+      return false;
+    }
+    employee.isFree = !employee.isFree;
+    return true;
   }
 }

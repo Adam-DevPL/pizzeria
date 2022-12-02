@@ -1,10 +1,8 @@
 export class Validator {
   public static validateStringNotEmpty(name: string) {
     if (!name || name.length === 0) {
-      return 0;
+      throw new Error("It's not valid name or it's empty")
     }
-
-    return 1;
   }
 
   public static validatePriceIfMoreThenZero(value: number) {
