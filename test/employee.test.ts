@@ -1,7 +1,7 @@
 import "mocha";
 import { expect } from "chai";
 
-import { Employee } from "../src/Employee/Employee";
+import { Employee } from "../src/Employees/Employees";
 
 describe("Employee", () => {
   describe("adding new employee", () => {

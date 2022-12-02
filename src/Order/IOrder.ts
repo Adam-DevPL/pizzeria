@@ -1,4 +1,4 @@
-import { IEmployee } from "../Employee/IEmployee";
+import { IEmployee } from "../Employees/IEmployee";
 import { IPizza } from "../Pizza/IPizza";
 import { ITable } from "../Table/ITable";
 
