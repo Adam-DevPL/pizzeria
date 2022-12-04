@@ -1,114 +1,140 @@
 import { expect } from "chai";
-import { Table } from "../src/Table/Tables";
+import { Table } from "../Table";
+import { Tables } from "../Tables";
 
 describe("Table", () => {
   describe("Adding new table to the Pizzeria", () => {
+    beforeEach(() => {
+      const tables = Tables.getInstance();
+      tables.getAllTables().clear();
+    });
+
     it("Truthy - added table successfully", () => {
-      const tables = Table.getInstance();
-      const returnMsg = tables.addNewTable(1, 1);
+      const tables: Tables = Tables.getInstance();
+      const newTable: Table | null = tables.addNewTable(1, 1);
+
+      let newTableNo: number = 0;
+      let newTableNoSeats: number = 0;
+
+      if (newTable) {
+        const foundTable: Table | null = tables.getSingleTable(newTable.id);
+        newTableNo = foundTable ? foundTable.tableNumber : 0;
+        newTableNoSeats = foundTable ? foundTable.numberOfSeats : 0;
+      }
+
       const expectedNumberOfTable = 1;
       const expectedNumberOfSeats = 1;
-      const foundTable = tables.listOfTables.find(
-        (t) => t.tableNumber === expectedNumberOfTable
-      );
 
-      expect(foundTable).to.not.equal(undefined);
-      expect(foundTable?.numberOfSeats).to.equal(expectedNumberOfSeats);
-      expect(returnMsg).to.equal("Table added successfully");
+      expect(newTableNo).to.equal(expectedNumberOfTable);
+      expect(newTableNoSeats).to.equal(expectedNumberOfSeats);
     });
+
     it("Falsy - throw error, number of seats is lower or equal 0", () => {
-      const tables = Table.getInstance();
+      const tables = Tables.getInstance();
 
       expect(function () {
         tables.addNewTable(1, 0);
       }).to.throw(Error);
     });
+
     it("Falsy - throw error, number of table is lower or equal 0", () => {
-      const tables = Table.getInstance();
+      const tables = Tables.getInstance();
 
       expect(function () {
         tables.addNewTable(-1, 1);
       }).to.throw(Error);
     });
-    it("Falsy - added table is duplicated", () => {
-      const tables = Table.getInstance();
-      const returnMsg = tables.addNewTable(1, 1);
 
-      expect(returnMsg).to.equal("Duplicated table");
+    it("Falsy - add table with the same number - return null", () => {
+      const tables = Tables.getInstance();
+      tables.addNewTable(1, 1);
+      const duplicateTable = tables.addNewTable(1, 1);
+
+      expect(duplicateTable).to.null;
     });
   });
 
   describe("Removing table from the local", () => {
+    beforeEach(() => {
+      const tables = Tables.getInstance();
+      tables.getAllTables().clear();
+    });
+
     it("Truthy - table removed successfully", () => {
-      const tables = Table.getInstance();
-      const tableNoToRemove = 1;
-      const returnMsg = tables.removeTable(tableNoToRemove);
-      const lookForTable = tables.listOfTables.find(
-        (t) => t.tableNumber === tableNoToRemove
-      );
+      const tables: Tables = Tables.getInstance();
+      const newTable: Table | null = tables.addNewTable(1, 1);
+      const isSuccess: boolean = newTable
+        ? tables.removeTable(newTable.id)
+        : false;
 
-      expect(lookForTable).to.equal(undefined);
-      expect(returnMsg).to.equal("Table removed successfully");
+      const lookForTable = newTable ? tables.getSingleTable(newTable.id) : null;
+
+      expect(isSuccess).to.true;
+      expect(lookForTable).to.null;
     });
+
     it("Falsy - table can't be removed, becasue it doesn't exist", () => {
-      const tables = Table.getInstance();
-      const tableNoToRemove = 1;
-      const returnMsg = tables.removeTable(tableNoToRemove);
-      const lookForTable = tables.listOfTables.find(
-        (t) => t.tableNumber === tableNoToRemove
-      );
+      const tables: Tables = Tables.getInstance();
+      const isSuccess = tables.removeTable("");
 
-      expect(lookForTable).to.equal(undefined);
-      expect(returnMsg).to.equal("Can't remove table, becasue it wasn't found");
+      expect(isSuccess).to.false;
     });
   });
+
   describe("Changing status of the table - is it free or not?", () => {
-    it("Truthy - change status from free to oposite", () => {
-      const tables = Table.getInstance();
-      const tableIsFree = false;
-      const tableNo = 1;
-      const numberSeats = 1;
-      tables.addNewTable(tableNo, numberSeats);
-
-      const returnMsg = tables.changeStatusOfTable(tableNo);
-      const foundTable = tables.listOfTables.find(
-        (t) => t.tableNumber === tableNo
-      );
-
-      expect(foundTable?.isFree).to.false;
-      expect(returnMsg).to.equal(`Table is free: ${tableIsFree}`);
+    beforeEach(() => {
+      const tables = Tables.getInstance();
+      tables.getAllTables().clear();
     });
+
+    it("Truthy - change status from free to oposite", () => {
+      const tables: Tables = Tables.getInstance();
+      const newTable: Table | null = tables.addNewTable(1, 1);
+
+      const isSuccess: boolean = newTable
+        ? tables.changeStatusOfTable(newTable.id)
+        : false;
+      const foundTable: Table | null = newTable
+        ? tables.getSingleTable(newTable.id)
+        : null;
+
+      expect(isSuccess).to.true;
+      expect(foundTable?.isFree).to.false;
+    });
+
     it("Falsy - table doesn't exist", () => {
-      const tables = Table.getInstance();
-      const tableIsFree = false;
-      const tableNo = 1;
-      tables.removeTable(tableNo);
+      const tables: Tables = Tables.getInstance();
 
-      const returnMsg = tables.changeStatusOfTable(tableNo);
-      const foundTable = tables.listOfTables.find(
-        (t) => t.tableNumber === tableNo
-      );
+      const isSuccess: boolean = tables.changeStatusOfTable("");
 
-      expect(returnMsg).to.equal("Table doesn't exist");
-      expect(foundTable).to.equal(undefined);
+      expect(isSuccess).to.false;
     });
   });
+
   describe("Finding first free table with ordered number of seats", () => {
-    it("Truthy - found table with 4 seats", () => {
-      const tables = Table.getInstance();
-      const tableNo = 1;
-      const noOfSeats = 4;
-      tables.addNewTable(tableNo, noOfSeats);
-
-      const foundTable = tables.findFreeTable(noOfSeats);
-
-      expect(foundTable?.numberOfSeats).to.equal(noOfSeats);
+    beforeEach(() => {
+      const tables = Tables.getInstance();
+      tables.getAllTables().clear();
     });
+
+    it("Truthy - found table with 4 seats", () => {
+      const tables: Tables = Tables.getInstance();
+      const newTable: Table | null = tables.addNewTable(1, 4);
+
+      const numberOfSeatNeeded: number = 4;
+
+      const foundTable: Table | null = tables.findFreeTable(numberOfSeatNeeded);
+
+      expect(foundTable?.id).to.equal(newTable?.id);
+    });
+
     it("Falsy - table wasn't found with 3 seats", () => {
-      const tables = Table.getInstance();
+      const tables: Tables = Tables.getInstance();
+      const newTable: Table | null = tables.addNewTable(1, 4);
+
       const noOfSeats = 3;
 
-      const foundTable = tables.findFreeTable(noOfSeats);
+      const foundTable: Table | null = tables.findFreeTable(noOfSeats);
 
       expect(foundTable).to.null;
     });

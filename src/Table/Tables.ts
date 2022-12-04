@@ -27,6 +27,14 @@ export class Tables {
     return foundTable;
   }
 
+  public getAllTables(): Map<string, Table> {
+    return this.listOfTables;
+  }
+
+  public getSingleTable(id: string): Table | null {
+    return this.listOfTables.get(id) ?? null;
+  }
+
   public addNewTable(tableNumber: number, numberOfSeats: number): Table | null {
     Validator.validateNumberMoreOrEqualZero(tableNumber);
     Validator.validateNumberMoreOrEqualZero(numberOfSeats);
