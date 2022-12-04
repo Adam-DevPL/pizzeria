@@ -16,12 +16,12 @@ export class Employees {
     return Employees.instance;
   }
 
-  findEmployeeById(employeeId: string): Employee | null {
+  public findEmployeeById(employeeId: string): Employee | null {
     return this.listOfEmployees.get(employeeId) ?? null;
   }
 
   private findEmployeeByName(employeeName: string): Employee | null {
-    let foundEmployee: IEmployee | null = null;
+    let foundEmployee: Employee | null = null;
     this.listOfEmployees.forEach((employee) => {
       if (employee.name === employeeName) {
         foundEmployee = employee;
@@ -31,8 +31,8 @@ export class Employees {
     return foundEmployee;
   }
 
-  findEmployeeByRole(role: Role): Employee | null {
-    let foundEmployee: IEmployee | null = null;
+  public findEmployeeByRole(role: Role): Employee | null {
+    let foundEmployee: Employee | null = null;
     this.listOfEmployees.forEach((employee) => {
       if (employee.role === role) {
         foundEmployee = employee;
@@ -42,10 +42,10 @@ export class Employees {
     return foundEmployee;
   }
 
-  addNewEmployee(name: string, role: Role): Employee | null {
+  public addNewEmployee(name: string, role: Role): Employee | null {
     Validator.validateStringNotEmpty(name);
 
-    const foundEmployee: IEmployee | null = this.findEmployeeByName(name);
+    const foundEmployee: Employee | null = this.findEmployeeByName(name);
 
     if (foundEmployee) {
       return null;
@@ -57,11 +57,11 @@ export class Employees {
     return newEmployee;
   }
 
-  removeEmployee(employeeId: string): boolean {
+  public removeEmployee(employeeId: string): boolean {
     return this.listOfEmployees.delete(employeeId);
   }
 
-  changeStatusOfEmployee(employeeId: string): boolean {
+  public changeStatusOfEmployee(employeeId: string): boolean {
     const employee: Employee | null = this.findEmployeeById(employeeId);
     if (!employee) {
       return false;
@@ -70,7 +70,7 @@ export class Employees {
     return true;
   }
 
-  getAllEmployees(): Map<string, Employee> {
+  public getAllEmployees(): Map<string, Employee> {
     return this.listOfEmployees;
   }
 }

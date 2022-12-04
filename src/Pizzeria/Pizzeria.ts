@@ -4,8 +4,8 @@ import {
   IIngredient,
   IngredientsBase,
   ReceipeIngredient,
-} from "../Ingredient/IIngredient";
-import { Ingredients } from "../Ingredient/Ingredients";
+} from "../Ingredients/IIngredient";
+import { Ingredients } from "../Ingredients/Ingredients";
 import { IOrder } from "../Order/IOrder";
 import { Orders } from "../Order/Order";
 import { IPizza } from "../Pizza/IPizza";

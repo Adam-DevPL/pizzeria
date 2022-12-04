@@ -1,10 +1,11 @@
 export interface IIngredient {
+  id: string;
   name: IngredientsBase;
   quantity: number;
   price: number;
 }
 
-export type ReceipeIngredient = Omit<IIngredient, "price">;
+export type ReceipeIngredient = Omit<IIngredient, "price" | "id">;
 
 export type PropertyName = "quantity" | "price";
 
