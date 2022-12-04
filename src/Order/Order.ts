@@ -3,7 +3,7 @@ import { IEmployee } from "../Employees/IEmployee";
 import { IPizza } from "../Pizza/IPizza";
 import { Pizzas } from "../Pizza/Pizza";
 import { ITable } from "../Table/ITable";
-import { Table } from "../Table/Table";
+import { Tables } from "../Table/Tables";
 import { IOrder, SpecialVouchers } from "./IOrder";
 
 export class Orders {

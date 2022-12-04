@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Table } from "../src/Table/Table";
+import { Table } from "../src/Table/Tables";
 
 describe("Table", () => {
   describe("Adding new table to the Pizzeria", () => {
