@@ -7,9 +7,9 @@ import {
 } from "../Ingredients/IIngredient";
 import { Ingredients } from "../Ingredients/Ingredients";
 import { IOrder } from "../Order/IOrder";
-import { Orders } from "../Order/Order";
-import { IPizza } from "../Pizza/IPizza";
-import { Pizzas } from "../Pizza/Pizzas";
+import { Orders } from "../Order/Orders";
+import { IPizza } from "../Pizzas/IPizza";
+import { Pizzas } from "../Pizzas/Pizzas";
 import { Tables } from "../Table/Tables";
 import { Vouchers } from "../Voucher/Vouchers";
 

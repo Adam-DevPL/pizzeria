@@ -1,15 +1,19 @@
 import { IEmployee } from "../Employees/IEmployee";
-import { IPizza } from "../Pizza/IPizza";
+import { IPizza } from "../Pizzas/IPizza";
 import { ITable } from "../Table/ITable";
 
 export interface IOrder {
-  id: number;
-  inQueue?: boolean;
-  chefAssigned?: IEmployee | null;
+  id: string;
+  orderStatus: OrderStatus;
+  chefAssigned: IEmployee | null;
   waiterAssigned: IEmployee;
-  tableAssigned?: ITable | null;
+  tableAssigned: ITable | null;
   pizzasOrdered: IPizza[];
-  finalPrice?: number;
+  finalPrice: number;
 }
 
-export type SpecialVouchers = "10yo" | "student";
+export enum OrderStatus {
+  finished = "finished",
+  queue = "queue",
+  processing = "processing",
+}

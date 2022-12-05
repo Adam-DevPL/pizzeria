@@ -1,59 +1,75 @@
-import { Employee } from "../Employees/Employees";
 import { IEmployee } from "../Employees/IEmployee";
-import { IPizza } from "../Pizza/IPizza";
-import { Pizzas } from "../Pizza/Pizzas";
+import { IPizza } from "../Pizzas/IPizza";
 import { ITable } from "../Table/ITable";
-import { Tables } from "../Table/Tables";
-import { IOrder, SpecialVouchers } from "./IOrder";
+import { IOrder, OrderStatus } from "./IOrder";
 
-export class Orders {
-  private static instance: Orders;
-  listOfOrders: IOrder[] = [];
+export class Order implements IOrder {
+  private _id: string;
+  private _orderStatus: OrderStatus;
+  private _chefAssigned: IEmployee | null;
+  private _waiterAssigned: IEmployee;
+  private _tableAssigned: ITable | null;
+  private _pizzasOrdered: IPizza[];
+  private _finalPrice: number;
 
-  private constructor() {}
-
-  public static getInstance(): Orders {
-    if (!Orders.instance) {
-      Orders.instance = new Orders();
-    }
-    return Orders.instance;
-  }
-
-  public findOrder(orderId: number) {
-    return this.listOfOrders.find((o) => o.id === orderId) ?? null;
-  }
-
-  public addNewOrder(
-    id: number,
+  constructor(
+    id: string,
+    orderStatus: OrderStatus,
     chefAssigned: IEmployee | null,
     waiterAssigned: IEmployee,
     tableAssigned: ITable | null,
     pizzasOrdered: IPizza[],
     finalPrice: number
   ) {
-    this.listOfOrders.push({
-      id,
-      chefAssigned,
-      waiterAssigned,
-      tableAssigned,
-      pizzasOrdered,
-      finalPrice,
-    });
+    this._id = id;
+    this._orderStatus = orderStatus;
+    this._chefAssigned = chefAssigned;
+    this._waiterAssigned = waiterAssigned;
+    this._tableAssigned = tableAssigned;
+    this._pizzasOrdered = pizzasOrdered;
+    this._finalPrice = finalPrice;
   }
 
-  public toQueue(orderId: number) {
-    this.listOfOrders.forEach((o) => {
-      if (o.id === orderId) {
-        o.inQueue = true;
-      }
-    });
+  get id() {
+    return this._id;
   }
-
-  public calculateTheFinalPrice(orderId: number, discount: number, ingredientsCosts: number, margin: number) {
-    this.listOfOrders.forEach(order => {
-      if (order.id === orderId) {
-        order.finalPrice = ingredientsCosts + margin - (discount/100 * (ingredientsCosts + margin));
-      }
-    })
+  set id(value: string) {
+    this._id = value;
+  }
+  get orderStatus() {
+    return this._orderStatus;
+  }
+  set orderStatus(value: OrderStatus) {
+    this._orderStatus = value;
+  }
+  get chefAssigned(): IEmployee | null {
+    return this._chefAssigned;
+  }
+  set chefAssigned(value: IEmployee | null) {
+    this._chefAssigned = value;
+  }
+  get waiterAssigned(): IEmployee {
+    return this._waiterAssigned;
+  }
+  set waiterAssigned(value: IEmployee) {
+    this._waiterAssigned = value;
+  }
+  get tableAssigned() {
+    return this._tableAssigned;
+  }
+  set tableAssigned(value: ITable | null) {
+    this._tableAssigned = value;
+  }
+  get pizzasOrdered() {
+    return this._pizzasOrdered;
+  }
+  set pizzasOrdered(value: IPizza[]) {
+    this._pizzasOrdered = [...value];
+  }
+  get finalPrice() {
+    return this._finalPrice;
+  }
+  set finalPrice(value: number) {
+    this._finalPrice = value;
   }
 }
