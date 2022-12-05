@@ -9,7 +9,7 @@ import { Ingredients } from "../Ingredients/Ingredients";
 import { IOrder } from "../Order/IOrder";
 import { Orders } from "../Order/Order";
 import { IPizza } from "../Pizza/IPizza";
-import { Pizzas } from "../Pizza/Pizza";
+import { Pizzas } from "../Pizza/Pizzas";
 import { Tables } from "../Table/Tables";
 import { Vouchers } from "../Voucher/Vouchers";
 
