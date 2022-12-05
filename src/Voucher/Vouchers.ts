@@ -1,37 +1,55 @@
+import {v4 as uuid} from "uuid";
+
 import { Validator } from "../Validator/Validator";
 import { IVoucher } from "./IVoucher";
+import { Voucher } from "./Voucher";
 
 export class Vouchers {
   private static instance: Vouchers;
-  listOfVouchers: IVoucher[] = [];
+  private listOfVouchers: Map<string, Voucher> = new Map();
 
   private costructor() {}
 
   public static getInstance(): Vouchers {
     if (!Vouchers.instance) {
       Vouchers.instance = new Vouchers();
-      Vouchers.instance.listOfVouchers.push({ name: "10yo", discount: 10 });
-      Vouchers.instance.listOfVouchers.push({ name: "student", discount: 40 });
     }
     return Vouchers.instance;
   }
 
-  private findVoucher(name: string): IVoucher | null {
-    return this.listOfVouchers.find((v) => v.name === name) ?? null;
+  private findVoucher(voucherId: string): Voucher | null {
+    return this.listOfVouchers.get(voucherId) ?? null;
   }
 
-  public addVoucher(name: string, discount: number) {
+  private findVoucherByName(name: string): Voucher | null {
+    let foundVoucher: Voucher | null = null;
+    this.listOfVouchers.forEach((voucher) => {
+      if (voucher.name === name) {
+        foundVoucher = voucher;
+        return;
+      }
+    });
+    return foundVoucher;
+  }
+
+  public addVoucher(name: string, discount: number): Voucher | null {
     Validator.validateName(name);
     Validator.validateDiscount(discount);
-    if (this.findVoucher(name)) {
-      return `This voucher ${name} exist in database`;
-    }
-    this.listOfVouchers.push({ name, discount });
 
-    return `Voucher ${name} added successfully`;
+    const foundVoucher: Voucher | null= this.findVoucherByName(name);
+
+    if (foundVoucher) {
+      return null;
+    }
+
+    const newId: string = uuid();
+    const newVoucher: Voucher = new Voucher(newId, name, discount);
+    this.listOfVouchers.set(newId, newVoucher);
+
+    return newVoucher;
   }
 
-  public calcDiscount(voucher: string | null = null): number {
+  public calcDiscount(voucherName: string = ""): number {
     const weekday = [
       "Sunday",
       "Monday",
@@ -42,14 +60,14 @@ export class Vouchers {
       "Saturday",
     ];
 
-    if (!voucher) {
+    if (!voucherName) {
       return 0;
     }
 
     const d = new Date();
     const currentDay = weekday[d.getDay()];
 
-    const foundVoucher = this.findVoucher(voucher);
+    const foundVoucher: Voucher | null = this.findVoucherByName(voucherName);
 
     if (!foundVoucher) {
       return 0;
