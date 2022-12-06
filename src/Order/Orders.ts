@@ -35,8 +35,8 @@ export class Orders {
     pizzasOrdered: Pizza[],
     finalPrice: number
   ): Order {
-    const newId = uuid();
-    const newOrder = new Order(
+    const newId: string = uuid();
+    const newOrder: Order = new Order(
       newId,
       orderStatus,
       chefAssigned,
@@ -56,7 +56,7 @@ export class Orders {
     ingredientsCosts: number,
     margin: number
   ): void {
-    const foundOrder = this.getOrder(orderId);
+    const foundOrder: Order | null = this.getOrder(orderId);
     if (foundOrder) {
       foundOrder.finalPrice =
         ingredientsCosts +
