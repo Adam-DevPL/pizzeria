@@ -1,14 +1,14 @@
-import { IEmployee } from "../Employees/IEmployee";
-import { IPizza } from "../Pizzas/IPizza";
-import { ITable } from "../Table/ITable";
+import { Employee } from "../Employees/Employee";
+import { Pizza } from "../Pizzas/Pizza";
+import { Table } from "../Table/Table";
 
 export interface IOrder {
   id: string;
   orderStatus: OrderStatus;
-  chefAssigned: IEmployee | null;
-  waiterAssigned: IEmployee;
-  tableAssigned: ITable | null;
-  pizzasOrdered: IPizza[];
+  chefAssigned: Employee | null;
+  waiterAssigned: Employee;
+  tableAssigned: Table | null;
+  pizzasOrdered: Pizza[];
   finalPrice: number;
 }
 

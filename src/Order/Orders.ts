@@ -1,14 +1,14 @@
-import { Employee } from "../Employees/Employees";
-import { IEmployee } from "../Employees/IEmployee";
-import { IPizza } from "../Pizzas/IPizza";
-import { Pizzas } from "../Pizzas/Pizzas";
-import { ITable } from "../Table/ITable";
-import { Tables } from "../Table/Tables";
-import { IOrder, SpecialVouchers } from "./IOrder";
+import { v4 as uuid } from "uuid";
+
+import { Employee } from "../Employees/Employee";
+import { Pizza } from "../Pizzas/Pizza";
+import { Table } from "../Table/Table";
+import { OrderStatus } from "./IOrder";
+import { Order } from "./Order";
 
 export class Orders {
   private static instance: Orders;
-  listOfOrders: IOrder[] = [];
+  private listOfOrders: Map<string, Order> = new Map();
 
   private constructor() {}
 
@@ -19,41 +19,49 @@ export class Orders {
     return Orders.instance;
   }
 
-  public findOrder(orderId: number) {
-    return this.listOfOrders.find((o) => o.id === orderId) ?? null;
+  public getOrder(orderId: string): Order | null {
+    return this.listOfOrders.get(orderId) ?? null;
+  }
+
+  public getAllOrders(): Map<string, Order> {
+    return this.listOfOrders;
   }
 
   public addNewOrder(
-    id: number,
-    chefAssigned: IEmployee | null,
-    waiterAssigned: IEmployee,
-    tableAssigned: ITable | null,
-    pizzasOrdered: IPizza[],
+    orderStatus: OrderStatus,
+    chefAssigned: Employee | null,
+    waiterAssigned: Employee,
+    tableAssigned: Table | null,
+    pizzasOrdered: Pizza[],
     finalPrice: number
-  ) {
-    this.listOfOrders.push({
-      id,
+  ): Order {
+    const newId = uuid();
+    const newOrder = new Order(
+      newId,
+      orderStatus,
       chefAssigned,
       waiterAssigned,
       tableAssigned,
       pizzasOrdered,
-      finalPrice,
-    });
+      finalPrice
+    );
+    this.listOfOrders.set(newId, newOrder);
+
+    return newOrder;
   }
 
-  public toQueue(orderId: number) {
-    this.listOfOrders.forEach((o) => {
-      if (o.id === orderId) {
-        o.inQueue = true;
-      }
-    });
-  }
-
-  public calculateTheFinalPrice(orderId: number, discount: number, ingredientsCosts: number, margin: number) {
-    this.listOfOrders.forEach(order => {
-      if (order.id === orderId) {
-        order.finalPrice = ingredientsCosts + margin - (discount/100 * (ingredientsCosts + margin));
-      }
-    })
+  public calculateTheFinalPrice(
+    orderId: string,
+    discount: number,
+    ingredientsCosts: number,
+    margin: number
+  ): void {
+    const foundOrder = this.getOrder(orderId);
+    if (foundOrder) {
+      foundOrder.finalPrice =
+        ingredientsCosts +
+        margin -
+        (discount / 100) * (ingredientsCosts + margin);
+    }
   }
 }

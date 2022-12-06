@@ -1,24 +1,27 @@
+import { Employee } from "../Employees/Employee";
 import { IEmployee } from "../Employees/IEmployee";
 import { IPizza } from "../Pizzas/IPizza";
+import { Pizza } from "../Pizzas/Pizza";
 import { ITable } from "../Table/ITable";
+import { Table } from "../Table/Table";
 import { IOrder, OrderStatus } from "./IOrder";
 
 export class Order implements IOrder {
   private _id: string;
   private _orderStatus: OrderStatus;
-  private _chefAssigned: IEmployee | null;
-  private _waiterAssigned: IEmployee;
-  private _tableAssigned: ITable | null;
-  private _pizzasOrdered: IPizza[];
+  private _chefAssigned: Employee | null;
+  private _waiterAssigned: Employee;
+  private _tableAssigned: Table | null;
+  private _pizzasOrdered: Pizza[];
   private _finalPrice: number;
 
   constructor(
     id: string,
     orderStatus: OrderStatus,
-    chefAssigned: IEmployee | null,
-    waiterAssigned: IEmployee,
-    tableAssigned: ITable | null,
-    pizzasOrdered: IPizza[],
+    chefAssigned: Employee | null,
+    waiterAssigned: Employee,
+    tableAssigned: Table | null,
+    pizzasOrdered: Pizza[],
     finalPrice: number
   ) {
     this._id = id;
@@ -42,28 +45,28 @@ export class Order implements IOrder {
   set orderStatus(value: OrderStatus) {
     this._orderStatus = value;
   }
-  get chefAssigned(): IEmployee | null {
+  get chefAssigned(): Employee | null {
     return this._chefAssigned;
   }
-  set chefAssigned(value: IEmployee | null) {
+  set chefAssigned(value: Employee | null) {
     this._chefAssigned = value;
   }
-  get waiterAssigned(): IEmployee {
+  get waiterAssigned(): Employee {
     return this._waiterAssigned;
   }
-  set waiterAssigned(value: IEmployee) {
+  set waiterAssigned(value: Employee) {
     this._waiterAssigned = value;
   }
   get tableAssigned() {
     return this._tableAssigned;
   }
-  set tableAssigned(value: ITable | null) {
+  set tableAssigned(value: Table | null) {
     this._tableAssigned = value;
   }
   get pizzasOrdered() {
     return this._pizzasOrdered;
   }
-  set pizzasOrdered(value: IPizza[]) {
+  set pizzasOrdered(value: Pizza[]) {
     this._pizzasOrdered = [...value];
   }
   get finalPrice() {
