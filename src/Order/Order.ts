@@ -1,6 +1,6 @@
 import { Employee } from "../Employees/Employee";
 import { IEmployee } from "../Employees/IEmployee";
-import { IPizza } from "../Pizzas/IPizza";
+import { IPizza, PizzaType } from "../Pizzas/IPizza";
 import { Pizza } from "../Pizzas/Pizza";
 import { ITable } from "../Table/ITable";
 import { Table } from "../Table/Table";
@@ -12,7 +12,7 @@ export class Order implements IOrder {
   private _chefAssigned: Employee | null;
   private _waiterAssigned: Employee;
   private _tableAssigned: Table | null;
-  private _pizzasOrdered: Pizza[];
+  private _pizzasOrdered: PizzaType[];
   private _finalPrice: number;
 
   constructor(
@@ -21,7 +21,7 @@ export class Order implements IOrder {
     chefAssigned: Employee | null,
     waiterAssigned: Employee,
     tableAssigned: Table | null,
-    pizzasOrdered: Pizza[],
+    pizzasOrdered: PizzaType[],
     finalPrice: number
   ) {
     this._id = id;
@@ -66,7 +66,7 @@ export class Order implements IOrder {
   get pizzasOrdered() {
     return this._pizzasOrdered;
   }
-  set pizzasOrdered(value: Pizza[]) {
+  set pizzasOrdered(value: PizzaType[]) {
     this._pizzasOrdered = [...value];
   }
   get finalPrice() {

@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { Employee } from "../Employees/Employee";
+import { PizzaType } from "../Pizzas/IPizza";
 import { Pizza } from "../Pizzas/Pizza";
 import { Table } from "../Table/Table";
 import { OrderStatus } from "./IOrder";
@@ -32,10 +33,11 @@ export class Orders {
     chefAssigned: Employee | null,
     waiterAssigned: Employee,
     tableAssigned: Table | null,
-    pizzasOrdered: Pizza[],
-    finalPrice: number
+    pizzasOrdered: PizzaType[],
   ): Order {
+    
     const newId: string = uuid();
+    const finalPrice: number = 0;
     const newOrder: Order = new Order(
       newId,
       orderStatus,

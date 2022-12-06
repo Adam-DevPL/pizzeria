@@ -1,4 +1,5 @@
 import { Employee } from "../Employees/Employee";
+import { PizzaType } from "../Pizzas/IPizza";
 import { Pizza } from "../Pizzas/Pizza";
 import { Table } from "../Table/Table";
 
@@ -8,7 +9,7 @@ export interface IOrder {
   chefAssigned: Employee | null;
   waiterAssigned: Employee;
   tableAssigned: Table | null;
-  pizzasOrdered: Pizza[];
+  pizzasOrdered: PizzaType[];
   finalPrice: number;
 }
 

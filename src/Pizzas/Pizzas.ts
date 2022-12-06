@@ -37,6 +37,18 @@ export class Pizzas {
     return this.listOfPizzasReceipes;
   }
 
+  public getAllPizzasFromOrder(pizzasOrdered: PizzaType[]): Map<string, Pizza> {
+    let listOfPizzas: Map<string, Pizza> = new Map();
+    let foundPizza: Pizza | null = null;
+    pizzasOrdered.forEach(pizzaOrdered => {
+      foundPizza = this.findPizzaByName(pizzaOrdered);
+      if (foundPizza) {
+        listOfPizzas.set(foundPizza.id, foundPizza);
+      }
+    })
+    return listOfPizzas;
+  }
+
   public addPizzaReceipe(pizzaName: PizzaType, ingredients: ReceipeIngredient[]) {
     const findPizzaReceipe = this.findPizzaByName(pizzaName);
 
