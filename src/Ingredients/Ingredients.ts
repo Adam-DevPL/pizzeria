@@ -1,5 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { IPizza } from "../Pizzas/IPizza";
+import { Pizza } from "../Pizzas/Pizza";
 import { Validator } from "../Validator/Validator";
 import {
   IIngredient,
@@ -40,8 +41,8 @@ export class Ingredients {
   }
 
   public compareIngredientsWithStock(ingredients: IngredientsBase[]): {
-    ingredientsFound: Map<string, Ingredient>,
-    ingredientsNotFound: IngredientsBase[],
+    ingredientsFound: Map<string, Ingredient>;
+    ingredientsNotFound: IngredientsBase[];
   } {
     const ingredientsFound: Map<string, Ingredient> = new Map();
     const ingredientsNotFound: IngredientsBase[] = [];
@@ -70,7 +71,12 @@ export class Ingredients {
 
     if (!foundIngredient) {
       const newId: string = uuid();
-      const newIngredient: Ingredient = new Ingredient(newId, name, quantity, price);
+      const newIngredient: Ingredient = new Ingredient(
+        newId,
+        name,
+        quantity,
+        price
+      );
       this.listOfIngredients.set(newId, newIngredient);
       return newIngredient;
     }
@@ -83,42 +89,43 @@ export class Ingredients {
     return null;
   }
 
-  // public checkQuantityOfIngredientsForPizza(pizza: IPizza) {
-  //   let isOk = true;
-  //   const listOfIngredients = pizza.ingredients.map(
-  //     (ingredient) => ingredient.name
-  //   );
-  //   const foundIngredients = this.getIngredients(listOfIngredients);
+  public checkQuantityOfIngredientsForPizza(pizza: Pizza): boolean {
+    let isOk = true;
+    let listOfIngredients: IngredientsBase[] = pizza.ingredients.map(
+      (ingredient) => ingredient.name
+    );
+    const foundIngredients =
+      this.compareIngredientsWithStock(listOfIngredients);
 
-  //   if (foundIngredients.ingredientsNotFound.length !== 0) {
-  //     return false;
-  //   }
+    if (foundIngredients.ingredientsNotFound.length !== 0) {
+      return false;
+    }
 
-  //   pizza.ingredients.forEach((ingredient) => {
-  //     const ingr = foundIngredients.ingredientsFound.find(
-  //       (i) => i.name === ingredient.name
-  //     );
-  //     if (ingr && ingr.quantity - ingredient.quantity < 0) {
-  //       isOk = false;
-  //     }
-  //   });
+    pizza.ingredients.forEach((ingredient) => {
+      const ingr = this.findIngredientByName(ingredient.name);
+      if (ingr && ingr.quantity - ingredient.quantity < 0) {
+        isOk = false;
+      }
+    });
 
-  //   return isOk;
-  // }
+    return isOk;
+  }
 
   public calculateIngredientsCosts(ingredients: ReceipeIngredient[]) {
     const ingredientsBase = ingredients.map((ingredient) => ingredient.name);
-    const foundIngredientsInStorage = this.compareIngredientsWithStock(ingredientsBase);
-    let total: number = 0;
+    const foundIngredientsInStorage =
+      this.compareIngredientsWithStock(ingredientsBase);
 
     if (foundIngredientsInStorage.ingredientsNotFound.length !== 0) {
       return 0;
     }
 
-    for (const value of foundIngredientsInStorage.ingredientsFound.values()) {
-      total += value.price * value.quantity;
-    }
-
-    return total;
+    return ingredients.reduce(
+      (total, value) =>
+        total +
+        value.quantity *
+          (this.findIngredientByName(value.name) as Ingredient).price,
+      0
+    );
   }
 }
