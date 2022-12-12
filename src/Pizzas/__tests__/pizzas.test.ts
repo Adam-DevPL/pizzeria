@@ -14,12 +14,15 @@ describe("Pizza module", () => {
     });
 
     it("Truthy - added new pizza receipe successfully", () => {
+      //given
       const pizzas = Pizzas.getInstance();
       const margharita = PizzaType.margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
         { name: IngredientsBase.ananas, quantity: 1 },
         { name: IngredientsBase.olives, quantity: 4 },
       ];
+
+      //when
       const newReceipe = pizzas.addPizzaReceipe(
         margharita,
         ingredientsForPizza
@@ -28,7 +31,8 @@ describe("Pizza module", () => {
       const foundReceipe = newReceipe
         ? pizzas.getReceipe(newReceipe?.id)
         : null;
-
+        
+      //then
       expect(newReceipe?.id).to.equal(foundReceipe?.id);
       expect(newReceipe?.name).to.equal(PizzaType.margharita);
       expect(newReceipe?.ingredients[0].quantity).to.equal(1);

@@ -1,33 +1,25 @@
-import { IVoucher } from "./IVoucher";
+import { IVoucher, WeekDay } from "./IVoucher";
 
 export class Voucher implements IVoucher {
-  private _id: string;
-  private _name: string;
-  private _discount: number;
+  readonly _name: string;
+  readonly _discount: number;
+  readonly _weekDay: WeekDay | null;
 
-  constructor(id: string, name: string, discount: number) {
-    this._id = id;
+  constructor(name: string, discount: number, weekdDay: WeekDay | null) {
     this._name = name;
     this._discount = discount;
-  }
-
-  get id() {
-    return this._id;
-  }
-  set id(value: string) {
-    this._id = value;
+    this._weekDay = weekdDay;
   }
 
   get name(): string {
     return this._name;
   }
-  set name(value: string) {
-    this._name = value;
-  }
+
   get discount(): number {
     return this._discount;
   }
-  set discount(value: number) {
-    this._discount = value;
+
+  get weekDay(): WeekDay | null {
+    return this._weekDay;
   }
 }

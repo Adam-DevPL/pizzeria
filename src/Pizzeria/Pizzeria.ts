@@ -121,11 +121,11 @@ export class Pizzeria {
       this.orders.getOrder(newOrder.id)?.orderStatus === OrderStatus.queue;
       this.tables.changeStatusOfTable(assignTable.id);
       return newOrder;
-    } else {
-      this.employees.changeStatusOfEmployee(assignChef.id);
+    } 
+    
+    this.employees.changeStatusOfEmployee(assignChef.id);
       this.tables.changeStatusOfTable(assignTable.id);
       return newOrder;
-    }
   }
 
   public assignChefIfFree(orderId: string): boolean {
