@@ -1,9 +1,9 @@
 import { IIngredient, ReceipeIngredient } from "../Ingredients/IIngredient";
 
 export interface IPizza {
-  id: string;
-  name: PizzaType;
-  ingredients: ReceipeIngredient[];
+  readonly id: string;
+  readonly name: PizzaType;
+  readonly ingredients: ReceipeIngredient[];
 }
 
 export enum PizzaType {

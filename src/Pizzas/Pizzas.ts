@@ -1,4 +1,4 @@
-import {v4 as uuid} from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { IIngredient, ReceipeIngredient } from "../Ingredients/IIngredient";
 import { Validator } from "../Validator/Validator";
@@ -7,7 +7,7 @@ import { Pizza } from "./Pizza";
 
 export class Pizzas {
   private static instance: Pizzas;
-  private listOfPizzasReceipes: Map<string, Pizza> = new Map();
+  private listOfPizzasReceipes: Map<PizzaType, Pizza> = new Map();
 
   private constructor() {}
 
@@ -18,39 +18,31 @@ export class Pizzas {
     return Pizzas.instance;
   }
 
-  private findPizzaByName(pizzaName: PizzaType): Pizza | null {
-    let foundPizza: Pizza | null = null;
-    this.listOfPizzasReceipes.forEach((pizza) => {
-      if (pizza.name === pizzaName) {
-        foundPizza = pizza;
-        return;
-      }
-    });
-    return foundPizza;
+  public findPizzaByName(pizzaName: PizzaType): Pizza | null {
+    return this.listOfPizzasReceipes.get(pizzaName) ?? null;
   }
 
-  public getReceipe(pizzaId: string): Pizza | null {
-    return this.listOfPizzasReceipes.get(pizzaId) ?? null;
-  }
-
-  public getAllReceipes(): Map<string, Pizza> {
+  public getAllReceipes(): Map<PizzaType, Pizza> {
     return this.listOfPizzasReceipes;
   }
 
-  public getAllPizzasFromOrder(pizzasOrdered: PizzaType[]): Map<string, Pizza> {
-    let listOfPizzas: Map<string, Pizza> = new Map();
+  public getAllPizzasFromOrder(pizzasOrdered: PizzaType[]): Map<PizzaType, Pizza> {
+    let listOfPizzas: Map<PizzaType, Pizza> = new Map<PizzaType, Pizza>();
     let foundPizza: Pizza | null = null;
-    pizzasOrdered.forEach(pizzaOrdered => {
+    pizzasOrdered.forEach((pizzaOrdered) => {
       foundPizza = this.findPizzaByName(pizzaOrdered);
       if (foundPizza) {
-        listOfPizzas.set(foundPizza.id, foundPizza);
+        listOfPizzas.set(foundPizza.name, foundPizza);
       }
-    })
+    });
     return listOfPizzas;
   }
 
-  public addPizzaReceipe(pizzaName: PizzaType, ingredients: ReceipeIngredient[]) {
-    const findPizzaReceipe = this.findPizzaByName(pizzaName);
+  public addPizzaReceipe(
+    pizzaName: PizzaType,
+    ingredients: ReceipeIngredient[]
+  ): Pizza | null {
+    const findPizzaReceipe: Pizza | null = this.findPizzaByName(pizzaName);
 
     if (findPizzaReceipe) {
       return null;
@@ -58,7 +50,7 @@ export class Pizzas {
 
     const newId = uuid();
     const newPizzaReceipe: Pizza = new Pizza(newId, pizzaName, ingredients);
-    this.listOfPizzasReceipes.set(newId, newPizzaReceipe);
+    this.listOfPizzasReceipes.set(newPizzaReceipe.name, newPizzaReceipe);
 
     return newPizzaReceipe;
   }
