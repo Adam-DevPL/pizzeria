@@ -60,7 +60,7 @@ describe("Voucher module", () => {
       //given
       const vouchers = Vouchers.getInstance();
       vouchers.getAllVouchers().clear();
-      vouchers.addVoucher("test", 10, WeekDay.monday);
+      vouchers.addVoucher("test", 10);
     });
 
     it("Truthy - get proper discount based on voucher", () => {
