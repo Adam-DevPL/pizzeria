@@ -134,7 +134,7 @@ describe("Employees", () => {
       //when
       employees.addNewEmployee(chefDto);
       employees.addNewEmployee(waiterDto);
-      const foundEmployee = employees.findFreeChef(Role.chef);      
+      const foundEmployee = employees.findEmployeeByRole(Role.chef);      
 
       //then
       expect(foundEmployee ? foundEmployee.name : null).to.equal("Dawid");
@@ -145,7 +145,7 @@ describe("Employees", () => {
       const employees = Employees.getInstance();
 
       //when
-      const foundEmployee = employees.findFreeChef(Role.chef);
+      const foundEmployee = employees.findEmployeeByRole(Role.chef);
 
       //then
       expect(foundEmployee).to.null;

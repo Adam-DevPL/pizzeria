@@ -31,7 +31,7 @@ export class Employees {
     return foundEmployee;
   }
 
-  public findFreeChef(role: Role): Employee | null {
+  public findEmployeeByRole(role: Role): Employee | null {
     let foundEmployee: Employee | null = null;
     this.getAllFreeEmployees().forEach((employee) => {
       if (employee.role === role) {

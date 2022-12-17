@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 import { Utils } from "../Utils/Utils";
 
 import { Validator } from "../Validator/Validator";
-import { WeekDay } from "./IVoucher";
+import { VoucherDto, WeekDay } from "./IVoucher";
 import { Voucher } from "./Voucher";
 
 export class Vouchers {
@@ -33,11 +33,7 @@ export class Vouchers {
     return this.listOfVouchers;
   }
 
-  public addVoucher(
-    name: string,
-    discount: number,
-    weekdDay: WeekDay | null = null
-  ): Voucher | null {
+  public addVoucher({ name, discount, weekDay }: VoucherDto): Voucher | null {
     Validator.validateName(name);
     Validator.validateDiscount(discount);
 
@@ -50,7 +46,7 @@ export class Vouchers {
     }
 
     const newId: string = uuid();
-    const newVoucher: Voucher = new Voucher(newId, name, discount, weekdDay);
+    const newVoucher: Voucher = new Voucher(newId, name, discount, weekDay);
     this.listOfVouchers.set(newId, newVoucher);
 
     return newVoucher;

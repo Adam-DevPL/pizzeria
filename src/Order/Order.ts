@@ -26,4 +26,8 @@ export class Order implements IOrder {
     this.pizzasOrdered = pizzasOrdered;
     this.finalPrice = finalPrice;
   }
+
+  assignChef(chef: Employee) {
+    (this.chefAssigned as Order["chefAssigned"]) = chef;
+  }
 }
