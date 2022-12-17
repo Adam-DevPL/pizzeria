@@ -1,8 +1,8 @@
 import { v4 as uuid } from "uuid";
 
-import { IIngredient, ReceipeIngredient } from "../Ingredients/IIngredient";
+import { ReceipeIngredient } from "../Ingredients/IIngredient";
 import { Validator } from "../Validator/Validator";
-import { IPizza, PizzaType } from "./IPizza";
+import { PizzaType } from "./IPizza";
 import { Pizza } from "./Pizza";
 
 export class Pizzas {
@@ -26,22 +26,12 @@ export class Pizzas {
     return this.listOfPizzasReceipes;
   }
 
-  public getAllPizzasFromOrder(pizzasOrdered: PizzaType[]): Map<PizzaType, Pizza> {
-    let listOfPizzas: Map<PizzaType, Pizza> = new Map<PizzaType, Pizza>();
-    let foundPizza: Pizza | null = null;
-    pizzasOrdered.forEach((pizzaOrdered) => {
-      foundPizza = this.findPizzaByName(pizzaOrdered);
-      if (foundPizza) {
-        listOfPizzas.set(foundPizza.name, foundPizza);
-      }
-    });
-    return listOfPizzas;
-  }
-
   public addPizzaReceipe(
     pizzaName: PizzaType,
     ingredients: ReceipeIngredient[]
   ): Pizza | null {
+    Validator.validateNumberOfIngredients(ingredients.length);
+
     const findPizzaReceipe: Pizza | null = this.findPizzaByName(pizzaName);
 
     if (findPizzaReceipe) {
@@ -53,5 +43,19 @@ export class Pizzas {
     this.listOfPizzasReceipes.set(newPizzaReceipe.name, newPizzaReceipe);
 
     return newPizzaReceipe;
+  }
+
+  public getAllPizzasFromOrder(
+    pizzasOrdered: PizzaType[]
+  ): Map<PizzaType, Pizza> {
+    let listOfPizzas: Map<PizzaType, Pizza> = new Map<PizzaType, Pizza>();
+    let foundPizza: Pizza | null = null;
+    pizzasOrdered.forEach((pizzaOrdered) => {
+      foundPizza = this.findPizzaByName(pizzaOrdered);
+      if (foundPizza) {
+        listOfPizzas.set(foundPizza.name, foundPizza);
+      }
+    });
+    return listOfPizzas;
   }
 }

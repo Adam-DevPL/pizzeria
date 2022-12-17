@@ -1,4 +1,4 @@
-import { IIngredient, ReceipeIngredient } from "../Ingredients/IIngredient";
+import { ReceipeIngredient } from "../Ingredients/IIngredient";
 
 export interface IPizza {
   readonly id: string;

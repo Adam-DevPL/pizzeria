@@ -21,17 +21,18 @@ describe("Pizza module", () => {
       const ingredientsForPizza: ReceipeIngredient[] = [
         { name: IngredientsBase.ananas, quantity: 1 },
         { name: IngredientsBase.olives, quantity: 4 },
+        { name: IngredientsBase.tomato, quantity: 2 },
       ];
 
       //when
-      const newReceipe: Pizza | null = pizzas.addPizzaReceipe(
+      const newReceipe: Pizza = pizzas.addPizzaReceipe(
         margharita,
         ingredientsForPizza
-      );
+      ) as Pizza;
 
-      const foundReceipe: Pizza | null = newReceipe
-        ? pizzas.findPizzaByName(newReceipe?.name)
-        : null;
+      const foundReceipe: Pizza | null = pizzas.findPizzaByName(
+        newReceipe.name
+      );
 
       //then
       expect(newReceipe?.id).to.equal(foundReceipe?.id);
@@ -46,6 +47,7 @@ describe("Pizza module", () => {
       const ingredientsForPizza: ReceipeIngredient[] = [
         { name: IngredientsBase.ananas, quantity: 1 },
         { name: IngredientsBase.olives, quantity: 4 },
+        { name: IngredientsBase.tomato, quantity: 2 },
       ];
       pizzas.addPizzaReceipe(margharita, ingredientsForPizza);
 
@@ -58,7 +60,23 @@ describe("Pizza module", () => {
       //then
       expect(doubleReceipe).to.null;
     });
+
+    it("Error - not enaugh ingredients to create new pizz receipe", () => {
+      //given
+      const pizzas = Pizzas.getInstance();
+      const margharita = PizzaType.margharita;
+      const ingredientsForPizza: ReceipeIngredient[] = [
+        { name: IngredientsBase.ananas, quantity: 1 },
+        { name: IngredientsBase.olives, quantity: 4 },
+      ];
+
+      //when, then
+      expect(function () {
+        pizzas.addPizzaReceipe(margharita, ingredientsForPizza);
+      }).to.throw(Error);
+    });
   });
+
   describe("get all pizza's receipe based on ordered pizzas", () => {
     beforeEach(() => {
       const pizzas = Pizzas.getInstance();
@@ -72,12 +90,14 @@ describe("Pizza module", () => {
       const ingredientsForMargharita: ReceipeIngredient[] = [
         { name: IngredientsBase.tomato, quantity: 1 },
         { name: IngredientsBase.olives, quantity: 4 },
+        { name: IngredientsBase.ananas, quantity: 1 },
       ];
       pizzas.addPizzaReceipe(margharita, ingredientsForMargharita);
       const hawaian = PizzaType.margharita;
       const ingredientsForHawaian: ReceipeIngredient[] = [
         { name: IngredientsBase.ananas, quantity: 1 },
         { name: IngredientsBase.olives, quantity: 4 },
+        { name: IngredientsBase.paprika, quantity: 1 },
       ];
       pizzas.addPizzaReceipe(hawaian, ingredientsForHawaian);
 

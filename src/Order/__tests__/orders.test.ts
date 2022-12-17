@@ -40,6 +40,8 @@ describe("Orders module", () => {
       const ingredientsReceipe: ReceipeIngredient[] = [
         { name: IngredientsBase.tomato, quantity: 4 },
         { name: IngredientsBase.paprika, quantity: 4 },
+        { name: IngredientsBase.paprika, quantity: 4 },
+
       ];
       pizzas.addPizzaReceipe(PizzaType.margharita, ingredientsReceipe);
       const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
