@@ -64,7 +64,7 @@ export class Pizzeria {
     voucherName: string,
     margin: number
   ): null | Order {
-    const assignWaiter: Employee | null = this.employees.findEmployeeByRole(
+    const assignWaiter: Employee | null = this.employees.findFreeChef(
       Role.waiter
     );
 
@@ -100,7 +100,7 @@ export class Pizzeria {
       );
     });
 
-    const assignChef = this.employees.findEmployeeByRole(Role.chef);
+    const assignChef = this.employees.findFreeChef(Role.chef);
 
     const newOrder: Order = this.orders.addNewOrder(
       OrderStatus.processing,
@@ -133,7 +133,7 @@ export class Pizzeria {
     if (!foundOrder) {
       return false;
     }
-    const assignChef = this.employees.findEmployeeByRole(Role.chef);
+    const assignChef = this.employees.findFreeChef(Role.chef);
 
     if (!assignChef) {
       return false;

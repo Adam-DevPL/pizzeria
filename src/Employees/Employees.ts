@@ -26,20 +26,19 @@ export class Employees {
     this.getAllEmployees().forEach((employee) => {
       if (employee.name === employeeName) {
         foundEmployee = employee;
-        return;
       }
     });
     return foundEmployee;
   }
 
-  public findEmployeeByRole(role: Role): Employee | null {
+  public findFreeChef(role: Role): Employee | null {
     let foundEmployee: Employee | null = null;
     this.getAllFreeEmployees().forEach((employee) => {
       if (employee.role === role) {
         foundEmployee = employee;
-        return;
       }
     });
+
     return foundEmployee;
   }
 
@@ -53,7 +52,7 @@ export class Employees {
     }
 
     const newId: string = uuid();
-    const newEmployee: Employee = new Employee(newId, name, role);    
+    const newEmployee: Employee = new Employee(newId, name, role);
 
     this.listOfFreeEmployees.set(newId, newEmployee);
 
@@ -65,7 +64,8 @@ export class Employees {
   }
 
   public changeStatusOfEmployee(employeeId: string): boolean {
-    const employeeFree: Employee | undefined = this.getAllFreeEmployees().get(employeeId)
+    const employeeFree: Employee | undefined =
+      this.getAllFreeEmployees().get(employeeId);
 
     if (employeeFree) {
       this.getAllFreeEmployees().delete(employeeFree.id);
@@ -73,7 +73,8 @@ export class Employees {
       return true;
     }
 
-    const employeeOccupied: Employee | undefined = this.getAllOccupiedEmployees().get(employeeId);
+    const employeeOccupied: Employee | undefined =
+      this.getAllOccupiedEmployees().get(employeeId);
 
     if (employeeOccupied) {
       this.getAllOccupiedEmployees().delete(employeeOccupied.id);

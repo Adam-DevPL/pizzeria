@@ -23,8 +23,9 @@ export class Tables {
 
     let tmpTable: Table | null = null;
     this.getAllTables().forEach((table) => {
-      tmpTable = table.tableNumber === tableNo ? table : null;
-      return;
+      if (table.tableNumber === tableNo) {
+        tmpTable = table;
+      }
     });
 
     return tmpTable;
@@ -93,8 +94,9 @@ export class Tables {
 
     let foundTable: Table | null = null;
     this.getAllTables().forEach((table) => {
-      foundTable = table.numberOfSeats === seatsNo ? table : null;
-      return;
+      if (table.numberOfSeats === seatsNo) {
+        foundTable = table;
+      }
     });
     return foundTable;
   }

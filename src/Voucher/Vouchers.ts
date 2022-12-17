@@ -21,10 +21,11 @@ export class Vouchers {
 
   private findVoucherByName(voucherName: string): Voucher | null {
     let foundVoucher: Voucher | null = null;
-    this.getAllVouchers().forEach(voucher => {
-      foundVoucher = voucher.name === voucherName ? voucher : null;
-      return;
-    })
+    this.getAllVouchers().forEach((voucher) => {
+      if (voucher.name === voucherName) {
+        foundVoucher = voucher;
+      }
+    });
     return foundVoucher;
   }
 
@@ -58,13 +59,15 @@ export class Vouchers {
   public calcDiscount(voucherName: string): number {
     Validator.validateName(voucherName);
 
-    const foundVoucher: Voucher | null = this.findVoucherByName(voucherName.toLowerCase());
-    
+    const foundVoucher: Voucher | null = this.findVoucherByName(
+      voucherName.toLowerCase()
+    );
+
     if (
       !foundVoucher ||
       (foundVoucher.weekDay !== null &&
-      foundVoucher.weekDay !== Utils.getDayOfWeek())
-    ) {      
+        foundVoucher.weekDay !== Utils.getDayOfWeek())
+    ) {
       return 0;
     }
 
