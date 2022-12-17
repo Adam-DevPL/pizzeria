@@ -75,7 +75,7 @@ describe("Table", () => {
       const newTable: Table = tables.addNewTable(tableDto) as Table;
 
       //when
-      const isSuccess: boolean = tables.removeTable(newTable.id)
+      const isSuccess: boolean = tables.removeTable(newTable.id);
 
       //then
       expect(isSuccess).to.true;
@@ -108,7 +108,9 @@ describe("Table", () => {
 
       //when
       const isSuccess: boolean = tables.changeStatusOfTable(newTable.id);
-      const freeTable: Table | undefined = tables.getAllOccupiedTables().get(newTable.id);
+      const freeTable: Table | undefined = tables
+        .getAllOccupiedTables()
+        .get(newTable.id);
 
       //then
       expect(isSuccess).to.true;
@@ -147,6 +149,17 @@ describe("Table", () => {
       expect(foundTable?.id).to.equal(newTable.id);
     });
 
+    it("Error - when number of seats is under or equal 0", () => {
+      //given
+      const tables: Tables = Tables.getInstance();
+      const noOfSeats = 0;
+
+      //when, then
+      expect(function () {
+        tables.findFreeTable(noOfSeats);
+      }).to.throw(Error);
+    });
+
     it("Falsy - table wasn't found with 3 seats", () => {
       //given
       const tables: Tables = Tables.getInstance();
@@ -154,8 +167,10 @@ describe("Table", () => {
       const newTable: Table = tables.addNewTable(tableDto) as Table;
       const noOfSeats = 3;
 
+      //when
       const foundTable: Table | null = tables.findFreeTable(noOfSeats);
 
+      //then
       expect(foundTable).to.null;
     });
   });

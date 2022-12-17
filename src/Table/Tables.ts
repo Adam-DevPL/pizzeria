@@ -19,6 +19,8 @@ export class Tables {
   }
 
   private findTableByNumber(tableNo: number): Table | null {
+    Validator.validateNumberMoreOrEqualZero(tableNo);
+
     let tmpTable: Table | null = null;
     this.getAllTables().forEach((table) => {
       tmpTable = table.tableNumber === tableNo ? table : null;
@@ -87,6 +89,8 @@ export class Tables {
   }
 
   public findFreeTable(seatsNo: number): Table | null {
+    Validator.validateNumberMoreOrEqualZero(seatsNo);
+
     let foundTable: Table | null = null;
     this.getAllTables().forEach((table) => {
       foundTable = table.numberOfSeats === seatsNo ? table : null;

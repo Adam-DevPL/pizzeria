@@ -36,7 +36,7 @@ describe("Orders module", () => {
       //   "Dawid",
       //   Role.chef
       // );
-      const table: Table | null = tables.addNewTable(1, 4);
+      // const table: Table | null = tables.addNewTable(1, 4);
       const ingredientsReceipe: ReceipeIngredient[] = [
         { name: IngredientsBase.tomato, quantity: 4 },
         { name: IngredientsBase.paprika, quantity: 4 },
