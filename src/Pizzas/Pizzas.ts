@@ -51,7 +51,7 @@ export class Pizzas {
 
   public getAllPizzasFromOrder(
     pizzasOrdered: PizzaType[]
-  ): Map<PizzaType, Pizza> {
+  ): Map<PizzaType, Pizza> | null {
     let listOfPizzas: Map<PizzaType, Pizza> = new Map<PizzaType, Pizza>();
     let foundPizza: Pizza | null = null;
     pizzasOrdered.forEach((pizzaOrdered) => {
@@ -60,6 +60,6 @@ export class Pizzas {
         listOfPizzas.set(foundPizza.name, foundPizza);
       }
     });
-    return listOfPizzas;
+    return listOfPizzas ?? null;
   }
 }

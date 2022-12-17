@@ -1,10 +1,7 @@
 import { Employee } from "../Employees/Employee";
 import { Employees } from "../Employees/Employees";
 import { EmployeeDto, Role } from "../Employees/IEmployee";
-import {
-  IngredientsBase,
-  ReceipeIngredient,
-} from "../Ingredients/IIngredient";
+import { IngredientsBase, ReceipeIngredient } from "../Ingredients/IIngredient";
 import { Ingredient } from "../Ingredients/Ingredient";
 import { Ingredients } from "../Ingredients/Ingredients";
 import { OrderDto, OrderStatus } from "../Order/IOrder";
@@ -109,7 +106,10 @@ export class Pizzeria implements IPizzeria {
     return returnMsg;
   }
 
-  public createPizza(name: PizzaType, ingredients: ReceipeIngredient[]): string {
+  public createPizza(
+    name: PizzaType,
+    ingredients: ReceipeIngredient[]
+  ): string {
     let returnMsg: string = "";
     try {
       const pizzaReceipe: Pizza | null = this.pizzas.addPizzaReceipe(
@@ -129,11 +129,8 @@ export class Pizzeria implements IPizzeria {
   public makeNewOrder(
     seatsNo: number,
     pizzasOrdered: PizzaType[],
-    voucherName: string,
-    margin: number
+    voucherName: string
   ): string {
-    let returnMsg: string = "Your order is in progress";
-
     try {
       const assignWaiter: Employee | null = this.employees.findEmployeeByRole(
         Role.waiter
@@ -149,8 +146,12 @@ export class Pizzeria implements IPizzeria {
         return "No free table.";
       }
 
-      const pizzasToPrepare: Map<string, Pizza> =
+      const pizzasToPrepare: Map<string, Pizza> | null =
         this.pizzas.getAllPizzasFromOrder(pizzasOrdered);
+
+      if (!pizzasToPrepare) {
+        throw new Error("There is no pizza receipe in the menu!");
+      }
 
       const doWeHaveAllIngredeintsForOrder: boolean[] = [];
 
@@ -183,17 +184,16 @@ export class Pizzeria implements IPizzeria {
         status: assignChef ? OrderStatus.pending : OrderStatus.queue,
         discount: discount,
         ingredientsCosts: ingredientsCost,
-        margin: margin,
+        margin: this.margin,
       };
       const newOrder: Order = this.orders.addNewOrder(orderDto);
       if (!newOrder.chefAssigned) {
-        return "Your order is in the queue";
+        return `Your order is in the queue. The final price is: ${newOrder.finalPrice}`;
       }
+      return `Your order is undergoing. The final price is: ${newOrder.finalPrice}`;
     } catch (error: any) {
-      returnMsg = error.message;
+      return error.message;
     }
-
-    return returnMsg;
   }
 
   public assignChefIfFree(orderId: string): string {
