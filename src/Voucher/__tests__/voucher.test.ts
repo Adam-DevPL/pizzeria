@@ -16,11 +16,11 @@ describe("Voucher module", () => {
       const vouchers = Vouchers.getInstance();
 
       //when
-      const newVoucher: Voucher | null = vouchers.addVoucher("special", 15);
+      const newVoucher: Voucher = vouchers.addVoucher("special", 15) as Voucher;
 
       //then
-      expect(newVoucher?._name).to.equal("special");
-      expect(newVoucher?._discount).to.equal(15);
+      expect(newVoucher.name).to.equal("special");
+      expect(newVoucher.discount).to.equal(15);
     });
 
     it("Falsy - voucher exist in database", () => {

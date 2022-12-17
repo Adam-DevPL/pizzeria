@@ -19,8 +19,13 @@ export class Vouchers {
     return Vouchers.instance;
   }
 
-  private findVoucherByName(name: string): Voucher | null {
-    return this.listOfVouchers.get(name) ?? null;
+  private findVoucherByName(voucherName: string): Voucher | null {
+    let foundVoucher: Voucher | null = null;
+    this.getAllVouchers().forEach(voucher => {
+      foundVoucher = voucher.name === voucherName ? voucher : null;
+      return;
+    })
+    return foundVoucher;
   }
 
   public getAllVouchers(): Map<string, Voucher> {
@@ -43,23 +48,26 @@ export class Vouchers {
       return null;
     }
 
-    const newVoucher: Voucher = new Voucher(name, discount, weekdDay);
-    this.listOfVouchers.set(newVoucher.name, newVoucher);
+    const newId: string = uuid();
+    const newVoucher: Voucher = new Voucher(newId, name, discount, weekdDay);
+    this.listOfVouchers.set(newId, newVoucher);
 
     return newVoucher;
   }
 
   public calcDiscount(voucherName: string): number {
-    const foundVoucher: Voucher | null = this.findVoucherByName(voucherName);
+    Validator.validateName(voucherName);
+
+    const foundVoucher: Voucher | null = this.findVoucherByName(voucherName.toLowerCase());
     
     if (
       !foundVoucher ||
-      (foundVoucher._weekDay !== null &&
-      foundVoucher._weekDay !== Utils.getDayOfWeek())
+      (foundVoucher.weekDay !== null &&
+      foundVoucher.weekDay !== Utils.getDayOfWeek())
     ) {      
       return 0;
     }
 
-    return foundVoucher._discount;
+    return foundVoucher.discount;
   }
 }
