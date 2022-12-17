@@ -77,6 +77,46 @@ describe("Pizza module", () => {
     });
   });
 
+  describe("remove pizza receipe", () => {
+    beforeEach(() => {
+      const pizzas = Pizzas.getInstance();
+      pizzas.getAllReceipes().clear();
+    });
+
+    it("Success - pizza receipe successfully removed", () => {
+      //given
+      const pizzas: Pizzas = Pizzas.getInstance();
+      const margharita = PizzaType.margharita;
+      const ingredientsForPizza: ReceipeIngredient[] = [
+        { name: IngredientsBase.ananas, quantity: 1 },
+        { name: IngredientsBase.olives, quantity: 4 },
+        { name: IngredientsBase.tomato, quantity: 2 },
+      ];
+      const newReceipe: Pizza = pizzas.addPizzaReceipe(
+        margharita,
+        ingredientsForPizza
+      ) as Pizza;
+
+      //when
+      const isSuccess: boolean = pizzas.removePizzaReceipe(newReceipe.name);
+
+      //then
+      expect(isSuccess).to.be.true;
+    });
+
+    it("Failure - pizza can't be removed - not existing", () => {
+      //given
+      const pizzas: Pizzas = Pizzas.getInstance();
+      const margharita = PizzaType.margharita;
+
+      //when
+      const isSuccess: boolean = pizzas.removePizzaReceipe(margharita);
+
+      //then
+      expect(isSuccess).to.be.false;
+    });
+  });
+
   describe("get all pizza's receipe based on ordered pizzas", () => {
     beforeEach(() => {
       const pizzas = Pizzas.getInstance();

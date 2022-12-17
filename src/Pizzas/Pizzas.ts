@@ -45,6 +45,10 @@ export class Pizzas {
     return newPizzaReceipe;
   }
 
+  public removePizzaReceipe(pizzaType: PizzaType): boolean {
+    return this.getAllReceipes().delete(pizzaType);
+  }
+
   public getAllPizzasFromOrder(
     pizzasOrdered: PizzaType[]
   ): Map<PizzaType, Pizza> {
