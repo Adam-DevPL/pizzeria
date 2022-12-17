@@ -1,20 +1,28 @@
 import { Employee } from "../Employees/Employee";
 import { PizzaType } from "../Pizzas/IPizza";
-import { Pizza } from "../Pizzas/Pizza";
 import { Table } from "../Table/Table";
 
 export interface IOrder {
-  id: string;
-  orderStatus: OrderStatus;
+  readonly id: string;
+  readonly chefAssigned: Employee | null;
+  readonly waiterAssigned: Employee;
+  readonly tableAssigned: Table;
+  readonly pizzasOrdered: PizzaType[];
+  readonly finalPrice: number;
+}
+
+export interface OrderDto {
   chefAssigned: Employee | null;
   waiterAssigned: Employee;
-  tableAssigned: Table | null;
+  tableAssigned: Table;
   pizzasOrdered: PizzaType[];
-  finalPrice: number;
+  status: OrderStatus;
+  discount: number;
+  ingredientsCosts: number;
+  margin: number;
 }
 
 export enum OrderStatus {
-  finished = "finished",
-  queue = "queue",
-  processing = "processing",
+  queue,
+  pending,
 }

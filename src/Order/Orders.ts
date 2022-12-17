@@ -1,15 +1,13 @@
 import { v4 as uuid } from "uuid";
 
-import { Employee } from "../Employees/Employee";
-import { PizzaType } from "../Pizzas/IPizza";
-import { Pizza } from "../Pizzas/Pizza";
-import { Table } from "../Table/Table";
-import { OrderStatus } from "./IOrder";
+import { Validator } from "../Validator/Validator";
+import { OrderDto, OrderStatus } from "./IOrder";
 import { Order } from "./Order";
 
 export class Orders {
   private static instance: Orders;
-  private listOfOrders: Map<string, Order> = new Map();
+  private listOfOrderInProgress: Map<string, Order> = new Map();
+  private listOfOrderInQueue: Map<string, Order> = new Map();
 
   private constructor() {}
 
@@ -21,49 +19,69 @@ export class Orders {
   }
 
   public getOrder(orderId: string): Order | null {
-    return this.listOfOrders.get(orderId) ?? null;
+    return this.getAllOrders().get(orderId) ?? null;
+  }
+
+  public getAllOrdersInProgress(): Map<string, Order> {
+    return this.listOfOrderInProgress;
+  }
+
+  public getAllOrdersInQueue(): Map<string, Order> {
+    return this.listOfOrderInQueue;
   }
 
   public getAllOrders(): Map<string, Order> {
-    return this.listOfOrders;
+    return new Map<string, Order>([
+      ...this.listOfOrderInProgress,
+      ...this.listOfOrderInQueue,
+    ]);
   }
 
-  public addNewOrder(
-    orderStatus: OrderStatus,
-    chefAssigned: Employee | null,
-    waiterAssigned: Employee,
-    tableAssigned: Table | null,
-    pizzasOrdered: PizzaType[],
-  ): Order {
-    
+  public addNewOrder({
+    chefAssigned,
+    waiterAssigned,
+    tableAssigned,
+    pizzasOrdered,
+    status,
+    discount,
+    ingredientsCosts,
+    margin,
+  }: OrderDto): Order {
+    Validator.validatePizzasNoInOrder(pizzasOrdered.length);
+    Validator.validateDiscount(discount);
+    Validator.validateNumberMoreOrEqualZero(ingredientsCosts);
+    Validator.validateNumberMoreOrEqualZero(margin);
+
     const newId: string = uuid();
-    const finalPrice: number = 0;
+    const finalPrice: number = this.calculateTheFinalPrice(
+      discount,
+      ingredientsCosts,
+      margin
+    );
     const newOrder: Order = new Order(
       newId,
-      orderStatus,
       chefAssigned,
       waiterAssigned,
       tableAssigned,
       pizzasOrdered,
       finalPrice
     );
-    this.listOfOrders.set(newId, newOrder);
+    if (status === OrderStatus.pending) {
+      this.listOfOrderInProgress.set(newId, newOrder);
+    } else {
+      this.listOfOrderInQueue.set(newId, newOrder);
+    }
 
     return newOrder;
   }
 
-  public calculateTheFinalPrice(
-    orderId: string,
+  private calculateTheFinalPrice(
     discount: number,
     ingredientsCosts: number,
     margin: number
-  ): void {
-    const foundOrder: Order | null = this.getOrder(orderId);
-    if (foundOrder) {
-      foundOrder.finalPrice =
-        ingredientsCosts +
-        margin -
-        (discount / 100) * (ingredientsCosts + margin);
-    }
+  ): number {
+    return (
+      ingredientsCosts + margin - (discount / 100) * (ingredientsCosts + margin)
+    );
   }
 }

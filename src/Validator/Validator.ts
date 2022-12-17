@@ -36,4 +36,10 @@ export class Validator {
       throw new Error("Not enaught ingredients to create pizza receipe");
     }
   }
+
+  public static validatePizzasNoInOrder(value: number) {
+    if (value < 1) {
+      throw new Error("You can't order nothing");
+    }
+  }
 }
