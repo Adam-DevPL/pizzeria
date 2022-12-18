@@ -4,6 +4,7 @@ import { Pizza } from "../Pizzas/Pizza";
 import { Validator } from "../Validator/Validator";
 import {
   IIngredient,
+  IngredientDto,
   IngredientsBase,
   PropertyName,
   ReceipeIngredient,
@@ -12,7 +13,7 @@ import { Ingredient } from "./Ingredient";
 
 export class Ingredients {
   private static instance: Ingredients;
-  private listOfIngredients: Map<string, Ingredient> = new Map();
+  private listOfIngredients: Map<IngredientsBase, Ingredient> = new Map();
 
   private constructor() {}
 
@@ -26,32 +27,25 @@ export class Ingredients {
   public findIngredientByName(
     ingredientName: IngredientsBase
   ): Ingredient | null {
-    let foundIngredient: Ingredient | null = null;
-    this.listOfIngredients.forEach((ingredient) => {
-      if (ingredient.name === ingredientName) {
-        foundIngredient = ingredient;
-        return;
-      }
-    });
-    return foundIngredient;
+    return this.listOfIngredients.get(ingredientName) ?? null;
   }
 
-  public getAllIngredients(): Map<string, Ingredient> {
+  public getAllIngredients(): Map<IngredientsBase, Ingredient> {
     return this.listOfIngredients;
   }
 
   public compareIngredientsWithStock(ingredients: IngredientsBase[]): {
-    ingredientsFound: Map<string, Ingredient>;
+    ingredientsFound: Map<IngredientsBase, Ingredient>;
     ingredientsNotFound: IngredientsBase[];
   } {
-    const ingredientsFound: Map<string, Ingredient> = new Map();
+    const ingredientsFound: Map<IngredientsBase, Ingredient> = new Map();
     const ingredientsNotFound: IngredientsBase[] = [];
 
     ingredients.forEach((ingredient) => {
       const foundIngredient: Ingredient | null =
         this.findIngredientByName(ingredient);
       if (foundIngredient) {
-        ingredientsFound.set(foundIngredient.id, foundIngredient);
+        ingredientsFound.set(foundIngredient.name, foundIngredient);
       } else {
         ingredientsNotFound.push(ingredient);
       }
@@ -59,11 +53,11 @@ export class Ingredients {
     return { ingredientsFound, ingredientsNotFound };
   }
 
-  public purchaseIngredients(
-    name: IngredientsBase,
-    price: number,
-    quantity: number = 1
-  ): Ingredient | null {
+  public purchaseIngredients({
+    name,
+    price,
+    quantity = 1,
+  }: IngredientDto): Ingredient | null {
     Validator.validatePriceIfMoreThenZero(price);
     Validator.validateQuantityIfMoreThenZero(quantity);
 
@@ -77,14 +71,10 @@ export class Ingredients {
         quantity,
         price
       );
-      this.listOfIngredients.set(newId, newIngredient);
+      this.listOfIngredients.set(newIngredient.name, newIngredient);
       return newIngredient;
     }
-    this.listOfIngredients.forEach((ingredient) => {
-      if (ingredient.name === name) {
-        ingredient.quantity += quantity;
-      }
-    });
+    foundIngredient.changeQuantity(quantity);
 
     return null;
   }

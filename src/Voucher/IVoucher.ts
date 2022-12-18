@@ -1,10 +1,22 @@
 export interface IVoucher {
-  id: string;
-  name: string;
-  discount: number;
+  readonly id: string;
+  readonly name: string;
+  readonly discount: number;
+  readonly weekDay: WeekDay | null;
 }
 
-export enum SpecialVouchers  {
-  discount10yo = "10yo",
-  discountStudent = "student",
+export interface VoucherDto {
+  name: string;
+  discount: number;
+  weekDay: WeekDay | null;
+}
+
+export enum WeekDay {
+  sunday,
+  monday,
+  tuesday,
+  wednesday,
+  thursday,
+  friday,
+  saturday,
 }

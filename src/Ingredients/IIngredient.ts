@@ -1,8 +1,14 @@
-export interface IIngredient {
-  id: string;
+export interface IngredientDto {
   name: IngredientsBase;
-  quantity: number;
   price: number;
+  quantity?: number;
+}
+
+export interface IIngredient {
+  readonly id: string;
+  readonly name: IngredientsBase;
+  readonly quantity: number;
+  readonly price: number;
 }
 
 export type ReceipeIngredient = Omit<IIngredient, "price" | "id">;

@@ -1,8 +1,13 @@
-import { IIngredient, ReceipeIngredient } from "../Ingredients/IIngredient";
+import { ReceipeIngredient } from "../Ingredients/IIngredient";
 
 export interface IPizza {
-  id: string;
-  name: PizzaType;
+  readonly id: string;
+  readonly name: PizzaType;
+  readonly ingredients: ReceipeIngredient[];
+}
+
+export interface PizzaDto {
+  pizzaName: PizzaType;
   ingredients: ReceipeIngredient[];
 }
 

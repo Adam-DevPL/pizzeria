@@ -1,7 +1,8 @@
-import {v4 as uuid} from "uuid";
+import { v4 as uuid } from "uuid";
+import { Utils } from "../Utils/Utils";
 
 import { Validator } from "../Validator/Validator";
-import { IVoucher } from "./IVoucher";
+import { VoucherDto, WeekDay } from "./IVoucher";
 import { Voucher } from "./Voucher";
 
 export class Vouchers {
@@ -14,77 +15,58 @@ export class Vouchers {
     if (!Vouchers.instance) {
       Vouchers.instance = new Vouchers();
     }
+
     return Vouchers.instance;
   }
 
-  private findVoucher(voucherId: string): Voucher | null {
-    return this.listOfVouchers.get(voucherId) ?? null;
-  }
-
-  private findVoucherByName(name: string): Voucher | null {
+  private findVoucherByName(voucherName: string): Voucher | null {
     let foundVoucher: Voucher | null = null;
-    this.listOfVouchers.forEach((voucher) => {
-      if (voucher.name === name) {
+    this.getAllVouchers().forEach((voucher) => {
+      if (voucher.name === voucherName) {
         foundVoucher = voucher;
-        return;
       }
     });
     return foundVoucher;
   }
 
-  public addVoucher(name: string, discount: number): Voucher | null {
+  public getAllVouchers(): Map<string, Voucher> {
+    return this.listOfVouchers;
+  }
+
+  public addVoucher({ name, discount, weekDay }: VoucherDto): Voucher | null {
     Validator.validateName(name);
     Validator.validateDiscount(discount);
 
-    const foundVoucher: Voucher | null= this.findVoucherByName(name);
+    const foundVoucher: Voucher | null = this.findVoucherByName(
+      name.toLowerCase()
+    );
 
     if (foundVoucher) {
       return null;
     }
 
     const newId: string = uuid();
-    const newVoucher: Voucher = new Voucher(newId, name, discount);
+    const newVoucher: Voucher = new Voucher(newId, name, discount, weekDay);
     this.listOfVouchers.set(newId, newVoucher);
 
     return newVoucher;
   }
 
-  public calcDiscount(voucherName: string = ""): number {
-    const weekday = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
+  public calcDiscount(voucherName: string): number {
+    Validator.validateName(voucherName);
 
-    if (!voucherName) {
+    const foundVoucher: Voucher | null = this.findVoucherByName(
+      voucherName.toLowerCase()
+    );
+
+    if (
+      !foundVoucher ||
+      (foundVoucher.weekDay !== null &&
+        foundVoucher.weekDay !== Utils.getDayOfWeek())
+    ) {
       return 0;
     }
 
-    const d = new Date();
-    const currentDay = weekday[d.getDay()];
-
-    const foundVoucher: Voucher | null = this.findVoucherByName(voucherName);
-
-    if (!foundVoucher) {
-      return 0;
-    }
-
-    if (foundVoucher.name === "10yo" && currentDay === "Tuesday") {
-      return foundVoucher.discount;
-    }
-
-    if (foundVoucher.name === "student" && currentDay === "Thursday") {
-      return foundVoucher.discount;
-    }
-
-    if (foundVoucher) {
-      return foundVoucher.discount;
-    }
-
-    return 0;
+    return foundVoucher.discount;
   }
 }
