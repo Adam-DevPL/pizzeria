@@ -1,39 +1,34 @@
-import { IIngredient, ReceipeIngredient } from "../Ingredients/IIngredient";
-import { Validator } from "../Validator/Validator";
-import { IPizza } from "./IPizza";
+import { v4 as uuid } from "uuid";
+import { ReceipeIngredient } from "../Ingredients/IIngredient";
+import { IPizza, PizzaType } from "./IPizza";
 
-export class Pizzas {
-  private static instance: Pizzas;
-  listOfPizzasReceipes: IPizza[] = [];
+export class Pizza implements IPizza {
+  private _id: string;
+  private _name: PizzaType;
+  private _ingredients: ReceipeIngredient[];
 
-  private constructor() {}
-
-  public static getInstance(): Pizzas {
-    if (!Pizzas.instance) {
-      Pizzas.instance = new Pizzas();
-    }
-    return Pizzas.instance;
+  constructor(id: string, name: PizzaType, ingredients: ReceipeIngredient[]) {
+    this._id = id;
+    this._name = name;
+    this._ingredients = ingredients;
   }
 
-  public findPizza(pizzaName: string) {
-    return this.listOfPizzasReceipes.find((p) => p.name === pizzaName) ?? null;
+  get id() {
+    return this._id;
   }
-
-  public addPizzaReceipe(pizzaName: string, ingredients: ReceipeIngredient[]) {
-    Validator.validateName(pizzaName);
-
-    const findPizzaReceipe = this.findPizza(pizzaName);
-
-    if (findPizzaReceipe) {
-      return `Receipe for ${pizzaName} exist in database`;
-    }
-
-    this.listOfPizzasReceipes.push({ name: pizzaName, ingredients: [...ingredients] });
-
-    return `New receipe for ${pizzaName} added to the database`;
+  set id(value: string) {
+    this._id = value;
   }
-
-  public canWeMakeIt(pizzas: IPizza[], ingredients: ReceipeIngredient[]) { 
-    
+  get name() {
+    return this._name;
+  }
+  set name(value: PizzaType) {
+    this._name = value;
+  }
+  get ingredients() {
+    return this._ingredients;
+  }
+  set ingredients(value: ReceipeIngredient[]) {
+    this._ingredients = [...value];
   }
 }

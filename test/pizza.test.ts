@@ -3,7 +3,7 @@ import {
   IngredientsBase,
   ReceipeIngredient,
 } from "../src/Ingredients/IIngredient";
-import { Pizzas } from "../src/Pizza/Pizza";
+import { Pizzas } from "../src/Pizza/Pizzas";
 
 describe("Pizza module", () => {
   describe("add new pizza receipe", () => {
