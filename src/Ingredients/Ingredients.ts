@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { IPizza } from "../Pizza/IPizza";
+import { IPizza } from "../Pizzas/IPizza";
 import { Validator } from "../Validator/Validator";
 import {
   IIngredient,

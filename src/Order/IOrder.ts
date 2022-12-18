@@ -1,15 +1,20 @@
-import { IEmployee } from "../Employees/IEmployee";
-import { IPizza } from "../Pizza/IPizza";
-import { ITable } from "../Table/ITable";
+import { Employee } from "../Employees/Employee";
+import { PizzaType } from "../Pizzas/IPizza";
+import { Pizza } from "../Pizzas/Pizza";
+import { Table } from "../Table/Table";
 
 export interface IOrder {
-  id: number;
-  inQueue?: boolean;
-  chefAssigned?: IEmployee | null;
-  waiterAssigned: IEmployee;
-  tableAssigned?: ITable | null;
-  pizzasOrdered: IPizza[];
-  finalPrice?: number;
+  id: string;
+  orderStatus: OrderStatus;
+  chefAssigned: Employee | null;
+  waiterAssigned: Employee;
+  tableAssigned: Table | null;
+  pizzasOrdered: PizzaType[];
+  finalPrice: number;
 }
 
-export type SpecialVouchers = "10yo" | "student";
+export enum OrderStatus {
+  finished = "finished",
+  queue = "queue",
+  processing = "processing",
+}
