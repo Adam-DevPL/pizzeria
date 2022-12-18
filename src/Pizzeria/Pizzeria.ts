@@ -17,10 +17,11 @@ import { Pizzas } from "../Pizzas/Pizzas";
 import { TableDto } from "../Table/ITable";
 import { Table } from "../Table/Table";
 import { Tables } from "../Table/Tables";
-import { VoucherDto } from "../Voucher/IVoucher";
+import { Validator } from "../Validator/Validator";
+import { VoucherDto, WeekDay } from "../Voucher/IVoucher";
 import { Voucher } from "../Voucher/Voucher";
 import { Vouchers } from "../Voucher/Vouchers";
-import { IPizzeria, PizzeriaResponse } from "./IPizzeria";
+import { IPizzeria, NewOrderDto, PizzeriaResponse } from "./IPizzeria";
 
 export class Pizzeria implements IPizzeria {
   private ingredients: Ingredients;
@@ -38,6 +39,16 @@ export class Pizzeria implements IPizzeria {
     this.vouchers = Vouchers.getInstance();
     this.orders = Orders.getInstance();
     this.pizzas = Pizzas.getInstance();
+    this.addNewVoucher({
+      name: "10yo",
+      discount: 10,
+      weekDay: WeekDay.wednesday,
+    });
+    this.addNewVoucher({
+      name: "student",
+      discount: 40,
+      weekDay: WeekDay.thursday,
+    });
   }
 
   public get margin(): number {
@@ -113,24 +124,30 @@ export class Pizzeria implements IPizzeria {
     }
   }
 
-  public makeNewOrder(
-    seatsNo: number,
-    pizzasOrdered: PizzaType[],
-    voucherName: string
-  ): string {
+  public getOrder(orderId: string): Order | null {
+    return this.orders.getOrder(orderId) ?? null;
+  }
+
+  public makeNewOrder({
+    seatsNo,
+    pizzasOrdered,
+    voucherName = "",
+  }: NewOrderDto): PizzeriaResponse {
     try {
+      Validator.validateNumberMoreOrEqualZero(seatsNo);
+      Validator.validatePizzasNoInOrder(pizzasOrdered.length);
       const assignWaiter: Employee | null = this.employees.findEmployeeByRole(
         Role.waiter
       );
 
       if (!assignWaiter) {
-        return "No free waiter";
+        return { isSuccess: false, message: "No free waiter" };
       }
 
       const assignTable: Table | null = this.tables.findFreeTable(seatsNo);
 
       if (!assignTable) {
-        return "No free table.";
+        return { isSuccess: false, message: "No free table." };
       }
 
       const pizzasToPrepare: Map<string, Pizza> | null =
@@ -149,7 +166,11 @@ export class Pizzeria implements IPizzeria {
       });
 
       if (!doWeHaveAllIngredeintsForOrder.every((p) => p === true)) {
-        return "Order can't be realized, because of not enaugh ingredients. Sorry.";
+        return {
+          isSuccess: false,
+          message:
+            "Order can't be realized, because of not enaugh ingredients. Sorry.",
+        };
       }
 
       let ingredientsCost: number = 0;
@@ -175,28 +196,42 @@ export class Pizzeria implements IPizzeria {
       };
       const newOrder: Order = this.orders.addNewOrder(orderDto);
       if (!newOrder.chefAssigned) {
-        return `Your order is in the queue. The final price is: ${newOrder.finalPrice}`;
+        return {
+          isSuccess: true,
+          message: "Success - order in queue",
+          order: newOrder,
+        };
       }
-      return `Your order is undergoing. The final price is: ${newOrder.finalPrice}`;
+      return {
+        isSuccess: true,
+        message: "Success - order in progress",
+        order: newOrder,
+      };
     } catch (error: any) {
-      return error.message;
+      return {
+        isSuccess: false,
+        message: error.message,
+      };
     }
   }
 
-  public assignChefIfFree(orderId: string): string {
+  public assignChefIfFree(orderId: string): PizzeriaResponse {
     const foundOrder: Order | null = this.orders.getOrder(orderId);
     if (!foundOrder) {
-      return "Order not found!";
+      return { isSuccess: false, message: "Order not found!" };
     }
 
     const assignChef = this.employees.findEmployeeByRole(Role.chef);
 
     if (!assignChef) {
-      return "No free chef for the order";
+      return { isSuccess: false, message: "No free chef for the order" };
     }
 
     this.employees.changeStatusOfEmployee(assignChef.id);
 
-    return "There is free chef. Your order will proceed";
+    return {
+      isSuccess: true,
+      message: "There is free chef. Your order will proceed",
+    };
   }
 }

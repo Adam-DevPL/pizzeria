@@ -56,6 +56,6 @@ export class Pizzas {
         listOfPizzas.set(foundPizza.name, foundPizza);
       }
     });
-    return listOfPizzas ?? null;
+    return listOfPizzas.size === 0 ? null : listOfPizzas;
   }
 }

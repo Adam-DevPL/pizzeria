@@ -4,9 +4,16 @@ import {
   IngredientsBase,
   ReceipeIngredient,
 } from "../Ingredients/IIngredient";
+import { Order } from "../Order/Order";
 import { PizzaDto, PizzaType } from "../Pizzas/IPizza";
 import { TableDto } from "../Table/ITable";
 import { VoucherDto } from "../Voucher/IVoucher";
+
+export interface NewOrderDto {
+  seatsNo: number;
+  pizzasOrdered: PizzaType[];
+  voucherName?: string;
+}
 
 export interface IPizzeria {
   hireNewEmployee(newEmployee: EmployeeDto): PizzeriaResponse;
@@ -14,16 +21,12 @@ export interface IPizzeria {
   purchaseIngredients(ingredientDto: IngredientDto): PizzeriaResponse;
   addNewVoucher(newVoucher: VoucherDto): PizzeriaResponse;
   createPizza(newPizza: PizzaDto): PizzeriaResponse;
-  makeNewOrder(
-    seatsNo: number,
-    pizzasOrdered: PizzaType[],
-    voucherName: string,
-    margin: number
-  ): string;
-  assignChefIfFree(orderId: string): string;
+  makeNewOrder(newOrderDto: NewOrderDto): PizzeriaResponse;
+  assignChefIfFree(orderId: string): PizzeriaResponse;
 }
 
 export interface PizzeriaResponse {
   isSuccess: boolean;
   message: string;
+  order?: Order;
 }

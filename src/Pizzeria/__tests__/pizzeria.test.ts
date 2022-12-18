@@ -8,6 +8,7 @@ import {
   ReceipeIngredient,
 } from "../../Ingredients/IIngredient";
 import { Ingredients } from "../../Ingredients/Ingredients";
+import { Order } from "../../Order/Order";
 import { PizzaDto, PizzaType } from "../../Pizzas/IPizza";
 import { Pizzas } from "../../Pizzas/Pizzas";
 import { TableDto } from "../../Table/ITable";
@@ -334,9 +335,7 @@ describe("Pizzeria module", () => {
 
       //then
       expect(newIngredientResp.isSuccess).to.true;
-      expect(newIngredientResp.message).to.equal(
-        "Ingredient added to stock"
-      );
+      expect(newIngredientResp.message).to.equal("Ingredient added to stock");
     });
 
     it("Failure - adding new ingredient with 0 price - The price must be more tehn zero", () => {
@@ -377,6 +376,403 @@ describe("Pizzeria module", () => {
       expect(newIngredientResp.message).to.equal(
         "The quantity is less then zero!"
       );
+    });
+  });
+
+  describe("make new order", () => {
+    beforeEach(() => {
+      const employees: Employees = Employees.getInstance();
+      employees.getAllFreeEmployees().clear();
+      employees.getAllOccupiedEmployees().clear();
+      const tables: Tables = Tables.getInstance();
+      tables.getAllFreeTables().clear();
+      tables.getAllOccupiedTables().clear();
+      const vouchers: Vouchers = Vouchers.getInstance();
+      vouchers.getAllVouchers().clear();
+      const pizzas: Pizzas = Pizzas.getInstance();
+      pizzas.getAllReceipes().clear();
+      const ingredients: Ingredients = Ingredients.getInstance();
+      ingredients.getAllIngredients().clear();
+    });
+
+    it("Success - succesfully created order in progress", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+        name: "Adam",
+        role: Role.waiter,
+      });
+      const chefMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+        name: "Dawid",
+        role: Role.chef,
+      });
+      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
+        tableNumber: 1,
+        numberOfSeats: 4,
+      });
+
+      const ingr1: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.potato,
+        price: 4,
+        quantity: 4,
+      });
+      const ingr2: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.tomato,
+        price: 4,
+        quantity: 4,
+      });
+      const ingr3: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.olives,
+        price: 4,
+        quantity: 4,
+      });
+
+      const pizza: PizzeriaResponse = pizzeria.createPizza({
+        pizzaName: PizzaType.margharita,
+        ingredients: [
+          { name: IngredientsBase.potato, quantity: 1 },
+          { name: IngredientsBase.tomato, quantity: 1 },
+          { name: IngredientsBase.olives, quantity: 1 },
+        ],
+      });
+
+      const voucherMsg: PizzeriaResponse = pizzeria.addNewVoucher({
+        name: "special",
+        discount: 10,
+        weekDay: null,
+      });
+
+      //when
+      const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
+        seatsNo: 4,
+        pizzasOrdered: [PizzaType.margharita],
+        voucherName: "special",
+      });
+
+      //then
+      expect(outcome.isSuccess).to.true;
+      expect(outcome.message).to.equal("Success - order in progress");
+      expect(outcome.order?.chefAssigned?.name).to.equal("Dawid");
+      expect(outcome.order?.finalPrice).to.equal(19.8);
+    });
+
+    it("Success - succesfully created order in queue", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+        name: "Adam",
+        role: Role.waiter,
+      });
+      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
+        tableNumber: 1,
+        numberOfSeats: 4,
+      });
+
+      const ingr1: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.potato,
+        price: 4,
+        quantity: 4,
+      });
+      const ingr2: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.tomato,
+        price: 4,
+        quantity: 4,
+      });
+      const ingr3: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.olives,
+        price: 4,
+        quantity: 4,
+      });
+
+      const pizza: PizzeriaResponse = pizzeria.createPizza({
+        pizzaName: PizzaType.margharita,
+        ingredients: [
+          { name: IngredientsBase.potato, quantity: 1 },
+          { name: IngredientsBase.tomato, quantity: 1 },
+          { name: IngredientsBase.olives, quantity: 1 },
+        ],
+      });
+
+      const voucherMsg: PizzeriaResponse = pizzeria.addNewVoucher({
+        name: "special",
+        discount: 10,
+        weekDay: null,
+      });
+
+      //when
+      const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
+        seatsNo: 4,
+        pizzasOrdered: [PizzaType.margharita],
+        voucherName: "special",
+      });
+
+      //then
+      expect(outcome.isSuccess).to.true;
+      expect(outcome.message).to.equal("Success - order in queue");
+      expect(outcome.order?.tableAssigned.tableNumber).to.equal(1);
+      expect(outcome.order?.finalPrice).to.equal(19.8);
+    });
+
+    it("Failure - no free table", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+        name: "Adam",
+        role: Role.waiter,
+      });
+
+      //when
+      const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
+        seatsNo: 4,
+        pizzasOrdered: [PizzaType.margharita],
+        voucherName: "special",
+      });
+
+      //then
+      expect(outcome.isSuccess).to.false;
+      expect(outcome.message).to.equal("No free table.");
+    });
+
+    it("Failure - not any pizza receipies for ordered pizzas", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+        name: "Adam",
+        role: Role.waiter,
+      });
+      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
+        tableNumber: 1,
+        numberOfSeats: 4,
+      });
+
+      //when
+      const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
+        seatsNo: 4,
+        pizzasOrdered: [PizzaType.margharita],
+        voucherName: "special",
+      });
+
+      //then
+      expect(outcome.isSuccess).to.false;
+      expect(outcome.message).to.equal(
+        "There is no pizza receipe in the menu!"
+      );
+    });
+
+    it("Failure - not enaugh ingredients to make the order", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+        name: "Adam",
+        role: Role.waiter,
+      });
+      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
+        tableNumber: 1,
+        numberOfSeats: 4,
+      });
+
+      const pizza: PizzeriaResponse = pizzeria.createPizza({
+        pizzaName: PizzaType.margharita,
+        ingredients: [
+          { name: IngredientsBase.potato, quantity: 1 },
+          { name: IngredientsBase.tomato, quantity: 1 },
+          { name: IngredientsBase.olives, quantity: 1 },
+        ],
+      });
+
+      //when
+      const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
+        seatsNo: 4,
+        pizzasOrdered: [PizzaType.margharita],
+        voucherName: "special",
+      });
+
+      //then
+      expect(outcome.isSuccess).to.false;
+      expect(outcome.message).to.equal(
+        "Order can't be realized, because of not enaugh ingredients. Sorry."
+      );
+    });
+
+    it("Failure - can't create order fo table with 0 seats", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+
+      //when
+      const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
+        seatsNo: 0,
+        pizzasOrdered: [PizzaType.margharita],
+        voucherName: "special",
+      });
+
+      //then
+      expect(outcome.isSuccess).to.false;
+      expect(outcome.message).to.equal("The number must be greater than zero!");
+    });
+
+    it("Failure - can't create order with no pizza", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+
+      //when
+      const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
+        seatsNo: 2,
+        pizzasOrdered: [],
+        voucherName: "special",
+      });
+
+      //then
+      expect(outcome.isSuccess).to.false;
+      expect(outcome.message).to.equal("You can't order nothing");
+    });
+  });
+
+  describe("check if there is free chef and assign to the order", () => {
+    beforeEach(() => {
+      const employees: Employees = Employees.getInstance();
+      employees.getAllFreeEmployees().clear();
+      employees.getAllOccupiedEmployees().clear();
+      const tables: Tables = Tables.getInstance();
+      tables.getAllFreeTables().clear();
+      tables.getAllOccupiedTables().clear();
+      const vouchers: Vouchers = Vouchers.getInstance();
+      vouchers.getAllVouchers().clear();
+      const pizzas: Pizzas = Pizzas.getInstance();
+      pizzas.getAllReceipes().clear();
+      const ingredients: Ingredients = Ingredients.getInstance();
+      ingredients.getAllIngredients().clear();
+    });
+
+    it("Success - there is a free chef", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+        name: "Adam",
+        role: Role.waiter,
+      });
+      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
+        tableNumber: 1,
+        numberOfSeats: 4,
+      });
+
+      const ingr1: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.potato,
+        price: 4,
+        quantity: 4,
+      });
+      const ingr2: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.tomato,
+        price: 4,
+        quantity: 4,
+      });
+      const ingr3: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.olives,
+        price: 4,
+        quantity: 4,
+      });
+
+      const pizza: PizzeriaResponse = pizzeria.createPizza({
+        pizzaName: PizzaType.margharita,
+        ingredients: [
+          { name: IngredientsBase.potato, quantity: 1 },
+          { name: IngredientsBase.tomato, quantity: 1 },
+          { name: IngredientsBase.olives, quantity: 1 },
+        ],
+      });
+
+      const voucherMsg: PizzeriaResponse = pizzeria.addNewVoucher({
+        name: "special",
+        discount: 10,
+        weekDay: null,
+      });
+      const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
+        seatsNo: 4,
+        pizzasOrdered: [PizzaType.margharita],
+        voucherName: "special",
+      });
+      const chefMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+        name: "Dawid",
+        role: Role.chef,
+      });
+
+      //when
+      const order: Order = outcome.order as Order;
+      const isFreeChef: PizzeriaResponse = pizzeria.assignChefIfFree(order.id);
+
+      //then
+      expect(isFreeChef.isSuccess).to.true;
+      expect(isFreeChef.message).to.equal(
+        "There is free chef. Your order will proceed"
+      );
+    });
+
+    it("Success - there is a free chef", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+        name: "Adam",
+        role: Role.waiter,
+      });
+      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
+        tableNumber: 1,
+        numberOfSeats: 4,
+      });
+
+      const ingr1: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.potato,
+        price: 4,
+        quantity: 4,
+      });
+      const ingr2: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.tomato,
+        price: 4,
+        quantity: 4,
+      });
+      const ingr3: PizzeriaResponse = pizzeria.purchaseIngredients({
+        name: IngredientsBase.olives,
+        price: 4,
+        quantity: 4,
+      });
+
+      const pizza: PizzeriaResponse = pizzeria.createPizza({
+        pizzaName: PizzaType.margharita,
+        ingredients: [
+          { name: IngredientsBase.potato, quantity: 1 },
+          { name: IngredientsBase.tomato, quantity: 1 },
+          { name: IngredientsBase.olives, quantity: 1 },
+        ],
+      });
+
+      const voucherMsg: PizzeriaResponse = pizzeria.addNewVoucher({
+        name: "special",
+        discount: 10,
+        weekDay: null,
+      });
+      const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
+        seatsNo: 4,
+        pizzasOrdered: [PizzaType.margharita],
+        voucherName: "special",
+      });
+
+      //when
+      const order: Order = outcome.order as Order;
+      const isFreeChef: PizzeriaResponse = pizzeria.assignChefIfFree(order.id);
+
+      //then
+      expect(isFreeChef.isSuccess).to.false;
+      expect(isFreeChef.message).to.equal("No free chef for the order");
+    });
+
+    it("Failure - order not found", () => {
+      //given
+      const pizzeria: Pizzeria = new Pizzeria();
+
+      //when
+      const isFreeChef: PizzeriaResponse = pizzeria.assignChefIfFree("");
+
+      //then
+      expect(isFreeChef.isSuccess).to.false;
+      expect(isFreeChef.message).to.equal("Order not found!");
     });
   });
 });
