@@ -1,13 +1,17 @@
 import { Employee } from "../Employees/Employee";
 import { Employees } from "../Employees/Employees";
 import { EmployeeDto, Role } from "../Employees/IEmployee";
-import { IngredientsBase, ReceipeIngredient } from "../Ingredients/IIngredient";
+import {
+  IngredientDto,
+  IngredientsBase,
+  ReceipeIngredient,
+} from "../Ingredients/IIngredient";
 import { Ingredient } from "../Ingredients/Ingredient";
 import { Ingredients } from "../Ingredients/Ingredients";
 import { OrderDto, OrderStatus } from "../Order/IOrder";
 import { Order } from "../Order/Order";
 import { Orders } from "../Order/Orders";
-import { PizzaType } from "../Pizzas/IPizza";
+import { PizzaDto, PizzaType } from "../Pizzas/IPizza";
 import { Pizza } from "../Pizzas/Pizza";
 import { Pizzas } from "../Pizzas/Pizzas";
 import { TableDto } from "../Table/ITable";
@@ -16,7 +20,7 @@ import { Tables } from "../Table/Tables";
 import { VoucherDto } from "../Voucher/IVoucher";
 import { Voucher } from "../Voucher/Voucher";
 import { Vouchers } from "../Voucher/Vouchers";
-import { IPizzeria } from "./IPizzeria";
+import { IPizzeria, PizzeriaResponse } from "./IPizzeria";
 
 export class Pizzeria implements IPizzeria {
   private ingredients: Ingredients;
@@ -44,86 +48,69 @@ export class Pizzeria implements IPizzeria {
     this._margin = value;
   }
 
-  public hireNewEmployee(newEmployee: EmployeeDto): string {
-    let returnMsg: string = "";
+  public hireNewEmployee(newEmployee: EmployeeDto): PizzeriaResponse {
     try {
       const employee: Employee | null =
         this.employees.addNewEmployee(newEmployee);
       if (!employee) {
-        returnMsg = "Employee exists in database";
-      } else returnMsg = "Employee created successfully";
+        return { isSuccess: false, message: "Employee exists in database" };
+      }
+      return { isSuccess: true, message: "Employee created successfully" };
     } catch (error: any) {
-      returnMsg = error.message;
+      return { isSuccess: false, message: error.message };
     }
-
-    return returnMsg;
   }
 
-  public purchaseNewTable(newTable: TableDto): string {
-    let returnMsg: string = "";
+  public purchaseNewTable(newTable: TableDto): PizzeriaResponse {
     try {
       const table: Table | null = this.tables.addNewTable(newTable);
       if (!table) {
-        returnMsg = "Table exists in database";
-      } else returnMsg = "Table purchesed successfully";
+        return { isSuccess: false, message: "Table exists in database" };
+      }
+      return { isSuccess: true, message: "Table purchesed successfully" };
     } catch (error: any) {
-      returnMsg = error.message;
+      return { isSuccess: false, message: error.message };
     }
-
-    return returnMsg;
   }
 
-  public purchaseIngredients(
-    ingredient: IngredientsBase,
-    quantity: number,
-    price: number
-  ): string {
-    let returnMsg: string = "";
+  public purchaseIngredients(IngredientDto: IngredientDto): PizzeriaResponse {
     try {
       const newIngredient: Ingredient | null =
-        this.ingredients.purchaseIngredients(ingredient, price, quantity);
+        this.ingredients.purchaseIngredients(IngredientDto);
       if (!newIngredient) {
-        returnMsg = "Ingredient added to stock";
-      } else returnMsg = "New ingredient added to the stock";
+        return { isSuccess: true, message: "Ingredient added to stock" };
+      }
+      return { isSuccess: true, message: "New ingredient added to the stock" };
     } catch (error: any) {
-      returnMsg = error.message;
+      return { isSuccess: false, message: error.message };
     }
-
-    return returnMsg;
   }
 
-  public addNewVoucher(newVoucher: VoucherDto): string {
-    let returnMsg: string = "";
+  public addNewVoucher(newVoucher: VoucherDto): PizzeriaResponse {
     try {
       const voucher: Voucher | null = this.vouchers.addVoucher(newVoucher);
       if (!voucher) {
-        returnMsg = "Vucher exists in database";
-      } else returnMsg = "New voucher was added";
+        return { isSuccess: false, message: "Voucher exists in database" };
+      }
+      return { isSuccess: true, message: "New voucher was added" };
     } catch (error: any) {
-      returnMsg = error.message;
+      return { isSuccess: false, message: error.message };
     }
-
-    return returnMsg;
   }
 
-  public createPizza(
-    name: PizzaType,
-    ingredients: ReceipeIngredient[]
-  ): string {
-    let returnMsg: string = "";
+  public createPizza(pizzaDto: PizzaDto): PizzeriaResponse {
     try {
-      const pizzaReceipe: Pizza | null = this.pizzas.addPizzaReceipe(
-        name,
-        ingredients
-      );
+      const pizzaReceipe: Pizza | null = this.pizzas.addPizzaReceipe(pizzaDto);
       if (!pizzaReceipe) {
-        returnMsg = "This receipe exist already in database";
-      } else returnMsg = "New receipe aded to menu";
+        return {
+          isSuccess: false,
+          message: "This receipe exist already in database",
+        };
+      }
+      return { isSuccess: true, message: "New receipe added to menu" };
     } catch (error: any) {
-      returnMsg = error.message;
+      return { isSuccess: false, message: error.message };
     }
-
-    return returnMsg;
   }
 
   public makeNewOrder(

@@ -3,7 +3,7 @@ import {
   IngredientsBase,
   ReceipeIngredient,
 } from "../../Ingredients/IIngredient";
-import { PizzaType } from "../IPizza";
+import { PizzaDto, PizzaType } from "../IPizza";
 import { Pizza } from "../Pizza";
 import { Pizzas } from "../Pizzas";
 
@@ -25,10 +25,11 @@ describe("Pizza module", () => {
       ];
 
       //when
-      const newReceipe: Pizza = pizzas.addPizzaReceipe(
-        margharita,
-        ingredientsForPizza
-      ) as Pizza;
+      const pizzaDto: PizzaDto = {
+        pizzaName: margharita,
+        ingredients: ingredientsForPizza,
+      };
+      const newReceipe: Pizza = pizzas.addPizzaReceipe(pizzaDto) as Pizza;
 
       const foundReceipe: Pizza | null = pizzas.findPizzaByName(
         newReceipe.name
@@ -49,13 +50,14 @@ describe("Pizza module", () => {
         { name: IngredientsBase.olives, quantity: 4 },
         { name: IngredientsBase.tomato, quantity: 2 },
       ];
-      pizzas.addPizzaReceipe(margharita, ingredientsForPizza);
+      const pizzaDto: PizzaDto = {
+        pizzaName: margharita,
+        ingredients: ingredientsForPizza,
+      };
+      pizzas.addPizzaReceipe(pizzaDto);
 
       //when
-      const doubleReceipe = pizzas.addPizzaReceipe(
-        margharita,
-        ingredientsForPizza
-      );
+      const doubleReceipe = pizzas.addPizzaReceipe(pizzaDto);
 
       //then
       expect(doubleReceipe).to.null;
@@ -69,10 +71,14 @@ describe("Pizza module", () => {
         { name: IngredientsBase.ananas, quantity: 1 },
         { name: IngredientsBase.olives, quantity: 4 },
       ];
+      const pizzaDto: PizzaDto = {
+        pizzaName: margharita,
+        ingredients: ingredientsForPizza,
+      };
 
       //when, then
       expect(function () {
-        pizzas.addPizzaReceipe(margharita, ingredientsForPizza);
+        pizzas.addPizzaReceipe(pizzaDto);
       }).to.throw(Error);
     });
   });
@@ -92,10 +98,11 @@ describe("Pizza module", () => {
         { name: IngredientsBase.olives, quantity: 4 },
         { name: IngredientsBase.tomato, quantity: 2 },
       ];
-      const newReceipe: Pizza = pizzas.addPizzaReceipe(
-        margharita,
-        ingredientsForPizza
-      ) as Pizza;
+      const pizzaDto: PizzaDto = {
+        pizzaName: margharita,
+        ingredients: ingredientsForPizza,
+      };
+      const newReceipe: Pizza = pizzas.addPizzaReceipe(pizzaDto) as Pizza;
 
       //when
       const isSuccess: boolean = pizzas.removePizzaReceipe(newReceipe.name);
@@ -132,20 +139,29 @@ describe("Pizza module", () => {
         { name: IngredientsBase.olives, quantity: 4 },
         { name: IngredientsBase.ananas, quantity: 1 },
       ];
-      pizzas.addPizzaReceipe(margharita, ingredientsForMargharita);
+      const pizzaMargharitaDto: PizzaDto = {
+        pizzaName: margharita,
+        ingredients: ingredientsForMargharita,
+      };
+      pizzas.addPizzaReceipe(pizzaMargharitaDto);
       const hawaian = PizzaType.margharita;
       const ingredientsForHawaian: ReceipeIngredient[] = [
         { name: IngredientsBase.ananas, quantity: 1 },
         { name: IngredientsBase.olives, quantity: 4 },
         { name: IngredientsBase.paprika, quantity: 1 },
       ];
-      pizzas.addPizzaReceipe(hawaian, ingredientsForHawaian);
+      const pizzaHawaianDto: PizzaDto = {
+        pizzaName: margharita,
+        ingredients: ingredientsForHawaian,
+      };
+      pizzas.addPizzaReceipe(pizzaHawaianDto);
 
       const orderedPizzas: PizzaType[] = [margharita, hawaian];
 
       //when
-      const foundedPizzas: Map<PizzaType, Pizza>  =
-        pizzas.getAllPizzasFromOrder(orderedPizzas) as Map<PizzaType, Pizza>;
+      const foundedPizzas: Map<PizzaType, Pizza> = pizzas.getAllPizzasFromOrder(
+        orderedPizzas
+      ) as Map<PizzaType, Pizza>;
       const foundMargharita: Pizza | undefined = foundedPizzas.get(margharita);
       const foundHawaian: Pizza | undefined = foundedPizzas.get(hawaian);
 

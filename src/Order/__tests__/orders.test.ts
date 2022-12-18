@@ -6,7 +6,7 @@ import {
   IngredientsBase,
   ReceipeIngredient,
 } from "../../Ingredients/IIngredient";
-import { PizzaType } from "../../Pizzas/IPizza";
+import { PizzaDto, PizzaType } from "../../Pizzas/IPizza";
 import { Pizza } from "../../Pizzas/Pizza";
 import { Pizzas } from "../../Pizzas/Pizzas";
 import { TableDto } from "../../Table/ITable";
@@ -44,7 +44,11 @@ describe("Orders module", () => {
         { name: IngredientsBase.paprika, quantity: 4 },
         { name: IngredientsBase.paprika, quantity: 4 },
       ];
-      pizzas.addPizzaReceipe(PizzaType.margharita, ingredientsReceipe);
+      const pizzaDto: PizzaDto = {
+        pizzaName: PizzaType.margharita,
+        ingredients: ingredientsReceipe,
+      };
+      pizzas.addPizzaReceipe(pizzaDto);
       const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
 
       //when
@@ -56,7 +60,7 @@ describe("Orders module", () => {
         status: OrderStatus.pending,
         discount: 10,
         ingredientsCosts: 10,
-        margin: 10
+        margin: 10,
       };
       const newOrder: Order | null = orders.addNewOrder(orderDto);
       const orderInProgress: Order | undefined = orders
@@ -87,7 +91,11 @@ describe("Orders module", () => {
         { name: IngredientsBase.paprika, quantity: 4 },
         { name: IngredientsBase.paprika, quantity: 4 },
       ];
-      pizzas.addPizzaReceipe(PizzaType.margharita, ingredientsReceipe);
+      const pizzaDto: PizzaDto = {
+        pizzaName: PizzaType.margharita,
+        ingredients: ingredientsReceipe,
+      };
+      pizzas.addPizzaReceipe(pizzaDto);
       const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
 
       //when
@@ -99,7 +107,7 @@ describe("Orders module", () => {
         status: OrderStatus.queue,
         discount: 10,
         ingredientsCosts: 10,
-        margin: 10
+        margin: 10,
       };
       const newOrder: Order | null = orders.addNewOrder(orderDto);
       const orderInQueue: Order | undefined = orders
@@ -129,7 +137,11 @@ describe("Orders module", () => {
         { name: IngredientsBase.paprika, quantity: 4 },
         { name: IngredientsBase.paprika, quantity: 4 },
       ];
-      pizzas.addPizzaReceipe(PizzaType.margharita, ingredientsReceipe);
+      const pizzaDto: PizzaDto = {
+        pizzaName: PizzaType.margharita,
+        ingredients: ingredientsReceipe,
+      };
+      pizzas.addPizzaReceipe(pizzaDto);
       const pizzasOrdered: PizzaType[] = [];
 
       //when
@@ -141,11 +153,13 @@ describe("Orders module", () => {
         status: OrderStatus.queue,
         discount: 10,
         ingredientsCosts: 10,
-        margin: 10
+        margin: 10,
       };
 
       //then
-      expect(function() {orders.addNewOrder(orderDto)}).to.throw(Error);
+      expect(function () {
+        orders.addNewOrder(orderDto);
+      }).to.throw(Error);
     });
 
     it("Failure - discount can't be lower then 0 or more then 100", () => {
@@ -166,7 +180,11 @@ describe("Orders module", () => {
         { name: IngredientsBase.paprika, quantity: 4 },
         { name: IngredientsBase.paprika, quantity: 4 },
       ];
-      pizzas.addPizzaReceipe(PizzaType.margharita, ingredientsReceipe);
+      const pizzaDto: PizzaDto = {
+        pizzaName: PizzaType.margharita,
+        ingredients: ingredientsReceipe,
+      };
+      pizzas.addPizzaReceipe(pizzaDto);
       const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
 
       //when
@@ -178,11 +196,13 @@ describe("Orders module", () => {
         status: OrderStatus.queue,
         discount: -1,
         ingredientsCosts: 10,
-        margin: 10
+        margin: 10,
       };
 
       //then
-      expect(function() {orders.addNewOrder(orderDto)}).to.throw(Error);
+      expect(function () {
+        orders.addNewOrder(orderDto);
+      }).to.throw(Error);
     });
     it("Failure - cost of ingredients can't be 0", () => {
       //given
@@ -202,7 +222,11 @@ describe("Orders module", () => {
         { name: IngredientsBase.paprika, quantity: 4 },
         { name: IngredientsBase.paprika, quantity: 4 },
       ];
-      pizzas.addPizzaReceipe(PizzaType.margharita, ingredientsReceipe);
+      const pizzaDto: PizzaDto = {
+        pizzaName: PizzaType.margharita,
+        ingredients: ingredientsReceipe,
+      };
+      pizzas.addPizzaReceipe(pizzaDto);
       const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
 
       //when
@@ -214,11 +238,13 @@ describe("Orders module", () => {
         status: OrderStatus.queue,
         discount: 1,
         ingredientsCosts: 0,
-        margin: 10
+        margin: 10,
       };
 
       //then
-      expect(function() {orders.addNewOrder(orderDto)}).to.throw(Error);
+      expect(function () {
+        orders.addNewOrder(orderDto);
+      }).to.throw(Error);
     });
 
     it("Failure - margin can't be 0", () => {
@@ -239,7 +265,11 @@ describe("Orders module", () => {
         { name: IngredientsBase.paprika, quantity: 4 },
         { name: IngredientsBase.paprika, quantity: 4 },
       ];
-      pizzas.addPizzaReceipe(PizzaType.margharita, ingredientsReceipe);
+      const pizzaDto: PizzaDto = {
+        pizzaName: PizzaType.margharita,
+        ingredients: ingredientsReceipe,
+      };
+      pizzas.addPizzaReceipe(pizzaDto);
       const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
 
       //when
@@ -251,11 +281,13 @@ describe("Orders module", () => {
         status: OrderStatus.queue,
         discount: 1,
         ingredientsCosts: 10,
-        margin: 0
+        margin: 0,
       };
 
       //then
-      expect(function() {orders.addNewOrder(orderDto)}).to.throw(Error);
+      expect(function () {
+        orders.addNewOrder(orderDto);
+      }).to.throw(Error);
     });
   });
 });

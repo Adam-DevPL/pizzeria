@@ -1,8 +1,7 @@
 import { v4 as uuid } from "uuid";
 
-import { ReceipeIngredient } from "../Ingredients/IIngredient";
 import { Validator } from "../Validator/Validator";
-import { PizzaType } from "./IPizza";
+import { PizzaDto, PizzaType } from "./IPizza";
 import { Pizza } from "./Pizza";
 
 export class Pizzas {
@@ -26,10 +25,7 @@ export class Pizzas {
     return this.listOfPizzasReceipes;
   }
 
-  public addPizzaReceipe(
-    pizzaName: PizzaType,
-    ingredients: ReceipeIngredient[]
-  ): Pizza | null {
+  public addPizzaReceipe({ pizzaName, ingredients }: PizzaDto): Pizza | null {
     Validator.validateNumberOfIngredients(ingredients.length);
 
     const findPizzaReceipe: Pizza | null = this.findPizzaByName(pizzaName);

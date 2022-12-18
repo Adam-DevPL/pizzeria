@@ -4,6 +4,7 @@ import { Pizza } from "../Pizzas/Pizza";
 import { Validator } from "../Validator/Validator";
 import {
   IIngredient,
+  IngredientDto,
   IngredientsBase,
   PropertyName,
   ReceipeIngredient,
@@ -52,11 +53,11 @@ export class Ingredients {
     return { ingredientsFound, ingredientsNotFound };
   }
 
-  public purchaseIngredients(
-    name: IngredientsBase,
-    price: number,
-    quantity: number = 1
-  ): Ingredient | null {
+  public purchaseIngredients({
+    name,
+    price,
+    quantity = 1,
+  }: IngredientDto): Ingredient | null {
     Validator.validatePriceIfMoreThenZero(price);
     Validator.validateQuantityIfMoreThenZero(quantity);
 

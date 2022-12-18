@@ -1,3 +1,9 @@
+export interface IngredientDto {
+  name: IngredientsBase;
+  price: number;
+  quantity?: number;
+}
+
 export interface IIngredient {
   readonly id: string;
   readonly name: IngredientsBase;

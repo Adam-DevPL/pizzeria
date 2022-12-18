@@ -6,6 +6,11 @@ export interface IPizza {
   readonly ingredients: ReceipeIngredient[];
 }
 
+export interface PizzaDto {
+  pizzaName: PizzaType;
+  ingredients: ReceipeIngredient[];
+}
+
 export enum PizzaType {
   margharita = "Margharita",
   hawaian = "Hawaian",
