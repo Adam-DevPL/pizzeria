@@ -1,17 +1,28 @@
-import { IEmployee } from "../Employee/IEmployee";
-import { IPizza } from "../Pizza/IPizza";
-import { ITable } from "../Table/ITable";
+import { Employee } from "../Employees/Employee";
+import { PizzaType } from "../Pizzas/IPizza";
+import { Table } from "../Table/Table";
 
 export interface IOrder {
-  id: number;
-  isFinished: boolean;
-  // vouchers: string[];
-  // specialVouchers: SpecialVouchers;
-  chefAssigned: IEmployee | null;
-  waiterAssigned: IEmployee;
-  tableAssigned: ITable | null;
-  pizzasOrdered: IPizza[];
-  finalPrice: number;
+  readonly id: string;
+  readonly chefAssigned: Employee | null;
+  readonly waiterAssigned: Employee;
+  readonly tableAssigned: Table;
+  readonly pizzasOrdered: PizzaType[];
+  readonly finalPrice: number;
 }
 
-export type SpecialVouchers = "10yo" | "student";
+export interface OrderDto {
+  chefAssigned: Employee | null;
+  waiterAssigned: Employee;
+  tableAssigned: Table;
+  pizzasOrdered: PizzaType[];
+  status: OrderStatus;
+  discount: number;
+  ingredientsCosts: number;
+  margin: number;
+}
+
+export enum OrderStatus {
+  queue,
+  pending,
+}

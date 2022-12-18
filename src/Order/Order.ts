@@ -1,41 +1,29 @@
-import { Employee } from "../Employee/Employee";
-import { IEmployee } from "../Employee/IEmployee";
-import { IPizza } from "../Pizza/IPizza";
-import { Pizza } from "../Pizza/Pizza";
-import { ITable } from "../Table/ITable";
+import { Employee } from "../Employees/Employee";
+import { PizzaType } from "../Pizzas/IPizza";
 import { Table } from "../Table/Table";
-import { IOrder, SpecialVouchers } from "./IOrder";
+import { IOrder } from "./IOrder";
 
 export class Order implements IOrder {
-  id: number;
-  isFinished = false;
-  // vouchers: string[];
-  // specialVouchers: SpecialVouchers;
-  chefAssigned: IEmployee | null = null;
-  waiterAssigned: IEmployee;
-  tableAssigned: ITable | null = null;
-  pizzasOrdered: IPizza[] = [];
-  finalPrice: number = 0;
+  readonly id: string;
+  readonly chefAssigned: Employee | null;
+  readonly waiterAssigned: Employee;
+  readonly tableAssigned: Table;
+  readonly pizzasOrdered: PizzaType[];
+  readonly finalPrice: number;
 
-  constructor(id: number, waiter: IEmployee) {
+  constructor(
+    id: string,
+    chefAssigned: Employee | null,
+    waiterAssigned: Employee,
+    tableAssigned: Table,
+    pizzasOrdered: PizzaType[],
+    finalPrice: number
+  ) {
     this.id = id;
-    this.waiterAssigned = waiter;
-  }
-
-  addChef(chef: IEmployee) {
-    this.chefAssigned = chef;
-  }
-
-  addTable(table: ITable) {
-    this.tableAssigned = table;
-  }
-
-  addPizzas(pizzas: IPizza[]) {
-    this.pizzasOrdered.push(...pizzas);
-    this.finalPrice = this.pizzasOrdered.reduce((total, pizza) => total + pizza.price, 0);
-  }
-
-  getTotalPrice() {
-    return this.finalPrice;
+    this.chefAssigned = chefAssigned;
+    this.waiterAssigned = waiterAssigned;
+    this.tableAssigned = tableAssigned;
+    this.pizzasOrdered = pizzasOrdered;
+    this.finalPrice = finalPrice;
   }
 }
