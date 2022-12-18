@@ -1,7 +1,11 @@
 export interface IEmployee {
+  id: string;
   name: string;
   role: Role;
   isFree: boolean;
 }
 
-export type Role = "chef" | "waiter";
+export enum Role {
+  waiter = "waiter",
+  chef = "chef",
+}

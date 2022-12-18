@@ -1,5 +1,5 @@
-import { Employee } from "../Employee/Employee";
-import { Role } from "../Employee/IEmployee";
+import { Employee } from "../Employees/Employees";
+import { Role } from "../Employees/IEmployee";
 import {
   IIngredient,
   IngredientsBase,

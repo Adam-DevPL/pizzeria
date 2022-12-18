@@ -1,5 +1,5 @@
-import { Employee } from "../Employee/Employee";
-import { IEmployee } from "../Employee/IEmployee";
+import { Employee } from "../Employees/Employees";
+import { IEmployee } from "../Employees/IEmployee";
 import { IPizza } from "../Pizza/IPizza";
 import { Pizzas } from "../Pizza/Pizza";
 import { ITable } from "../Table/ITable";
