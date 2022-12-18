@@ -33,12 +33,27 @@ export class Orders {
   ) {
     this.listOfOrders.push({
       id,
-      isFinished: false,
       chefAssigned,
       waiterAssigned,
       tableAssigned,
       pizzasOrdered,
       finalPrice,
     });
+  }
+
+  public toQueue(orderId: number) {
+    this.listOfOrders.forEach((o) => {
+      if (o.id === orderId) {
+        o.inQueue = true;
+      }
+    });
+  }
+
+  public calculateTheFinalPrice(orderId: number, discount: number, ingredientsCosts: number, margin: number) {
+    this.listOfOrders.forEach(order => {
+      if (order.id === orderId) {
+        order.finalPrice = ingredientsCosts + margin - (discount/100 * (ingredientsCosts + margin));
+      }
+    })
   }
 }

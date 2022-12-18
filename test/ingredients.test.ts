@@ -5,6 +5,7 @@ import {
   IngredientsBase,
   ReceipeIngredient,
 } from "../src/Ingredient/IIngredient";
+import { IPizza } from "../src/Pizza/IPizza";
 
 describe("Ingredients", () => {
   describe("Get ingredients with price from the storage", () => {
@@ -125,7 +126,9 @@ describe("Ingredients", () => {
         { name: IngredientsBase.ananas, quantity: 1 },
         { name: IngredientsBase.olives, quantity: 1 },
       ];
-      const costOfIngredientsForPizza = ingredients.calculateIngredientsCosts(ingredientsNeedeForPizza);
+      const costOfIngredientsForPizza = ingredients.calculateIngredientsCosts(
+        ingredientsNeedeForPizza
+      );
       const properCosts = 8;
 
       expect(costOfIngredientsForPizza).to.equal(properCosts);
@@ -136,10 +139,21 @@ describe("Ingredients", () => {
         { name: IngredientsBase.ananas, quantity: 1 },
         { name: IngredientsBase.tomato, quantity: 1 },
       ];
-      const costOfIngredientsForPizza = ingredients.calculateIngredientsCosts(ingredientsNeedeForPizza);
+      const costOfIngredientsForPizza = ingredients.calculateIngredientsCosts(
+        ingredientsNeedeForPizza
+      );
       const properCosts = 0;
 
       expect(costOfIngredientsForPizza).to.equal(properCosts);
+    });
+  });
+  describe("Comapring ingredients quantities between receipe and storeage", () => {
+    it("Truthy - should return true if we can make the pizza", () => {
+      const ingredients = Ingredients.getInstance();
+      console.log(ingredients);
+      const pizza: IPizza = {name: "Pizza", ingredients: [{name: IngredientsBase.ananas, quantity: 3}]}
+      const returnMsg = ingredients.checkQuantityOfIngredientsForPizza(pizza);
+      expect(returnMsg).to.equal(true);
     });
   });
 });

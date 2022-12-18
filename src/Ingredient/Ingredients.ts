@@ -1,4 +1,5 @@
 import { v4 as uuid } from "uuid";
+import { IPizza } from "../Pizza/IPizza";
 import { Validator } from "../Validator/Validator";
 import {
   IIngredient,
@@ -24,13 +25,17 @@ export class Ingredients {
     const ingredientsFound = this.listOfIngredients.filter((ingredient) => {
       return ingredients.find((ingr) => ingr === ingredient.name);
     });
-    const ingredientsNotFound: IngredientsBase[] = ingredients.filter(ingredient => {
-      const foundIngredient = ingredientsFound.find(ingr => ingr.name === ingredient);
-      if (foundIngredient) {
-        return 0;
+    const ingredientsNotFound: IngredientsBase[] = ingredients.filter(
+      (ingredient) => {
+        const foundIngredient = ingredientsFound.find(
+          (ingr) => ingr.name === ingredient
+        );
+        if (foundIngredient) {
+          return 0;
+        }
+        return 1;
       }
-      return 1;
-    })
+    );
     return { ingredientsFound, ingredientsNotFound };
   }
 
@@ -60,6 +65,28 @@ export class Ingredients {
     });
 
     return "Ingredients purchased.";
+  }
+
+  public checkQuantityOfIngredientsForPizza(pizza: IPizza) {
+    let isOk = true;
+    const listOfIngredients = pizza.ingredients.map(
+      (ingredient) => ingredient.name
+    );
+    const foundIngredients =
+      this.getIngredients(listOfIngredients);
+
+    if (foundIngredients.ingredientsNotFound.length !== 0) {
+      return false;
+    }
+
+    pizza.ingredients.forEach((ingredient) => {
+      const ingr = foundIngredients.ingredientsFound.find(i => i.name === ingredient.name);
+      if (ingr && ingr.quantity - ingredient.quantity < 0) {
+        isOk = false;
+      }
+    })
+
+    return isOk;
   }
 
   public calculateIngredientsCosts(ingredients: ReceipeIngredient[]) {

@@ -32,4 +32,8 @@ export class Pizzas {
 
     return `New receipe for ${pizzaName} added to the database`;
   }
+
+  public canWeMakeIt(pizzas: IPizza[], ingredients: ReceipeIngredient[]) { 
+    
+  }
 }

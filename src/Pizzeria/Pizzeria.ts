@@ -7,7 +7,7 @@ import {
 } from "../Ingredient/IIngredient";
 import { Ingredients } from "../Ingredient/Ingredients";
 import { IOrder } from "../Order/IOrder";
-import { Order } from "../Order/Order";
+import { Orders } from "../Order/Order";
 import { IPizza } from "../Pizza/IPizza";
 import { Pizzas } from "../Pizza/Pizza";
 import { Table } from "../Table/Table";
@@ -19,18 +19,16 @@ export class Pizzeria {
   private employees: Employee;
   private tables: Table;
   private vouchers: Vouchers;
-  private ordersInProgress: IOrder[];
-  private ordersInLine: IOrder[];
-  pizzas: IPizza[];
+  private orders: Orders;
+  private pizzas: Pizzas;
 
   private constructor() {
     this.ingredients = Ingredients.getInstance();
     this.employees = Employee.getInstance();
     this.tables = Table.getInstance();
     this.vouchers = Vouchers.getInstance();
-    this.ordersInProgress = [];
-    this.ordersInLine = [];
-    this.pizzas = [];
+    this.orders = Orders.getInstance();
+    this.pizzas = Pizzas.getInstance();
   }
 
   public static getInstance(): Pizzeria {
@@ -60,23 +58,16 @@ export class Pizzeria {
     this.vouchers.addVoucher(name, discount);
   }
 
-  public createPizza(
-    name: string,
-    ingredients: ReceipeIngredient[],
-    margin: number = 0
-  ) {
-    const newPizza = new Pizzas(name, ingredients);
-    newPizza.addMargins(
-      this.ingredients.calculateIngredientsCosts(ingredients) + margin
-    );
-    this.pizzas.push(newPizza);
+  public createPizza(name: string, ingredients: ReceipeIngredient[]) {
+    this.pizzas.addPizzaReceipe(name, ingredients);
   }
 
   public makeNewOrder(
     id: number,
     seatsNo: number,
     pizzas: IPizza[],
-    voucherName: string
+    voucherName: string,
+    margin: number
   ) {
     const assignWaiter = this.employees.findEmployeeByRole("waiter");
 
@@ -84,34 +75,72 @@ export class Pizzeria {
       return "There is no waiter to take up the order";
     }
 
-    const newOrder = new Order(id, assignWaiter);
-
     const assignTable = this.tables.findFreeTable(seatsNo);
 
     if (!assignTable) {
       return "No free table. Can not take the order";
     }
 
-    this.tables.changeStatusOfTable(assignTable.tableNumber);
-    newOrder.addTable(assignTable);
+    const canWeMakeAllPizza = pizzas
+      .map((pizza) =>
+        this.ingredients.checkQuantityOfIngredientsForPizza(pizza)
+      )
+      .every((e) => e === true);
+
+    if (!canWeMakeAllPizza) {
+      return "We have no enough ingredients to prepare the order";
+    }
+
+    const totalCostIngredients = pizzas
+      .map((pizza) => pizza.ingredients)
+      .reduce((total, ingredients) => {
+        return total + this.ingredients.calculateIngredientsCosts(ingredients);
+      }, 0);
 
     const assignChef = this.employees.findEmployeeByRole("chef");
 
+    this.orders.addNewOrder(
+      id,
+      assignChef,
+      assignWaiter,
+      assignTable,
+      pizzas,
+      0
+    );
+
+    this.orders.calculateTheFinalPrice(
+      id,
+      this.vouchers.calcDiscount(voucherName),
+      totalCostIngredients,
+      margin
+    );
+
     if (!assignChef) {
-      console.log("There is no free chef.Your order will go into the queue");
-      this.ordersInLine.push(newOrder);
+      this.orders.toQueue(id);
+      return `There is no free chef.Your order will go into the queue. Final price: ${
+        this.orders.findOrder(id)?.finalPrice
+      }`;
     } else {
       this.employees.changeStatusOfEmployee(assignChef.name);
-      newOrder.addChef(assignChef);
-      this.ordersInProgress.push(newOrder);
+      return `Your order will be procceded. Final price: ${
+        this.orders.findOrder(id)?.finalPrice
+      }`;
     }
+  }
 
-    newOrder.addPizzas(pizzas);
-    console.log(
-      "Final price for order is: " +
-        (newOrder.getTotalPrice() -
-          (newOrder.getTotalPrice() *
-            this.vouchers.calcDiscount(voucherName) / 100))
-    );
+  public assignChefIfFree(orderId: number) {
+    const foundOrder = this.orders.findOrder(orderId);
+    if (!foundOrder) {
+      return `There is no order - ${orderId}`;
+    }
+    const assignChef = this.employees.findEmployeeByRole("chef");
+
+    if (!assignChef) {
+      return "There is still no free chef";
+    }
+    this.orders.toQueue(orderId);
+    foundOrder.chefAssigned = assignChef;
+
+    return "Your order will be realised now";
   }
 }
