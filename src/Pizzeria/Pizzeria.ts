@@ -208,7 +208,7 @@ export class Pizzeria implements IPizzeria {
       return "No free chef for the order";
     }
 
-    foundOrder.assignChef(assignChef);
+    this.employees.changeStatusOfEmployee(assignChef.id);
 
     return "There is free chef. Your order will proceed";
   }

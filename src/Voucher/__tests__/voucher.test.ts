@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { WeekDay } from "../IVoucher";
+import { VoucherDto, WeekDay } from "../IVoucher";
 import { Voucher } from "../Voucher";
 import { Vouchers } from "../Vouchers";
 
@@ -16,7 +16,12 @@ describe("Voucher module", () => {
       const vouchers = Vouchers.getInstance();
 
       //when
-      const newVoucher: Voucher = vouchers.addVoucher("special", 15) as Voucher;
+      const voucherDto: VoucherDto = {
+        name: "special",
+        discount: 15,
+        weekDay: null,
+      };
+      const newVoucher: Voucher = vouchers.addVoucher(voucherDto) as Voucher;
 
       //then
       expect(newVoucher.name).to.equal("special");
@@ -26,13 +31,15 @@ describe("Voucher module", () => {
     it("Falsy - voucher exist in database", () => {
       //given
       const vouchers = Vouchers.getInstance();
-      vouchers.addVoucher("special", 15) as Voucher;
+      const voucherDto: VoucherDto = {
+        name: "special",
+        discount: 15,
+        weekDay: null,
+      };
+      vouchers.addVoucher(voucherDto) as Voucher;
 
       //when
-      const existingVoucher: Voucher | null = vouchers.addVoucher(
-        "special",
-        15
-      );
+      const existingVoucher: Voucher | null = vouchers.addVoucher(voucherDto);
 
       //then
       expect(existingVoucher).to.null;
@@ -42,15 +49,32 @@ describe("Voucher module", () => {
       //given
       const vouchers = Vouchers.getInstance();
 
+      //when
+      const voucherDtoNoName: VoucherDto = {
+        name: "",
+        discount: 5,
+        weekDay: null,
+      };
+      const voucherDtoDiscountBelow0: VoucherDto = {
+        name: "special",
+        discount: -5,
+        weekDay: null,
+      };
+      const voucherDtoDiscountBiggerThen100: VoucherDto = {
+        name: "special",
+        discount: 150,
+        weekDay: null,
+      };
+
       //then
       expect(function () {
-        vouchers.addVoucher("", 10);
+        vouchers.addVoucher(voucherDtoNoName);
       }).to.throw(Error);
       expect(function () {
-        vouchers.addVoucher("special", -5);
+        vouchers.addVoucher(voucherDtoDiscountBelow0);
       }).to.throw(Error);
       expect(function () {
-        vouchers.addVoucher("special", 101);
+        vouchers.addVoucher(voucherDtoDiscountBiggerThen100);
       }).to.throw(Error);
     });
   });
@@ -60,15 +84,20 @@ describe("Voucher module", () => {
       //given
       const vouchers = Vouchers.getInstance();
       vouchers.getAllVouchers().clear();
-      vouchers.addVoucher("test", 10);
+      const voucherDto: VoucherDto = {
+        name: "test",
+        discount: 10,
+        weekDay: null,
+      };
+      vouchers.addVoucher(voucherDto);
     });
 
     it("Truthy - get proper discount based on voucher", () => {
       //given
       const vouchers = Vouchers.getInstance();
-  
+
       //when
-      const amountOfDiscount: number = vouchers.calcDiscount("test");      
+      const amountOfDiscount: number = vouchers.calcDiscount("test");
 
       //then
       expect(amountOfDiscount).to.equal(10);

@@ -144,8 +144,8 @@ describe("Pizza module", () => {
       const orderedPizzas: PizzaType[] = [margharita, hawaian];
 
       //when
-      const foundedPizzas: Map<PizzaType, Pizza> =
-        pizzas.getAllPizzasFromOrder(orderedPizzas);
+      const foundedPizzas: Map<PizzaType, Pizza>  =
+        pizzas.getAllPizzasFromOrder(orderedPizzas) as Map<PizzaType, Pizza>;
       const foundMargharita: Pizza | undefined = foundedPizzas.get(margharita);
       const foundHawaian: Pizza | undefined = foundedPizzas.get(hawaian);
 
