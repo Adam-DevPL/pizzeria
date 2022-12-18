@@ -1,4 +1,4 @@
-import { IIngredient, ReceipeIngredient } from "../Ingredient/IIngredient";
+import { IIngredient, ReceipeIngredient } from "../Ingredients/IIngredient";
 import { Validator } from "../Validator/Validator";
 import { IPizza } from "./IPizza";
 

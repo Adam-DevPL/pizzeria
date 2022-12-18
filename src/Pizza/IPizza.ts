@@ -1,4 +1,4 @@
-import { IIngredient, ReceipeIngredient } from "../Ingredient/IIngredient";
+import { IIngredient, ReceipeIngredient } from "../Ingredients/IIngredient";
 
 export interface IPizza {
   name: string;

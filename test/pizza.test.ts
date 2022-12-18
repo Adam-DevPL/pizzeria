@@ -2,7 +2,7 @@ import { expect } from "chai";
 import {
   IngredientsBase,
   ReceipeIngredient,
-} from "../src/Ingredient/IIngredient";
+} from "../src/Ingredients/IIngredient";
 import { Pizzas } from "../src/Pizza/Pizza";
 
 describe("Pizza module", () => {
