@@ -1,69 +1,44 @@
-import { Validator } from "../Validator/Validator";
 import { ITable } from "./ITable";
 
-export class Table {
-  private static instance: Table;
-  public listOfTables: ITable[] = [];
+export class Table implements ITable {
+  private _id: string;
+  private _tableNumber: number;
+  private _isFree: boolean;
+  private _numberOfSeats: number;
 
-  private constructor() {}
-
-  public static getInstance(): Table {
-    if (!Table.instance) {
-      Table.instance = new Table();
-    }
-    return Table.instance;
+  constructor(
+    id: string,
+    tableNumber: number,
+    numberOfSeats: number
+  ) {
+    this._id = id;
+    this._tableNumber = tableNumber;
+    this._isFree = true;
+    this._numberOfSeats = numberOfSeats;
   }
 
-  private findTable(tableNo: number) {
-    return this.listOfTables.find((t) => t.tableNumber === tableNo);
+  get id() {
+    return this._id;
   }
-
-  addNewTable(tableNumber: number, numberOfSeats: number) {
-    Validator.validateNumberMoreOrEqualZero(tableNumber);
-    Validator.validateNumberMoreOrEqualZero(numberOfSeats);
-    const foundTable = this.listOfTables.find(
-      (table) => table.tableNumber === tableNumber
-    );
-    if (foundTable) {
-      return "Duplicated table";
-    }
-    this.listOfTables.push({
-      tableNumber,
-      numberOfSeats,
-      isFree: true,
-    });
-
-    return "Table added successfully";
+  set id(value: string) {
+    this._id = value;
   }
-
-  removeTable(tableNumber: number) {
-    if (!this.findTable(tableNumber)) {
-      return "Can't remove table, becasue it wasn't found";
-    }
-    this.listOfTables = this.listOfTables.filter(
-      (table) => table.tableNumber !== tableNumber
-    );
-
-    return "Table removed successfully";
+  get tableNumber() {
+    return this._tableNumber;
   }
-
-  changeStatusOfTable(tableNumber: number) {
-    const findTable = this.findTable(tableNumber);
-    if (!findTable) {
-      return "Table doesn't exist";
-    }
-    this.listOfTables.forEach((table) => {
-      if (table.tableNumber === tableNumber) {
-        table.isFree = !table.isFree;
-      }
-    });
-
-    return `Table is free: ${findTable.isFree}`;
+  set tableNumber(value: number) {
+    this._tableNumber = value;
   }
-
-  findFreeTable(seatsNo: number) {
-    return this.listOfTables.find(
-      (table) => table.isFree === true && table.numberOfSeats === seatsNo
-    ) ?? null;
+  get isFree() {
+    return this._isFree;
+  }
+  set isFree(value: boolean) {
+    this._isFree = value;
+  }
+  get numberOfSeats() {
+    return this._numberOfSeats;
+  }
+  set numberOfSeats(value: number) {
+    this._numberOfSeats = value;
   }
 }

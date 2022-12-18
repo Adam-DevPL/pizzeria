@@ -10,14 +10,14 @@ import { IOrder } from "../Order/IOrder";
 import { Orders } from "../Order/Order";
 import { IPizza } from "../Pizza/IPizza";
 import { Pizzas } from "../Pizza/Pizza";
-import { Table } from "../Table/Table";
+import { Tables } from "../Table/Tables";
 import { Vouchers } from "../Voucher/Vouchers";
 
 export class Pizzeria {
   private static instance: Pizzeria;
   ingredients: Ingredients;
   private employees: Employee;
-  private tables: Table;
+  private tables: Tables;
   private vouchers: Vouchers;
   private orders: Orders;
   private pizzas: Pizzas;
@@ -25,7 +25,7 @@ export class Pizzeria {
   private constructor() {
     this.ingredients = Ingredients.getInstance();
     this.employees = Employee.getInstance();
-    this.tables = Table.getInstance();
+    this.tables = Tables.getInstance();
     this.vouchers = Vouchers.getInstance();
     this.orders = Orders.getInstance();
     this.pizzas = Pizzas.getInstance();
