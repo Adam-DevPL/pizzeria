@@ -5,8 +5,8 @@ export interface IEmployee {
 }
 
 export enum Role {
-  waiter = "waiter",
-  chef = "chef",
+  Waiter,
+  Chef,
 }
 
 export interface EmployeeDto {

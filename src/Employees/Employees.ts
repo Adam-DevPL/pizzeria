@@ -17,38 +17,36 @@ export class Employees {
     return Employees.instance;
   }
 
-  public findEmployeeById(employeeId: string): Employee | null {
-    return this.getAllEmployees().get(employeeId) ?? null;
+  public getAllEmployees(): Map<string, Employee> {
+    return new Map([
+      ...this.listOfFreeEmployees,
+      ...this.listOfOccupiedEmployees,
+    ]);
   }
 
-  private findEmployeeByName(employeeName: string): Employee | null {
-    let foundEmployee: Employee | null = null;
-    this.getAllEmployees().forEach((employee) => {
-      if (employee.name === employeeName) {
-        foundEmployee = employee;
-      }
-    });
-    return foundEmployee;
+  public getAllFreeEmployees(): Map<string, Employee> {
+    return this.listOfFreeEmployees;
+  }
+
+  public getAllOccupiedEmployees(): Map<string, Employee> {
+    return this.listOfOccupiedEmployees;
   }
 
   public findEmployeeByRole(role: Role): Employee | null {
-    let foundEmployee: Employee | null = null;
-    this.getAllFreeEmployees().forEach((employee) => {
-      if (employee.role === role) {
-        foundEmployee = employee;
-      }
-    });
+    const foundEmployee: Employee | undefined = [...this.getAllFreeEmployees()]
+      .map((value) => value[1])
+      .find((employee) => employee.role === role);
 
-    return foundEmployee;
+    return foundEmployee ?? null;
   }
 
-  public addNewEmployee({ name, role }: EmployeeDto): Employee | null {
+  public addNewEmployee({ name, role }: EmployeeDto): Employee {
     Validator.validateStringNotEmpty(name);
 
     const foundEmployee: Employee | null = this.findEmployeeByName(name);
 
     if (foundEmployee) {
-      return null;
+      throw new Error(`Employee ${name} already exists`);
     }
 
     const newId: string = uuid();
@@ -85,18 +83,11 @@ export class Employees {
     return false;
   }
 
-  public getAllEmployees(): Map<string, Employee> {
-    return new Map([
-      ...this.listOfFreeEmployees,
-      ...this.listOfOccupiedEmployees,
-    ]);
-  }
+  private findEmployeeByName(employeeName: string): Employee | null {
+    const foundEmployee: Employee | undefined = [...this.getAllEmployees()]
+      .map((value) => value[1])
+      .find((employee) => employee.name === employeeName);
 
-  public getAllFreeEmployees(): Map<string, Employee> {
-    return this.listOfFreeEmployees;
-  }
-
-  public getAllOccupiedEmployees(): Map<string, Employee> {
-    return this.listOfOccupiedEmployees;
+    return foundEmployee ?? null;
   }
 }

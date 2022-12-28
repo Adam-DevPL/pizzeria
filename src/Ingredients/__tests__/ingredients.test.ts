@@ -9,9 +9,36 @@ import {
   ReceipeIngredient,
 } from "../IIngredient";
 
+function lookForIngredient(
+  array: Map<IngredientsBase, Ingredient>,
+  ingredientBase: IngredientsBase
+): Ingredient | null {
+  return (
+    [...array]
+      .map((value) => value[1])
+      .find((ingr) => ingr.name === ingredientBase) ?? null
+  );
+}
+
 describe("Ingredients", () => {
   describe("Get ingredients with price from the storage", () => {
     beforeEach(() => {
+      const ingredients = Ingredients.getInstance();
+      let ingredientOlivesDto: IngredientDto = {
+        name: IngredientsBase.Olives,
+        price: 4,
+        quantity: 1,
+      };
+      let ingredientAnanasDto: IngredientDto = {
+        name: IngredientsBase.Ananas,
+        price: 4,
+        quantity: 1,
+      };
+      ingredients.purchaseIngredients(ingredientOlivesDto);
+      ingredients.purchaseIngredients(ingredientAnanasDto);
+    });
+
+    afterEach(() => {
       const ingredients = Ingredients.getInstance();
       ingredients.getAllIngredients().clear();
     });
@@ -19,145 +46,93 @@ describe("Ingredients", () => {
     it("Truthy - you get all ingredients from the storage of Pizzeria", () => {
       //given
       const ingredients: Ingredients = Ingredients.getInstance();
-      let ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.olives,
-        price: 4,
-        quantity: 1,
-      };
-      let ingredientAnanasDto: IngredientDto = {
-        name: IngredientsBase.ananas,
-        price: 4,
-        quantity: 1,
-      };
-      ingredients.purchaseIngredients(ingredientOlivesDto);
-      ingredients.purchaseIngredients(ingredientAnanasDto);
 
       //when
       const ingredientsWeWant: IngredientsBase[] = [
-        IngredientsBase.olives,
-        IngredientsBase.ananas,
+        IngredientsBase.Olives,
+        IngredientsBase.Ananas,
       ];
-      const ingredientsWeGet: {
-        ingredientsFound: Map<string, Ingredient>;
-        ingredientsNotFound: IngredientsBase[];
-      } = ingredients.compareIngredientsWithStock(ingredientsWeWant);
-      const ananas: IngredientsBase = IngredientsBase.ananas;
-      const olives: IngredientsBase = IngredientsBase.olives;
-      let foundAnanas: boolean = false;
-      let foundOlives: boolean = false;
-      ingredientsWeGet.ingredientsFound.forEach((ingredient) => {
-        if (ingredient.name === ananas) {
-          foundAnanas = true;
-        }
-        if (ingredient.name === olives) {
-          foundOlives = true;
-        }
-      });
+      const ingredientsWeGet: Map<IngredientsBase, Ingredient> =
+        ingredients.compareIngredientsWithStock(
+          ingredientsWeWant
+        ).ingredientsFound;
+
+      const foundAnanas: Ingredient | null = lookForIngredient(
+        ingredientsWeGet,
+        IngredientsBase.Ananas
+      );
+      const foundOlives: Ingredient | null = lookForIngredient(
+        ingredientsWeGet,
+        IngredientsBase.Olives
+      );
 
       //then
-      expect(foundAnanas).to.true;
-      expect(foundOlives).to.true;
+      expect(foundAnanas).to.not.null;
+      expect(foundOlives).to.not.null;
     });
 
     it("Falsy - you get some of the ingredients form the storage", () => {
       //given
       const ingredients = Ingredients.getInstance();
-      let ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.olives,
-        price: 4,
-        quantity: 1,
-      };
-      let ingredientAnanasDto: IngredientDto = {
-        name: IngredientsBase.ananas,
-        price: 4,
-        quantity: 1,
-      };
-      ingredients.purchaseIngredients(ingredientOlivesDto);
-      ingredients.purchaseIngredients(ingredientAnanasDto);
 
       //when
       const ingredientsWeWant: IngredientsBase[] = [
-        IngredientsBase.olives,
-        IngredientsBase.ananas,
-        IngredientsBase.paprika,
+        IngredientsBase.Olives,
+        IngredientsBase.Ananas,
+        IngredientsBase.Paprika,
       ];
 
-      const ingredientsWeGet: {
-        ingredientsFound: Map<string, Ingredient>;
-        ingredientsNotFound: IngredientsBase[];
-      } = ingredients.compareIngredientsWithStock(ingredientsWeWant);
+      const ingredientsWeGet: Map<IngredientsBase, Ingredient> =
+        ingredients.compareIngredientsWithStock(
+          ingredientsWeWant
+        ).ingredientsFound;
 
-      const ananas: IngredientsBase = IngredientsBase.ananas;
-      const olives: IngredientsBase = IngredientsBase.olives;
-      const paprika: IngredientsBase = IngredientsBase.paprika;
-
-      let foundAnanas: boolean = false;
-      let foundOlives: boolean = false;
-      let foundPaprika: boolean = false;
-
-      ingredientsWeGet.ingredientsFound.forEach((ingredient) => {
-        if (ingredient.name === ananas) {
-          foundAnanas = true;
-        }
-        if (ingredient.name === olives) {
-          foundOlives = true;
-        }
-        if (ingredient.name === paprika) {
-          foundPaprika = true;
-        }
-      });
+      const foundAnanas: Ingredient | null = lookForIngredient(
+        ingredientsWeGet,
+        IngredientsBase.Ananas
+      );
+      const foundOlives: Ingredient | null = lookForIngredient(
+        ingredientsWeGet,
+        IngredientsBase.Olives
+      );
+      const foundPaprika: Ingredient | null = lookForIngredient(
+        ingredientsWeGet,
+        IngredientsBase.Paprika
+      );
 
       //then
-      expect(foundAnanas).to.true;
-      expect(foundOlives).to.true;
-      expect(foundPaprika).to.false;
+      expect(foundAnanas).to.not.null;
+      expect(foundOlives).to.not.null;
+      expect(foundPaprika).to.null;
     });
 
     it("Falsy - you get none of the ingredients", () => {
       //given
       const ingredients = Ingredients.getInstance();
-      let ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.olives,
-        price: 4,
-        quantity: 1,
-      };
-      let ingredientAnanasDto: IngredientDto = {
-        name: IngredientsBase.ananas,
-        price: 4,
-        quantity: 1,
-      };
-      ingredients.purchaseIngredients(ingredientOlivesDto);
-      ingredients.purchaseIngredients(ingredientAnanasDto);
 
       //when
       const ingredientsWeWant: IngredientsBase[] = [
-        IngredientsBase.salad,
-        IngredientsBase.potato,
+        IngredientsBase.Salad,
+        IngredientsBase.Potato,
       ];
 
-      const ingredientsWeGet: {
-        ingredientsFound: Map<string, Ingredient>;
-        ingredientsNotFound: IngredientsBase[];
-      } = ingredients.compareIngredientsWithStock(ingredientsWeWant);
+      const ingredientsWeGet: Map<IngredientsBase, Ingredient> =
+        ingredients.compareIngredientsWithStock(
+          ingredientsWeWant
+        ).ingredientsFound;
 
-      const salad: IngredientsBase = IngredientsBase.salad;
-      const potato: IngredientsBase = IngredientsBase.potato;
-
-      let foundSalad: boolean = false;
-      let foundPotato: boolean = false;
-
-      ingredientsWeGet.ingredientsFound.forEach((ingredient) => {
-        if (ingredient.name === salad) {
-          foundSalad = true;
-        }
-        if (ingredient.name === potato) {
-          foundPotato = true;
-        }
-      });
+      const foundSalad: Ingredient | null = lookForIngredient(
+        ingredientsWeGet,
+        IngredientsBase.Salad
+      );
+      const foundPotato: Ingredient | null = lookForIngredient(
+        ingredientsWeGet,
+        IngredientsBase.Potato
+      );
 
       //then
-      expect(foundSalad).to.false;
-      expect(foundPotato).to.false;
+      expect(foundSalad).to.null;
+      expect(foundPotato).to.null;
     });
   });
 
@@ -171,7 +146,7 @@ describe("Ingredients", () => {
       //given
       const ingredients = Ingredients.getInstance();
       let ingredientPotatoDto: IngredientDto = {
-        name: IngredientsBase.potato,
+        name: IngredientsBase.Potato,
         price: 4,
         quantity: 1,
       };
@@ -191,7 +166,7 @@ describe("Ingredients", () => {
       //given
       const ingredients = Ingredients.getInstance();
       let ingredientPotatoDto: IngredientDto = {
-        name: IngredientsBase.potato,
+        name: IngredientsBase.Potato,
         price: 4,
         quantity: 1,
       };
@@ -215,7 +190,7 @@ describe("Ingredients", () => {
       //given
       const ingredients = Ingredients.getInstance();
       let ingredientPotatoDto: IngredientDto = {
-        name: IngredientsBase.potato,
+        name: IngredientsBase.Potato,
         price: -1,
         quantity: 1,
       };
@@ -230,7 +205,7 @@ describe("Ingredients", () => {
       //given
       const ingredients = Ingredients.getInstance();
       let ingredientPotatoDto: IngredientDto = {
-        name: IngredientsBase.potato,
+        name: IngredientsBase.Potato,
         price: 1,
         quantity: -1,
       };
@@ -245,28 +220,32 @@ describe("Ingredients", () => {
   describe("Calculating costs of ingredients", () => {
     beforeEach(() => {
       const ingredients = Ingredients.getInstance();
+      let ingredientOlivesDto: IngredientDto = {
+        name: IngredientsBase.Olives,
+        price: 4,
+        quantity: 1,
+      };
+      let ingredientAnanasDto: IngredientDto = {
+        name: IngredientsBase.Ananas,
+        price: 4,
+        quantity: 1,
+      };
+      ingredients.purchaseIngredients(ingredientOlivesDto);
+      ingredients.purchaseIngredients(ingredientAnanasDto);
+    });
+
+    afterEach(() => {
+      const ingredients = Ingredients.getInstance();
       ingredients.getAllIngredients().clear();
     });
 
     it("Truthy - all ingredients were found and the costs was return", () => {
       //given
       const ingredients = Ingredients.getInstance();
-      let ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.olives,
-        price: 4,
-        quantity: 1,
-      };
-      let ingredientAnanasDto: IngredientDto = {
-        name: IngredientsBase.ananas,
-        price: 4,
-        quantity: 1,
-      };
-      ingredients.purchaseIngredients(ingredientOlivesDto);
-      ingredients.purchaseIngredients(ingredientAnanasDto);
 
       const ingredientsNeedeForPizza: ReceipeIngredient[] = [
-        { name: IngredientsBase.ananas, quantity: 1 },
-        { name: IngredientsBase.olives, quantity: 1 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
+        { name: IngredientsBase.Olives, quantity: 1 },
       ];
 
       //when
@@ -282,22 +261,10 @@ describe("Ingredients", () => {
     it("Falsy - some ingredients for pizza weren't found, can't calculate the costs, return 0", () => {
       //given
       const ingredients = Ingredients.getInstance();
-      let ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.olives,
-        price: 4,
-        quantity: 1,
-      };
-      let ingredientAnanasDto: IngredientDto = {
-        name: IngredientsBase.ananas,
-        price: 4,
-        quantity: 1,
-      };
-      ingredients.purchaseIngredients(ingredientOlivesDto);
-      ingredients.purchaseIngredients(ingredientAnanasDto);
 
       const ingredientsNeedeForPizza: ReceipeIngredient[] = [
-        { name: IngredientsBase.ananas, quantity: 1 },
-        { name: IngredientsBase.tomato, quantity: 1 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
+        { name: IngredientsBase.Tomato, quantity: 1 },
       ];
 
       //when

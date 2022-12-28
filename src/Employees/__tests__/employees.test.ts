@@ -15,10 +15,10 @@ describe("Employees", () => {
     it("Truthy", () => {
       //given
       const employees = Employees.getInstance();
-      const employeeDto: EmployeeDto = { name: "Adam", role: Role.chef };
+      const employeeDto: EmployeeDto = { name: "Adam", role: Role.Chef };
 
       //when
-      const foundEmployee = employees.addNewEmployee(employeeDto);
+      const foundEmployee = employees.addNewEmployee(employeeDto);      
 
       //then
       expect(foundEmployee?.name).to.equal("Adam");
@@ -27,7 +27,7 @@ describe("Employees", () => {
     it("Falsy - name is empty", () => {
       //given
       const employees = Employees.getInstance();
-      const employeeDto: EmployeeDto = { name: "", role: Role.chef };
+      const employeeDto: EmployeeDto = { name: "", role: Role.Chef };
 
       //then
       expect(function () {
@@ -38,14 +38,13 @@ describe("Employees", () => {
     it("Falsy - employee duplicated", () => {
       //given
       const employees = Employees.getInstance();
-      const employeeDto: EmployeeDto = { name: "Adam", role: Role.chef };
+      const employeeDto: EmployeeDto = { name: "Adam", role: Role.Chef };
 
       //when
       employees.addNewEmployee(employeeDto);
-      const duplicatedEmployee = employees.addNewEmployee(employeeDto);
 
       //then
-      expect(duplicatedEmployee).to.null;
+      expect(function() {employees.addNewEmployee(employeeDto);}).to.throw(Error);
     });
   });
 
@@ -59,7 +58,7 @@ describe("Employees", () => {
     it("Truthy - employee deleted", () => {
       //given
       const employees = Employees.getInstance();
-      const employeeDto: EmployeeDto = { name: "Adam", role: Role.chef };
+      const employeeDto: EmployeeDto = { name: "Adam", role: Role.Chef };
 
       //when
       const employee: Employee | null = employees.addNewEmployee(employeeDto);
@@ -94,7 +93,7 @@ describe("Employees", () => {
     it("Truthy - change status of the employee from free to occupied", () => {
       //given
       const employees = Employees.getInstance();
-      const employeeDto: EmployeeDto = { name: "Adam", role: Role.chef };
+      const employeeDto: EmployeeDto = { name: "Adam", role: Role.Chef };
 
       //when
       const employee = employees.addNewEmployee(employeeDto);
@@ -128,13 +127,13 @@ describe("Employees", () => {
     it("Truthy - finding employee who is the chef", () => {
       //given
       const employees = Employees.getInstance();
-      const chefDto: EmployeeDto = { name: "Dawid", role: Role.chef };
-      const waiterDto: EmployeeDto = { name: "Adam", role: Role.waiter };
+      const chefDto: EmployeeDto = { name: "Dawid", role: Role.Chef };
+      const waiterDto: EmployeeDto = { name: "Adam", role: Role.Waiter };
 
       //when
       employees.addNewEmployee(chefDto);
       employees.addNewEmployee(waiterDto);
-      const foundEmployee = employees.findEmployeeByRole(Role.chef);      
+      const foundEmployee = employees.findEmployeeByRole(Role.Chef);      
 
       //then
       expect(foundEmployee ? foundEmployee.name : null).to.equal("Dawid");
@@ -145,7 +144,7 @@ describe("Employees", () => {
       const employees = Employees.getInstance();
 
       //when
-      const foundEmployee = employees.findEmployeeByRole(Role.chef);
+      const foundEmployee = employees.findEmployeeByRole(Role.Chef);
 
       //then
       expect(foundEmployee).to.null;

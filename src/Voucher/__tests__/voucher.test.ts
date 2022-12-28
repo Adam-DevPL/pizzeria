@@ -39,10 +39,10 @@ describe("Voucher module", () => {
       vouchers.addVoucher(voucherDto) as Voucher;
 
       //when
-      const existingVoucher: Voucher | null = vouchers.addVoucher(voucherDto);
-
       //then
-      expect(existingVoucher).to.null;
+      expect(function () {
+        vouchers.addVoucher(voucherDto);
+      }).to.throw(Error);
     });
 
     it("Falsy - throw error when name is empty or discount less then zero or greater then 100", () => {

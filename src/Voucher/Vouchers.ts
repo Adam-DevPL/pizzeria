@@ -19,21 +19,11 @@ export class Vouchers {
     return Vouchers.instance;
   }
 
-  private findVoucherByName(voucherName: string): Voucher | null {
-    let foundVoucher: Voucher | null = null;
-    this.getAllVouchers().forEach((voucher) => {
-      if (voucher.name === voucherName) {
-        foundVoucher = voucher;
-      }
-    });
-    return foundVoucher;
-  }
-
   public getAllVouchers(): Map<string, Voucher> {
     return this.listOfVouchers;
   }
 
-  public addVoucher({ name, discount, weekDay }: VoucherDto): Voucher | null {
+  public addVoucher({ name, discount, weekDay }: VoucherDto): Voucher {
     Validator.validateName(name);
     Validator.validateDiscount(discount);
 
@@ -42,7 +32,7 @@ export class Vouchers {
     );
 
     if (foundVoucher) {
-      return null;
+      throw new Error(`Voucher ${name} already exists`);
     }
 
     const newId: string = uuid();
@@ -68,5 +58,13 @@ export class Vouchers {
     }
 
     return foundVoucher.discount;
+  }
+
+  private findVoucherByName(voucherName: string): Voucher | null {
+    const foundVoucher: Voucher | undefined = [...this.getAllVouchers()]
+      .map((value) => value[1])
+      .find((voucher) => voucher.name === voucherName);
+
+    return foundVoucher ?? null;
   }
 }
