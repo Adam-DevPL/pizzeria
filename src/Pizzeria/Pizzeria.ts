@@ -42,12 +42,12 @@ export class Pizzeria implements IPizzeria {
     this.addNewVoucher({
       name: "10yo",
       discount: 10,
-      weekDay: WeekDay.wednesday,
+      weekDay: WeekDay.Wednesday,
     });
     this.addNewVoucher({
       name: "student",
       discount: 40,
-      weekDay: WeekDay.thursday,
+      weekDay: WeekDay.Thursday,
     });
   }
 
@@ -61,12 +61,12 @@ export class Pizzeria implements IPizzeria {
 
   public hireNewEmployee(newEmployee: EmployeeDto): PizzeriaResponse {
     try {
-      const employee: Employee | null =
-        this.employees.addNewEmployee(newEmployee);
-      if (!employee) {
-        return { isSuccess: false, message: "Employee exists in database" };
-      }
-      return { isSuccess: true, message: "Employee created successfully" };
+      this.employees.addNewEmployee(newEmployee);
+
+      return {
+        isSuccess: true,
+        message: `Employee ${newEmployee.name} created successfully`,
+      };
     } catch (error: any) {
       return { isSuccess: false, message: error.message };
     }
@@ -74,11 +74,11 @@ export class Pizzeria implements IPizzeria {
 
   public purchaseNewTable(newTable: TableDto): PizzeriaResponse {
     try {
-      const table: Table | null = this.tables.addNewTable(newTable);
-      if (!table) {
-        return { isSuccess: false, message: "Table exists in database" };
-      }
-      return { isSuccess: true, message: "Table purchesed successfully" };
+      this.tables.addNewTable(newTable);
+      return {
+        isSuccess: true,
+        message: `Table '${newTable.tableNumber}' purchesed successfully`,
+      };
     } catch (error: any) {
       return { isSuccess: false, message: error.message };
     }
@@ -99,11 +99,11 @@ export class Pizzeria implements IPizzeria {
 
   public addNewVoucher(newVoucher: VoucherDto): PizzeriaResponse {
     try {
-      const voucher: Voucher | null = this.vouchers.addVoucher(newVoucher);
-      if (!voucher) {
-        return { isSuccess: false, message: "Voucher exists in database" };
-      }
-      return { isSuccess: true, message: "New voucher was added" };
+      const voucher: Voucher = this.vouchers.addVoucher(newVoucher);
+      return {
+        isSuccess: true,
+        message: `New voucher ${newVoucher.name} was added`,
+      };
     } catch (error: any) {
       return { isSuccess: false, message: error.message };
     }
@@ -111,14 +111,11 @@ export class Pizzeria implements IPizzeria {
 
   public createPizza(pizzaDto: PizzaDto): PizzeriaResponse {
     try {
-      const pizzaReceipe: Pizza | null = this.pizzas.addPizzaReceipe(pizzaDto);
-      if (!pizzaReceipe) {
-        return {
-          isSuccess: false,
-          message: "This receipe exist already in database",
-        };
-      }
-      return { isSuccess: true, message: "New receipe added to menu" };
+      this.pizzas.addPizzaReceipe(pizzaDto);
+      return {
+        isSuccess: true,
+        message: `Receipe for ${PizzaType[pizzaDto.pizzaName]} added successfuly`,
+      };
     } catch (error: any) {
       return { isSuccess: false, message: error.message };
     }
@@ -136,8 +133,9 @@ export class Pizzeria implements IPizzeria {
     try {
       Validator.validateNumberMoreOrEqualZero(seatsNo);
       Validator.validatePizzasNoInOrder(pizzasOrdered.length);
+      
       const assignWaiter: Employee | null = this.employees.findEmployeeByRole(
-        Role.waiter
+        Role.Waiter
       );
 
       if (!assignWaiter) {
@@ -150,10 +148,10 @@ export class Pizzeria implements IPizzeria {
         return { isSuccess: false, message: "No free table." };
       }
 
-      const pizzasToPrepare: Map<string, Pizza> | null =
+      const pizzasToPrepare: Map<PizzaType, Pizza> =
         this.pizzas.getAllPizzasFromOrder(pizzasOrdered);
 
-      if (!pizzasToPrepare) {
+      if (pizzasToPrepare.size === 0) {
         throw new Error("There is no pizza receipe in the menu!");
       }
 
@@ -182,14 +180,14 @@ export class Pizzeria implements IPizzeria {
 
       const discount: number = this.vouchers.calcDiscount(voucherName);
 
-      const assignChef = this.employees.findEmployeeByRole(Role.chef);
+      const assignChef = this.employees.findEmployeeByRole(Role.Chef);
 
       const orderDto: OrderDto = {
         chefAssigned: assignChef,
         waiterAssigned: assignWaiter,
         tableAssigned: assignTable,
         pizzasOrdered: pizzasOrdered,
-        status: assignChef ? OrderStatus.pending : OrderStatus.queue,
+        status: assignChef ? OrderStatus.Pending : OrderStatus.Queue,
         discount: discount,
         ingredientsCosts: ingredientsCost,
         margin: this.margin,
@@ -221,7 +219,7 @@ export class Pizzeria implements IPizzeria {
       return { isSuccess: false, message: "Order not found!" };
     }
 
-    const assignChef = this.employees.findEmployeeByRole(Role.chef);
+    const assignChef = this.employees.findEmployeeByRole(Role.Chef);
 
     if (!assignChef) {
       return { isSuccess: false, message: "No free chef for the order" };

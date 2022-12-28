@@ -12,6 +12,6 @@ export interface PizzaDto {
 }
 
 export enum PizzaType {
-  margharita = "Margharita",
-  hawaian = "Hawaian",
+  Margharita,
+  Hawaian,
 }

@@ -25,13 +25,13 @@ export class Pizzas {
     return this.listOfPizzasReceipes;
   }
 
-  public addPizzaReceipe({ pizzaName, ingredients }: PizzaDto): Pizza | null {
+  public addPizzaReceipe({ pizzaName, ingredients }: PizzaDto): Pizza {
     Validator.validateNumberOfIngredients(ingredients.length);
 
     const findPizzaReceipe: Pizza | null = this.findPizzaByName(pizzaName);
 
     if (findPizzaReceipe) {
-      return null;
+      throw new Error(`Pizza receipe ${PizzaType[pizzaName]} already exists`)
     }
 
     const newId = uuid();
@@ -47,7 +47,7 @@ export class Pizzas {
 
   public getAllPizzasFromOrder(
     pizzasOrdered: PizzaType[]
-  ): Map<PizzaType, Pizza> | null {
+  ): Map<PizzaType, Pizza> {
     let listOfPizzas: Map<PizzaType, Pizza> = new Map<PizzaType, Pizza>();
     let foundPizza: Pizza | null = null;
     pizzasOrdered.forEach((pizzaOrdered) => {
@@ -56,6 +56,6 @@ export class Pizzas {
         listOfPizzas.set(foundPizza.name, foundPizza);
       }
     });
-    return listOfPizzas.size === 0 ? null : listOfPizzas;
+    return listOfPizzas;
   }
 }

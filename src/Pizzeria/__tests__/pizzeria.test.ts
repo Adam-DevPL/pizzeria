@@ -1,5 +1,4 @@
 import { expect } from "chai";
-import { Employee } from "../../Employees/Employee";
 import { Employees } from "../../Employees/Employees";
 import { EmployeeDto, Role } from "../../Employees/IEmployee";
 import {
@@ -18,6 +17,55 @@ import { Vouchers } from "../../Voucher/Vouchers";
 import { PizzeriaResponse } from "../IPizzeria";
 import { Pizzeria } from "../Pizzeria";
 
+function getPizzeriaObjectWithSettings(): Pizzeria {
+  const pizzeria: Pizzeria = new Pizzeria();
+  const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+    name: "Adam",
+    role: Role.Waiter,
+  });
+  const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
+    tableNumber: 1,
+    numberOfSeats: 4,
+  });
+
+  const ingr1: PizzeriaResponse = pizzeria.purchaseIngredients({
+    name: IngredientsBase.Potato,
+    price: 4,
+    quantity: 4,
+  });
+  const ingr2: PizzeriaResponse = pizzeria.purchaseIngredients({
+    name: IngredientsBase.Tomato,
+    price: 4,
+    quantity: 4,
+  });
+  const ingr3: PizzeriaResponse = pizzeria.purchaseIngredients({
+    name: IngredientsBase.Olives,
+    price: 4,
+    quantity: 4,
+  });
+
+  const pizza: PizzeriaResponse = pizzeria.createPizza({
+    pizzaName: PizzaType.Margharita,
+    ingredients: [
+      { name: IngredientsBase.Potato, quantity: 1 },
+      { name: IngredientsBase.Tomato, quantity: 1 },
+      { name: IngredientsBase.Olives, quantity: 1 },
+    ],
+  });
+
+  const voucherMsg: PizzeriaResponse = pizzeria.addNewVoucher({
+    name: "special",
+    discount: 10,
+    weekDay: null,
+  });
+  const chefMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
+    name: "Dawid",
+    role: Role.Chef,
+  });
+
+  return pizzeria;
+}
+
 describe("Pizzeria module", () => {
   describe("hire new employee", () => {
     beforeEach(() => {
@@ -29,7 +77,7 @@ describe("Pizzeria module", () => {
     it("Success - hire new employee - Employee created successfully", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
-      const employeeDto: EmployeeDto = { name: "Adam", role: Role.chef };
+      const employeeDto: EmployeeDto = { name: "Adam", role: Role.Chef };
 
       //when
       const newEmployeeResponse: PizzeriaResponse =
@@ -38,14 +86,14 @@ describe("Pizzeria module", () => {
       //then
       expect(newEmployeeResponse.isSuccess).to.true;
       expect(newEmployeeResponse.message).to.equal(
-        "Employee created successfully"
+        "Employee Adam created successfully"
       );
     });
 
     it("Failure - hire new employee - Employee exists in database", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
-      const employeeDto: EmployeeDto = { name: "Adam", role: Role.chef };
+      const employeeDto: EmployeeDto = { name: "Adam", role: Role.Chef };
 
       //when
       pizzeria.hireNewEmployee(employeeDto);
@@ -55,14 +103,14 @@ describe("Pizzeria module", () => {
       //then
       expect(duplicatedEmployeeResp.isSuccess).to.false;
       expect(duplicatedEmployeeResp.message).to.equal(
-        "Employee exists in database"
+        "Employee Adam already exists"
       );
     });
 
     it("Failure - hire new employee - It's not valid name or it's empty", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
-      const employeeDto: EmployeeDto = { name: "", role: Role.chef };
+      const employeeDto: EmployeeDto = { name: "", role: Role.Chef };
 
       //when
       const errorResp: PizzeriaResponse = pizzeria.hireNewEmployee(employeeDto);
@@ -90,7 +138,9 @@ describe("Pizzeria module", () => {
 
       //then
       expect(newTableResponse.isSuccess).to.true;
-      expect(newTableResponse.message).to.equal("Table purchesed successfully");
+      expect(newTableResponse.message).to.equal(
+        "Table '1' purchesed successfully"
+      );
     });
 
     it("Failure - purchase new table - Table exists in database", () => {
@@ -105,7 +155,7 @@ describe("Pizzeria module", () => {
 
       //then
       expect(newTableResponse.isSuccess).to.false;
-      expect(newTableResponse.message).to.equal("Table exists in database");
+      expect(newTableResponse.message).to.equal("Table '1' already exists");
     });
 
     it("Failure - purchase new table - The table number must be greater than zero!", () => {
@@ -162,7 +212,7 @@ describe("Pizzeria module", () => {
 
       //then
       expect(newVoucherResp.isSuccess).to.true;
-      expect(newVoucherResp.message).to.equal("New voucher was added");
+      expect(newVoucherResp.message).to.equal("New voucher special was added");
     });
 
     it("Failure - adding new voucher witch exit in db - Voucher exists in database", () => {
@@ -181,7 +231,7 @@ describe("Pizzeria module", () => {
 
       //then
       expect(newVoucherResp.isSuccess).to.false;
-      expect(newVoucherResp.message).to.equal("Voucher exists in database");
+      expect(newVoucherResp.message).to.equal("Voucher special already exists");
     });
 
     it("Failure - adding new voucher with empty name - The name can't be empty", () => {
@@ -228,11 +278,11 @@ describe("Pizzeria module", () => {
     it("Success - adding new pizza receipe - New receipe added to menu", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
-      const margharita: PizzaType = PizzaType.margharita;
+      const margharita: PizzaType = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
-        { name: IngredientsBase.ananas, quantity: 1 },
-        { name: IngredientsBase.olives, quantity: 4 },
-        { name: IngredientsBase.tomato, quantity: 2 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
+        { name: IngredientsBase.Olives, quantity: 4 },
+        { name: IngredientsBase.Tomato, quantity: 2 },
       ];
       const pizzaDto: PizzaDto = {
         pizzaName: margharita,
@@ -244,17 +294,19 @@ describe("Pizzeria module", () => {
 
       //then
       expect(newPizzaResp.isSuccess).to.true;
-      expect(newPizzaResp.message).to.equal("New receipe added to menu");
+      expect(newPizzaResp.message).to.equal(
+        "Receipe for Margharita added successfuly"
+      );
     });
 
     it("Failure - adding new receipe when it already exists - This receipe exist already in database", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
-      const margharita: PizzaType = PizzaType.margharita;
+      const margharita: PizzaType = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
-        { name: IngredientsBase.ananas, quantity: 1 },
-        { name: IngredientsBase.olives, quantity: 4 },
-        { name: IngredientsBase.tomato, quantity: 2 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
+        { name: IngredientsBase.Olives, quantity: 4 },
+        { name: IngredientsBase.Tomato, quantity: 2 },
       ];
       const pizzaDto: PizzaDto = {
         pizzaName: margharita,
@@ -268,14 +320,14 @@ describe("Pizzeria module", () => {
       //then
       expect(newPizzaResp.isSuccess).to.false;
       expect(newPizzaResp.message).to.equal(
-        "This receipe exist already in database"
+        "Pizza receipe Margharita already exists"
       );
     });
 
     it("Failure - adding new receipe with empty ingredients - Not enaught ingredients to create pizza receipe", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
-      const margharita: PizzaType = PizzaType.margharita;
+      const margharita: PizzaType = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [];
       const pizzaDto: PizzaDto = {
         pizzaName: margharita,
@@ -303,7 +355,7 @@ describe("Pizzeria module", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
       const ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.olives,
+        name: IngredientsBase.Olives,
         price: 4,
         quantity: 1,
       };
@@ -323,7 +375,7 @@ describe("Pizzeria module", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
       const ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.olives,
+        name: IngredientsBase.Olives,
         price: 4,
         quantity: 1,
       };
@@ -342,7 +394,7 @@ describe("Pizzeria module", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
       const ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.olives,
+        name: IngredientsBase.Olives,
         price: 0,
         quantity: 1,
       };
@@ -362,7 +414,7 @@ describe("Pizzeria module", () => {
       //given
       const pizzeria: Pizzeria = new Pizzeria();
       const ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.olives,
+        name: IngredientsBase.Olives,
         price: 1,
         quantity: -1,
       };
@@ -397,55 +449,12 @@ describe("Pizzeria module", () => {
 
     it("Success - succesfully created order in progress", () => {
       //given
-      const pizzeria: Pizzeria = new Pizzeria();
-      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
-        name: "Adam",
-        role: Role.waiter,
-      });
-      const chefMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
-        name: "Dawid",
-        role: Role.chef,
-      });
-      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
-        tableNumber: 1,
-        numberOfSeats: 4,
-      });
-
-      const ingr1: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.potato,
-        price: 4,
-        quantity: 4,
-      });
-      const ingr2: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.tomato,
-        price: 4,
-        quantity: 4,
-      });
-      const ingr3: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.olives,
-        price: 4,
-        quantity: 4,
-      });
-
-      const pizza: PizzeriaResponse = pizzeria.createPizza({
-        pizzaName: PizzaType.margharita,
-        ingredients: [
-          { name: IngredientsBase.potato, quantity: 1 },
-          { name: IngredientsBase.tomato, quantity: 1 },
-          { name: IngredientsBase.olives, quantity: 1 },
-        ],
-      });
-
-      const voucherMsg: PizzeriaResponse = pizzeria.addNewVoucher({
-        name: "special",
-        discount: 10,
-        weekDay: null,
-      });
+      const pizzeria: Pizzeria = getPizzeriaObjectWithSettings();
 
       //when
       const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
         seatsNo: 4,
-        pizzasOrdered: [PizzaType.margharita],
+        pizzasOrdered: [PizzaType.Margharita],
         voucherName: "special",
       });
 
@@ -458,51 +467,15 @@ describe("Pizzeria module", () => {
 
     it("Success - succesfully created order in queue", () => {
       //given
-      const pizzeria: Pizzeria = new Pizzeria();
-      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
-        name: "Adam",
-        role: Role.waiter,
-      });
-      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
-        tableNumber: 1,
-        numberOfSeats: 4,
-      });
-
-      const ingr1: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.potato,
-        price: 4,
-        quantity: 4,
-      });
-      const ingr2: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.tomato,
-        price: 4,
-        quantity: 4,
-      });
-      const ingr3: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.olives,
-        price: 4,
-        quantity: 4,
-      });
-
-      const pizza: PizzeriaResponse = pizzeria.createPizza({
-        pizzaName: PizzaType.margharita,
-        ingredients: [
-          { name: IngredientsBase.potato, quantity: 1 },
-          { name: IngredientsBase.tomato, quantity: 1 },
-          { name: IngredientsBase.olives, quantity: 1 },
-        ],
-      });
-
-      const voucherMsg: PizzeriaResponse = pizzeria.addNewVoucher({
-        name: "special",
-        discount: 10,
-        weekDay: null,
-      });
-
+      const pizzeria: Pizzeria = getPizzeriaObjectWithSettings();
+      const employees: Employees = Employees.getInstance();
+      employees.removeEmployee(
+        employees.findEmployeeByRole(Role.Chef)?.id as string
+      );
       //when
       const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
         seatsNo: 4,
-        pizzasOrdered: [PizzaType.margharita],
+        pizzasOrdered: [PizzaType.Margharita],
         voucherName: "special",
       });
 
@@ -518,19 +491,19 @@ describe("Pizzeria module", () => {
       const pizzeria: Pizzeria = new Pizzeria();
       const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
         name: "Adam",
-        role: Role.waiter,
+        role: Role.Waiter,
       });
 
       //when
       const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
         seatsNo: 4,
-        pizzasOrdered: [PizzaType.margharita],
+        pizzasOrdered: [PizzaType.Margharita],
         voucherName: "special",
       });
 
       //then
       expect(outcome.isSuccess).to.false;
-      expect(outcome.message).to.equal("No free table.");
+      expect(outcome.message).to.equal("There is no free table for 4 seat(s)");
     });
 
     it("Failure - not any pizza receipies for ordered pizzas", () => {
@@ -538,7 +511,7 @@ describe("Pizzeria module", () => {
       const pizzeria: Pizzeria = new Pizzeria();
       const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
         name: "Adam",
-        role: Role.waiter,
+        role: Role.Waiter,
       });
       const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
         tableNumber: 1,
@@ -548,7 +521,7 @@ describe("Pizzeria module", () => {
       //when
       const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
         seatsNo: 4,
-        pizzasOrdered: [PizzaType.margharita],
+        pizzasOrdered: [PizzaType.Margharita],
         voucherName: "special",
       });
 
@@ -564,7 +537,7 @@ describe("Pizzeria module", () => {
       const pizzeria: Pizzeria = new Pizzeria();
       const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
         name: "Adam",
-        role: Role.waiter,
+        role: Role.Waiter,
       });
       const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
         tableNumber: 1,
@@ -572,18 +545,18 @@ describe("Pizzeria module", () => {
       });
 
       const pizza: PizzeriaResponse = pizzeria.createPizza({
-        pizzaName: PizzaType.margharita,
+        pizzaName: PizzaType.Margharita,
         ingredients: [
-          { name: IngredientsBase.potato, quantity: 1 },
-          { name: IngredientsBase.tomato, quantity: 1 },
-          { name: IngredientsBase.olives, quantity: 1 },
+          { name: IngredientsBase.Potato, quantity: 1 },
+          { name: IngredientsBase.Tomato, quantity: 1 },
+          { name: IngredientsBase.Olives, quantity: 1 },
         ],
       });
 
       //when
       const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
         seatsNo: 4,
-        pizzasOrdered: [PizzaType.margharita],
+        pizzasOrdered: [PizzaType.Margharita],
         voucherName: "special",
       });
 
@@ -601,7 +574,7 @@ describe("Pizzeria module", () => {
       //when
       const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
         seatsNo: 0,
-        pizzasOrdered: [PizzaType.margharita],
+        pizzasOrdered: [PizzaType.Margharita],
         voucherName: "special",
       });
 
@@ -628,7 +601,7 @@ describe("Pizzeria module", () => {
   });
 
   describe("check if there is free chef and assign to the order", () => {
-    beforeEach(() => {
+    afterEach(() => {
       const employees: Employees = Employees.getInstance();
       employees.getAllFreeEmployees().clear();
       employees.getAllOccupiedEmployees().clear();
@@ -645,54 +618,12 @@ describe("Pizzeria module", () => {
 
     it("Success - there is a free chef", () => {
       //given
-      const pizzeria: Pizzeria = new Pizzeria();
-      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
-        name: "Adam",
-        role: Role.waiter,
-      });
-      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
-        tableNumber: 1,
-        numberOfSeats: 4,
-      });
+      const pizzeria: Pizzeria = getPizzeriaObjectWithSettings();
 
-      const ingr1: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.potato,
-        price: 4,
-        quantity: 4,
-      });
-      const ingr2: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.tomato,
-        price: 4,
-        quantity: 4,
-      });
-      const ingr3: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.olives,
-        price: 4,
-        quantity: 4,
-      });
-
-      const pizza: PizzeriaResponse = pizzeria.createPizza({
-        pizzaName: PizzaType.margharita,
-        ingredients: [
-          { name: IngredientsBase.potato, quantity: 1 },
-          { name: IngredientsBase.tomato, quantity: 1 },
-          { name: IngredientsBase.olives, quantity: 1 },
-        ],
-      });
-
-      const voucherMsg: PizzeriaResponse = pizzeria.addNewVoucher({
-        name: "special",
-        discount: 10,
-        weekDay: null,
-      });
       const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
         seatsNo: 4,
-        pizzasOrdered: [PizzaType.margharita],
+        pizzasOrdered: [PizzaType.Margharita],
         voucherName: "special",
-      });
-      const chefMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
-        name: "Dawid",
-        role: Role.chef,
       });
 
       //when
@@ -706,51 +637,17 @@ describe("Pizzeria module", () => {
       );
     });
 
-    it("Success - there is a free chef", () => {
+    it("Success - there is no a free chef", () => {
       //given
-      const pizzeria: Pizzeria = new Pizzeria();
-      const waiterMsg: PizzeriaResponse = pizzeria.hireNewEmployee({
-        name: "Adam",
-        role: Role.waiter,
-      });
-      const tabelMsg: PizzeriaResponse = pizzeria.purchaseNewTable({
-        tableNumber: 1,
-        numberOfSeats: 4,
-      });
+      const pizzeria: Pizzeria = getPizzeriaObjectWithSettings();
+      const employees: Employees = Employees.getInstance();
+      employees.removeEmployee(
+        employees.findEmployeeByRole(Role.Chef)?.id as string
+      );
 
-      const ingr1: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.potato,
-        price: 4,
-        quantity: 4,
-      });
-      const ingr2: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.tomato,
-        price: 4,
-        quantity: 4,
-      });
-      const ingr3: PizzeriaResponse = pizzeria.purchaseIngredients({
-        name: IngredientsBase.olives,
-        price: 4,
-        quantity: 4,
-      });
-
-      const pizza: PizzeriaResponse = pizzeria.createPizza({
-        pizzaName: PizzaType.margharita,
-        ingredients: [
-          { name: IngredientsBase.potato, quantity: 1 },
-          { name: IngredientsBase.tomato, quantity: 1 },
-          { name: IngredientsBase.olives, quantity: 1 },
-        ],
-      });
-
-      const voucherMsg: PizzeriaResponse = pizzeria.addNewVoucher({
-        name: "special",
-        discount: 10,
-        weekDay: null,
-      });
       const outcome: PizzeriaResponse = pizzeria.makeNewOrder({
         seatsNo: 4,
-        pizzasOrdered: [PizzaType.margharita],
+        pizzasOrdered: [PizzaType.Margharita],
         voucherName: "special",
       });
 
@@ -765,7 +662,7 @@ describe("Pizzeria module", () => {
 
     it("Failure - order not found", () => {
       //given
-      const pizzeria: Pizzeria = new Pizzeria();
+      const pizzeria: Pizzeria = getPizzeriaObjectWithSettings();
 
       //when
       const isFreeChef: PizzeriaResponse = pizzeria.assignChefIfFree("");

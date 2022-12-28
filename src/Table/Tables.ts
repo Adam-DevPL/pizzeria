@@ -18,23 +18,6 @@ export class Tables {
     return Tables.instance;
   }
 
-  private findTableByNumber(tableNo: number): Table | null {
-    Validator.validateNumberMoreOrEqualZero(tableNo);
-
-    let tmpTable: Table | null = null;
-    this.getAllTables().forEach((table) => {
-      if (table.tableNumber === tableNo) {
-        tmpTable = table;
-      }
-    });
-
-    return tmpTable;
-  }
-
-  private getSingleTable(tableId: string): Table | null {
-    return this.getAllTables().get(tableId) ?? null;
-  }
-
   public getAllFreeTables(): Map<string, Table> {
     return this.listOfFreeTables;
   }
@@ -50,14 +33,14 @@ export class Tables {
     ]);
   }
 
-  public addNewTable({ tableNumber, numberOfSeats }: TableDto): Table | null {
+  public addNewTable({ tableNumber, numberOfSeats }: TableDto): Table {
     Validator.validateNumberMoreOrEqualZero(tableNumber);
     Validator.validateNumberMoreOrEqualZero(numberOfSeats);
 
     const foundTable = this.findTableByNumber(tableNumber);
 
     if (foundTable) {
-      return null;
+      throw new Error(`Table '${tableNumber}' already exists`);
     }
 
     const newId = uuid();
@@ -75,7 +58,9 @@ export class Tables {
     let findTable: Table | null = this.getSingleTable(tableId);
 
     if (!findTable) {
-      return false;
+      throw new Error(
+        `Can't change the table status, becasue it's not existing`
+      );
     }
 
     if (!this.listOfFreeTables.get(tableId)) {
@@ -92,12 +77,28 @@ export class Tables {
   public findFreeTable(seatsNo: number): Table | null {
     Validator.validateNumberMoreOrEqualZero(seatsNo);
 
-    let foundTable: Table | null = null;
-    this.getAllTables().forEach((table) => {
-      if (table.numberOfSeats === seatsNo) {
-        foundTable = table;
-      }
-    });
+    const foundTable: Table | undefined = [...this.getAllTables()]
+      .map((value) => value[1])
+      .find((table) => table.numberOfSeats === seatsNo);
+
+    if (!foundTable) {
+      throw new Error(`There is no free table for ${seatsNo} seat(s)`);
+    }
+
     return foundTable;
+  }
+
+  private findTableByNumber(tableNo: number): Table | null {
+    Validator.validateNumberMoreOrEqualZero(tableNo);
+
+    const tmpTable: Table | undefined = [...this.getAllTables()]
+      .map((value) => value[1])
+      .find((table) => table.tableNumber === tableNo);
+
+    return tmpTable ?? null;
+  }
+
+  private getSingleTable(tableId: string): Table | null {
+    return this.getAllTables().get(tableId) ?? null;
   }
 }

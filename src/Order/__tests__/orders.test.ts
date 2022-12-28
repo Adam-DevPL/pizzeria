@@ -7,7 +7,6 @@ import {
   ReceipeIngredient,
 } from "../../Ingredients/IIngredient";
 import { PizzaDto, PizzaType } from "../../Pizzas/IPizza";
-import { Pizza } from "../../Pizzas/Pizza";
 import { Pizzas } from "../../Pizzas/Pizzas";
 import { TableDto } from "../../Table/ITable";
 import { Table } from "../../Table/Table";
@@ -20,8 +19,41 @@ describe("Orders module", () => {
   describe("adding new order", () => {
     beforeEach(() => {
       const orders = Orders.getInstance();
+      const employees: Employees = Employees.getInstance();
+      const tables: Tables = Tables.getInstance();
+      const pizzas: Pizzas = Pizzas.getInstance();
+      const chefDto: EmployeeDto = { name: "Adam", role: Role.Chef };
+      const waiterDto: EmployeeDto = { name: "Dawid", role: Role.Waiter };
+      employees.addNewEmployee(chefDto);
+      employees.addNewEmployee(waiterDto);
+
+      const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 4 };
+      tables.addNewTable(tableDto);
+
+      const ingredientsReceipe: ReceipeIngredient[] = [
+        { name: IngredientsBase.Tomato, quantity: 4 },
+        { name: IngredientsBase.Paprika, quantity: 4 },
+        { name: IngredientsBase.Paprika, quantity: 4 },
+      ];
+      const pizzaDto: PizzaDto = {
+        pizzaName: PizzaType.Margharita,
+        ingredients: ingredientsReceipe,
+      };
+      pizzas.addPizzaReceipe(pizzaDto);
+    });
+
+    afterEach(() => {
+      const orders = Orders.getInstance();
+      const employees: Employees = Employees.getInstance();
+      const tables: Tables = Tables.getInstance();
+      const pizzas: Pizzas = Pizzas.getInstance();
       orders.getAllOrdersInProgress().clear();
       orders.getAllOrdersInQueue().clear();
+      employees.getAllFreeEmployees().clear();
+      employees.getAllOccupiedEmployees().clear();
+      tables.getAllFreeTables().clear();
+      tables.getAllOccupiedTables().clear();
+      pizzas.getAllReceipes().clear();
     });
 
     it("Success - adding new order to the list in progress", () => {
@@ -29,35 +61,16 @@ describe("Orders module", () => {
       const orders = Orders.getInstance();
       const employees: Employees = Employees.getInstance();
       const tables: Tables = Tables.getInstance();
-      const pizzas: Pizzas = Pizzas.getInstance();
 
-      const chefDto: EmployeeDto = { name: "Adam", role: Role.chef };
-      const waiterDto: EmployeeDto = { name: "Dawid", role: Role.waiter };
-      const chef: Employee = employees.addNewEmployee(chefDto) as Employee;
-      const waiter: Employee = employees.addNewEmployee(waiterDto) as Employee;
-
-      const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 4 };
-      const table: Table = tables.addNewTable(tableDto) as Table;
-
-      const ingredientsReceipe: ReceipeIngredient[] = [
-        { name: IngredientsBase.tomato, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-      ];
-      const pizzaDto: PizzaDto = {
-        pizzaName: PizzaType.margharita,
-        ingredients: ingredientsReceipe,
-      };
-      pizzas.addPizzaReceipe(pizzaDto);
-      const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
+      const pizzasOrdered: PizzaType[] = [PizzaType.Margharita];
 
       //when
       const orderDto: OrderDto = {
-        chefAssigned: chef,
-        waiterAssigned: waiter,
-        tableAssigned: table,
+        chefAssigned: employees.findEmployeeByRole(Role.Chef),
+        waiterAssigned: employees.findEmployeeByRole(Role.Waiter) as Employee,
+        tableAssigned: tables.findFreeTable(4) as Table,
         pizzasOrdered: pizzasOrdered,
-        status: OrderStatus.pending,
+        status: OrderStatus.Pending,
         discount: 10,
         ingredientsCosts: 10,
         margin: 10,
@@ -70,7 +83,6 @@ describe("Orders module", () => {
       //then
       expect(newOrder).to.not.null;
       expect(orderInProgress).to.not.null;
-      expect(newOrder.chefAssigned?.id).to.equal(chef.id);
     });
 
     it("Success - adding new order to the list in queue", () => {
@@ -78,33 +90,17 @@ describe("Orders module", () => {
       const orders = Orders.getInstance();
       const employees: Employees = Employees.getInstance();
       const tables: Tables = Tables.getInstance();
-      const pizzas: Pizzas = Pizzas.getInstance();
 
-      const waiterDto: EmployeeDto = { name: "Dawid", role: Role.waiter };
-      const waiter: Employee = employees.addNewEmployee(waiterDto) as Employee;
-
-      const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 4 };
-      const table: Table = tables.addNewTable(tableDto) as Table;
-
-      const ingredientsReceipe: ReceipeIngredient[] = [
-        { name: IngredientsBase.tomato, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-      ];
-      const pizzaDto: PizzaDto = {
-        pizzaName: PizzaType.margharita,
-        ingredients: ingredientsReceipe,
-      };
-      pizzas.addPizzaReceipe(pizzaDto);
-      const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
+      employees.removeEmployee(employees.findEmployeeByRole(Role.Chef)?.id as string);
+      const pizzasOrdered: PizzaType[] = [PizzaType.Margharita];
 
       //when
       const orderDto: OrderDto = {
         chefAssigned: null,
-        waiterAssigned: waiter,
-        tableAssigned: table,
+        waiterAssigned: employees.findEmployeeByRole(Role.Waiter) as Employee,
+        tableAssigned: tables.findFreeTable(4) as Table,
         pizzasOrdered: pizzasOrdered,
-        status: OrderStatus.queue,
+        status: OrderStatus.Queue,
         discount: 10,
         ingredientsCosts: 10,
         margin: 10,
@@ -124,33 +120,16 @@ describe("Orders module", () => {
       const orders = Orders.getInstance();
       const employees: Employees = Employees.getInstance();
       const tables: Tables = Tables.getInstance();
-      const pizzas: Pizzas = Pizzas.getInstance();
 
-      const waiterDto: EmployeeDto = { name: "Dawid", role: Role.waiter };
-      const waiter: Employee = employees.addNewEmployee(waiterDto) as Employee;
-
-      const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 4 };
-      const table: Table = tables.addNewTable(tableDto) as Table;
-
-      const ingredientsReceipe: ReceipeIngredient[] = [
-        { name: IngredientsBase.tomato, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-      ];
-      const pizzaDto: PizzaDto = {
-        pizzaName: PizzaType.margharita,
-        ingredients: ingredientsReceipe,
-      };
-      pizzas.addPizzaReceipe(pizzaDto);
       const pizzasOrdered: PizzaType[] = [];
 
       //when
       const orderDto: OrderDto = {
         chefAssigned: null,
-        waiterAssigned: waiter,
-        tableAssigned: table,
+        waiterAssigned: employees.findEmployeeByRole(Role.Waiter) as Employee,
+        tableAssigned: tables.findFreeTable(4) as Table,
         pizzasOrdered: pizzasOrdered,
-        status: OrderStatus.queue,
+        status: OrderStatus.Queue,
         discount: 10,
         ingredientsCosts: 10,
         margin: 10,
@@ -167,33 +146,16 @@ describe("Orders module", () => {
       const orders = Orders.getInstance();
       const employees: Employees = Employees.getInstance();
       const tables: Tables = Tables.getInstance();
-      const pizzas: Pizzas = Pizzas.getInstance();
 
-      const waiterDto: EmployeeDto = { name: "Dawid", role: Role.waiter };
-      const waiter: Employee = employees.addNewEmployee(waiterDto) as Employee;
-
-      const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 4 };
-      const table: Table = tables.addNewTable(tableDto) as Table;
-
-      const ingredientsReceipe: ReceipeIngredient[] = [
-        { name: IngredientsBase.tomato, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-      ];
-      const pizzaDto: PizzaDto = {
-        pizzaName: PizzaType.margharita,
-        ingredients: ingredientsReceipe,
-      };
-      pizzas.addPizzaReceipe(pizzaDto);
-      const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
+      const pizzasOrdered: PizzaType[] = [PizzaType.Margharita];
 
       //when
       const orderDto: OrderDto = {
         chefAssigned: null,
-        waiterAssigned: waiter,
-        tableAssigned: table,
+        waiterAssigned: employees.findEmployeeByRole(Role.Waiter) as Employee,
+        tableAssigned: tables.findFreeTable(4) as Table,
         pizzasOrdered: pizzasOrdered,
-        status: OrderStatus.queue,
+        status: OrderStatus.Queue,
         discount: -1,
         ingredientsCosts: 10,
         margin: 10,
@@ -209,33 +171,16 @@ describe("Orders module", () => {
       const orders = Orders.getInstance();
       const employees: Employees = Employees.getInstance();
       const tables: Tables = Tables.getInstance();
-      const pizzas: Pizzas = Pizzas.getInstance();
 
-      const waiterDto: EmployeeDto = { name: "Dawid", role: Role.waiter };
-      const waiter: Employee = employees.addNewEmployee(waiterDto) as Employee;
-
-      const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 4 };
-      const table: Table = tables.addNewTable(tableDto) as Table;
-
-      const ingredientsReceipe: ReceipeIngredient[] = [
-        { name: IngredientsBase.tomato, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-      ];
-      const pizzaDto: PizzaDto = {
-        pizzaName: PizzaType.margharita,
-        ingredients: ingredientsReceipe,
-      };
-      pizzas.addPizzaReceipe(pizzaDto);
-      const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
+      const pizzasOrdered: PizzaType[] = [PizzaType.Margharita];
 
       //when
       const orderDto: OrderDto = {
         chefAssigned: null,
-        waiterAssigned: waiter,
-        tableAssigned: table,
+        waiterAssigned: employees.findEmployeeByRole(Role.Waiter) as Employee,
+        tableAssigned: tables.findFreeTable(4) as Table,
         pizzasOrdered: pizzasOrdered,
-        status: OrderStatus.queue,
+        status: OrderStatus.Queue,
         discount: 1,
         ingredientsCosts: 0,
         margin: 10,
@@ -252,33 +197,16 @@ describe("Orders module", () => {
       const orders = Orders.getInstance();
       const employees: Employees = Employees.getInstance();
       const tables: Tables = Tables.getInstance();
-      const pizzas: Pizzas = Pizzas.getInstance();
 
-      const waiterDto: EmployeeDto = { name: "Dawid", role: Role.waiter };
-      const waiter: Employee = employees.addNewEmployee(waiterDto) as Employee;
-
-      const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 4 };
-      const table: Table = tables.addNewTable(tableDto) as Table;
-
-      const ingredientsReceipe: ReceipeIngredient[] = [
-        { name: IngredientsBase.tomato, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 4 },
-      ];
-      const pizzaDto: PizzaDto = {
-        pizzaName: PizzaType.margharita,
-        ingredients: ingredientsReceipe,
-      };
-      pizzas.addPizzaReceipe(pizzaDto);
-      const pizzasOrdered: PizzaType[] = [PizzaType.margharita];
+      const pizzasOrdered: PizzaType[] = [PizzaType.Margharita];
 
       //when
       const orderDto: OrderDto = {
         chefAssigned: null,
-        waiterAssigned: waiter,
-        tableAssigned: table,
+        waiterAssigned: employees.findEmployeeByRole(Role.Waiter) as Employee,
+        tableAssigned: tables.findFreeTable(4) as Table,
         pizzasOrdered: pizzasOrdered,
-        status: OrderStatus.queue,
+        status: OrderStatus.Queue,
         discount: 1,
         ingredientsCosts: 10,
         margin: 0,
