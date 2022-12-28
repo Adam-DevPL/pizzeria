@@ -14,14 +14,19 @@ describe("Pizza module", () => {
       pizzas.getAllReceipes().clear();
     });
 
+    afterEach(() => {
+      const pizzas = Pizzas.getInstance();
+      pizzas.getAllReceipes().clear();
+    })
+
     it("Truthy - added new pizza receipe successfully", () => {
       //given
       const pizzas = Pizzas.getInstance();
-      const margharita = PizzaType.margharita;
+      const margharita = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
-        { name: IngredientsBase.ananas, quantity: 1 },
-        { name: IngredientsBase.olives, quantity: 4 },
-        { name: IngredientsBase.tomato, quantity: 2 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
+        { name: IngredientsBase.Olives, quantity: 4 },
+        { name: IngredientsBase.Tomato, quantity: 2 },
       ];
 
       //when
@@ -37,18 +42,18 @@ describe("Pizza module", () => {
 
       //then
       expect(newReceipe?.id).to.equal(foundReceipe?.id);
-      expect(newReceipe?.name).to.equal(PizzaType.margharita);
+      expect(newReceipe?.name).to.equal(PizzaType.Margharita);
       expect(newReceipe?.ingredients[0].quantity).to.equal(1);
     });
 
     it("Falsy - can't add receipe if exist in db", () => {
       //given
       const pizzas = Pizzas.getInstance();
-      const margharita = PizzaType.margharita;
+      const margharita = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
-        { name: IngredientsBase.ananas, quantity: 1 },
-        { name: IngredientsBase.olives, quantity: 4 },
-        { name: IngredientsBase.tomato, quantity: 2 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
+        { name: IngredientsBase.Olives, quantity: 4 },
+        { name: IngredientsBase.Tomato, quantity: 2 },
       ];
       const pizzaDto: PizzaDto = {
         pizzaName: margharita,
@@ -56,20 +61,17 @@ describe("Pizza module", () => {
       };
       pizzas.addPizzaReceipe(pizzaDto);
 
-      //when
-      const doubleReceipe = pizzas.addPizzaReceipe(pizzaDto);
-
       //then
-      expect(doubleReceipe).to.null;
+      expect(function() {pizzas.addPizzaReceipe(pizzaDto)}).to.throw(Error);
     });
 
     it("Error - not enaugh ingredients to create new pizz receipe", () => {
       //given
       const pizzas = Pizzas.getInstance();
-      const margharita = PizzaType.margharita;
+      const margharita = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
-        { name: IngredientsBase.ananas, quantity: 1 },
-        { name: IngredientsBase.olives, quantity: 4 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
+        { name: IngredientsBase.Olives, quantity: 4 },
       ];
       const pizzaDto: PizzaDto = {
         pizzaName: margharita,
@@ -92,11 +94,11 @@ describe("Pizza module", () => {
     it("Success - pizza receipe successfully removed", () => {
       //given
       const pizzas: Pizzas = Pizzas.getInstance();
-      const margharita = PizzaType.margharita;
+      const margharita = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
-        { name: IngredientsBase.ananas, quantity: 1 },
-        { name: IngredientsBase.olives, quantity: 4 },
-        { name: IngredientsBase.tomato, quantity: 2 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
+        { name: IngredientsBase.Olives, quantity: 4 },
+        { name: IngredientsBase.Tomato, quantity: 2 },
       ];
       const pizzaDto: PizzaDto = {
         pizzaName: margharita,
@@ -114,7 +116,7 @@ describe("Pizza module", () => {
     it("Failure - pizza can't be removed - not existing", () => {
       //given
       const pizzas: Pizzas = Pizzas.getInstance();
-      const margharita = PizzaType.margharita;
+      const margharita = PizzaType.Margharita;
 
       //when
       const isSuccess: boolean = pizzas.removePizzaReceipe(margharita);
@@ -133,25 +135,25 @@ describe("Pizza module", () => {
     it("Order with two pizzas, return receipes for these 2 pizzas", () => {
       //given
       const pizzas = Pizzas.getInstance();
-      const margharita = PizzaType.margharita;
+      const margharita = PizzaType.Margharita;
       const ingredientsForMargharita: ReceipeIngredient[] = [
-        { name: IngredientsBase.tomato, quantity: 1 },
-        { name: IngredientsBase.olives, quantity: 4 },
-        { name: IngredientsBase.ananas, quantity: 1 },
+        { name: IngredientsBase.Tomato, quantity: 1 },
+        { name: IngredientsBase.Olives, quantity: 4 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
       ];
       const pizzaMargharitaDto: PizzaDto = {
         pizzaName: margharita,
         ingredients: ingredientsForMargharita,
       };
       pizzas.addPizzaReceipe(pizzaMargharitaDto);
-      const hawaian = PizzaType.margharita;
+      const hawaian = PizzaType.Hawaian;
       const ingredientsForHawaian: ReceipeIngredient[] = [
-        { name: IngredientsBase.ananas, quantity: 1 },
-        { name: IngredientsBase.olives, quantity: 4 },
-        { name: IngredientsBase.paprika, quantity: 1 },
+        { name: IngredientsBase.Ananas, quantity: 1 },
+        { name: IngredientsBase.Olives, quantity: 4 },
+        { name: IngredientsBase.Paprika, quantity: 1 },
       ];
       const pizzaHawaianDto: PizzaDto = {
-        pizzaName: margharita,
+        pizzaName: hawaian,
         ingredients: ingredientsForHawaian,
       };
       pizzas.addPizzaReceipe(pizzaHawaianDto);

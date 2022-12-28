@@ -47,17 +47,18 @@ describe("Table", () => {
       }).to.throw(Error);
     });
 
-    it("Falsy - add table with the same number - return null", () => {
+    it("Falsy - add table with the same number - throw error", () => {
       //given
       const tables = Tables.getInstance();
       const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 1 };
 
       //when
       tables.addNewTable(tableDto);
-      const duplicateTable = tables.addNewTable(tableDto);
 
       //then
-      expect(duplicateTable).to.null;
+      expect(function () {
+        tables.addNewTable(tableDto);
+      }).to.throw(Error);
     });
   });
 
@@ -121,11 +122,10 @@ describe("Table", () => {
       //given
       const tables: Tables = Tables.getInstance();
 
-      //when
-      const isSuccess: boolean = tables.changeStatusOfTable("");
-
       //then
-      expect(isSuccess).to.false;
+      expect(function () {
+        tables.changeStatusOfTable("");
+      }).to.throw(Error);
     });
   });
 
@@ -164,14 +164,13 @@ describe("Table", () => {
       //given
       const tables: Tables = Tables.getInstance();
       const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 4 };
-      const newTable: Table = tables.addNewTable(tableDto) as Table;
+      tables.addNewTable(tableDto);
       const noOfSeats = 3;
 
-      //when
-      const foundTable: Table | null = tables.findFreeTable(noOfSeats);
-
       //then
-      expect(foundTable).to.null;
+      expect(function () {
+        tables.findFreeTable(noOfSeats);
+      }).to.throw(Error);
     });
   });
 });

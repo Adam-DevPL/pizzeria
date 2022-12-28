@@ -66,7 +66,7 @@ export class Orders {
       pizzasOrdered,
       finalPrice
     );
-    if (status === OrderStatus.pending) {
+    if (status === OrderStatus.Pending) {
       this.listOfOrderInProgress.set(newId, newOrder);
     } else {
       this.listOfOrderInQueue.set(newId, newOrder);

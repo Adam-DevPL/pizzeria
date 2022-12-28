@@ -23,6 +23,6 @@ export interface OrderDto {
 }
 
 export enum OrderStatus {
-  queue,
-  pending,
+  Queue,
+  Pending,
 }

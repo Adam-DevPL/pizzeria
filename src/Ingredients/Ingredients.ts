@@ -63,20 +63,20 @@ export class Ingredients {
 
     const foundIngredient: Ingredient | null = this.findIngredientByName(name);
 
-    if (!foundIngredient) {
-      const newId: string = uuid();
-      const newIngredient: Ingredient = new Ingredient(
-        newId,
-        name,
-        quantity,
-        price
-      );
-      this.listOfIngredients.set(newIngredient.name, newIngredient);
-      return newIngredient;
+    if (foundIngredient) {
+      foundIngredient.changeQuantity(quantity);
+      return null;
     }
-    foundIngredient.changeQuantity(quantity);
 
-    return null;
+    const newId: string = uuid();
+    const newIngredient: Ingredient = new Ingredient(
+      newId,
+      name,
+      quantity,
+      price
+    );
+    this.listOfIngredients.set(newIngredient.name, newIngredient);
+    return newIngredient;
   }
 
   public checkQuantityOfIngredientsForPizza(pizza: Pizza): boolean {
