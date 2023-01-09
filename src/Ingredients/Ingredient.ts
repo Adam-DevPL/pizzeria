@@ -1,4 +1,4 @@
-import { IIngredient, IngredientsBase } from "./IIngredient";
+import { IIngredient, IngredientsBase } from "./Ingredient.types";
 
 export class Ingredient implements IIngredient {
   readonly id: string;

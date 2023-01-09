@@ -1,13 +1,9 @@
-import { EmployeeDto } from "../Employees/IEmployee";
-import {
-  IngredientDto,
-  IngredientsBase,
-  ReceipeIngredient,
-} from "../Ingredients/IIngredient";
+import { EmployeeDto } from "../Employees/Employee.types";
+import { IngredientDto } from "../Ingredients/Ingredient.types";
 import { Order } from "../Order/Order";
-import { PizzaDto, PizzaType } from "../Pizzas/IPizza";
-import { TableDto } from "../Table/ITable";
-import { VoucherDto } from "../Voucher/IVoucher";
+import { PizzaDto, PizzaType } from "../Pizzas/Pizza.types";
+import { TableDto } from "../Table/Table.types";
+import { VoucherDto } from "../Voucher/Voucher.types";
 
 export interface NewOrderDto {
   seatsNo: number;

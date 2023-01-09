@@ -1,7 +1,7 @@
 import { expect } from "chai";
-import { VoucherDto, WeekDay } from "../IVoucher";
+import { VoucherDto, WeekDay } from "../Voucher.types";
 import { Voucher } from "../Voucher";
-import { Vouchers } from "../Vouchers";
+import { Vouchers } from "../Voucher.service";
 
 describe("Voucher module", () => {
   describe("Adding a new voucher to the base", () => {

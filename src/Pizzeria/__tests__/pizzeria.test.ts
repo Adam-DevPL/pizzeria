@@ -1,21 +1,21 @@
 import { expect } from "chai";
-import { Employees } from "../../Employees/Employees";
-import { EmployeeDto, Role } from "../../Employees/IEmployee";
+import { Employees } from "../../Employees/Employee.service";
+import { EmployeeDto, Role } from "../../Employees/Employee.types";
 import {
   IngredientDto,
   IngredientsBase,
   ReceipeIngredient,
-} from "../../Ingredients/IIngredient";
-import { Ingredients } from "../../Ingredients/Ingredients";
+} from "../../Ingredients/Ingredient.types";
+import { Ingredients } from "../../Ingredients/Ingredient.service";
 import { Order } from "../../Order/Order";
-import { PizzaDto, PizzaType } from "../../Pizzas/IPizza";
-import { Pizzas } from "../../Pizzas/Pizzas";
-import { TableDto } from "../../Table/ITable";
-import { Tables } from "../../Table/Tables";
-import { VoucherDto } from "../../Voucher/IVoucher";
-import { Vouchers } from "../../Voucher/Vouchers";
-import { PizzeriaResponse } from "../IPizzeria";
-import { Pizzeria } from "../Pizzeria";
+import { PizzaDto, PizzaType } from "../../Pizzas/Pizza.types";
+import { Pizzas } from "../../Pizzas/Pizza.service";
+import { TableDto } from "../../Table/Table.types";
+import { Tables } from "../../Table/Table.service";
+import { VoucherDto } from "../../Voucher/Voucher.types";
+import { Vouchers } from "../../Voucher/Voucher.service";
+import { PizzeriaResponse } from "../Pizzeria.types";
+import { Pizzeria } from "../Pizzeria.service";
 
 function getPizzeriaObjectWithSettings(): Pizzeria {
   const pizzeria: Pizzeria = new Pizzeria();

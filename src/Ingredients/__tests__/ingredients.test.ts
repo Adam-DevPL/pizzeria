@@ -2,12 +2,12 @@ import "mocha";
 import { expect } from "chai";
 
 import { Ingredient } from "../Ingredient";
-import { Ingredients } from "../Ingredients";
+import { Ingredients } from "../Ingredient.service";
 import {
   IngredientDto,
   IngredientsBase,
   ReceipeIngredient,
-} from "../IIngredient";
+} from "../Ingredient.types";
 
 function lookForIngredient(
   array: Map<IngredientsBase, Ingredient>,
@@ -67,8 +67,8 @@ describe("Ingredients", () => {
       );
 
       //then
-      expect(foundAnanas).to.not.null;
-      expect(foundOlives).to.not.null;
+      expect(foundAnanas?.name).to.equal(IngredientsBase.Ananas);
+      expect(foundOlives?.name).to.equal(IngredientsBase.Olives);
     });
 
     it("Falsy - you get some of the ingredients form the storage", () => {
@@ -101,8 +101,8 @@ describe("Ingredients", () => {
       );
 
       //then
-      expect(foundAnanas).to.not.null;
-      expect(foundOlives).to.not.null;
+      expect(foundAnanas?.name).to.equal(IngredientsBase.Ananas);
+      expect(foundOlives?.name).to.equal(IngredientsBase.Olives);
       expect(foundPaprika).to.null;
     });
 

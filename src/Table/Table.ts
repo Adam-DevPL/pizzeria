@@ -1,4 +1,4 @@
-import { ITable } from "./ITable";
+import { ITable } from "./Table.types";
 
 export class Table implements ITable {
   readonly id: string;

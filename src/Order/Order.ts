@@ -1,7 +1,7 @@
 import { Employee } from "../Employees/Employee";
-import { PizzaType } from "../Pizzas/IPizza";
+import { PizzaType } from "../Pizzas/Pizza.types";
 import { Table } from "../Table/Table";
-import { IOrder } from "./IOrder";
+import { IOrder } from "./Order.types";
 
 export class Order implements IOrder {
   readonly id: string;

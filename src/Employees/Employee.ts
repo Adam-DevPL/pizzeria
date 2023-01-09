@@ -1,4 +1,4 @@
-import { IEmployee, Role } from "./IEmployee";
+import { IEmployee, Role } from "./Employee.types";
 
 export class Employee implements IEmployee {
   readonly id: string;

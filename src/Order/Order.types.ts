@@ -1,5 +1,5 @@
 import { Employee } from "../Employees/Employee";
-import { PizzaType } from "../Pizzas/IPizza";
+import { PizzaType } from "../Pizzas/Pizza.types";
 import { Table } from "../Table/Table";
 
 export interface IOrder {
