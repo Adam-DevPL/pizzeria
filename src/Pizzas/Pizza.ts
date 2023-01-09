@@ -1,5 +1,5 @@
-import { ReceipeIngredient } from "../Ingredients/IIngredient";
-import { IPizza, PizzaType } from "./IPizza";
+import { ReceipeIngredient } from "../Ingredients/Ingredient.types";
+import { IPizza, PizzaType } from "./Pizza.types";
 
 export class Pizza implements IPizza {
   readonly id: string;

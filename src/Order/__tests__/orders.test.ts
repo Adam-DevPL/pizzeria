@@ -1,19 +1,19 @@
 import { expect } from "chai";
 import { Employee } from "../../Employees/Employee";
-import { Employees } from "../../Employees/Employees";
-import { EmployeeDto, Role } from "../../Employees/IEmployee";
+import { Employees } from "../../Employees/Employee.service";
+import { EmployeeDto, Role } from "../../Employees/Employee.types";
 import {
   IngredientsBase,
   ReceipeIngredient,
-} from "../../Ingredients/IIngredient";
-import { PizzaDto, PizzaType } from "../../Pizzas/IPizza";
-import { Pizzas } from "../../Pizzas/Pizzas";
-import { TableDto } from "../../Table/ITable";
+} from "../../Ingredients/Ingredient.types";
+import { PizzaDto, PizzaType } from "../../Pizzas/Pizza.types";
+import { Pizzas } from "../../Pizzas/Pizza.service";
+import { TableDto } from "../../Table/Table.types";
 import { Table } from "../../Table/Table";
-import { Tables } from "../../Table/Tables";
-import { OrderDto, OrderStatus } from "../IOrder";
+import { Tables } from "../../Table/Table.service";
+import { OrderDto, OrderStatus } from "../Order.types";
 import { Order } from "../Order";
-import { Orders } from "../Orders";
+import { Orders } from "../Order.service";
 
 describe("Orders module", () => {
   describe("adding new order", () => {
@@ -81,8 +81,7 @@ describe("Orders module", () => {
         .get(newOrder.id);
 
       //then
-      expect(newOrder).to.not.null;
-      expect(orderInProgress).to.not.null;
+      expect(newOrder.id).to.equal(orderInProgress?.id);
     });
 
     it("Success - adding new order to the list in queue", () => {
@@ -107,12 +106,11 @@ describe("Orders module", () => {
       };
       const newOrder: Order | null = orders.addNewOrder(orderDto);
       const orderInQueue: Order | undefined = orders
-        .getAllOrdersInProgress()
+        .getAllOrdersInQueue()
         .get(newOrder.id);
 
       //then
-      expect(newOrder).to.not.null;
-      expect(orderInQueue).to.not.null;
+      expect(newOrder.id).to.equal(orderInQueue?.id);
     });
 
     it("Failure - pizzas ordered can't be empty", () => {

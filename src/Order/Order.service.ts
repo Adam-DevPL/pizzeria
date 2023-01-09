@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { Validator } from "../Validator/Validator";
-import { OrderDto, OrderStatus } from "./IOrder";
+import { OrderDto, OrderStatus } from "./Order.types";
 import { Order } from "./Order";
 
 export class Orders {
@@ -11,33 +11,29 @@ export class Orders {
 
   private constructor() {}
 
-  public static getInstance(): Orders {
+  public static getInstance = (): Orders => {
     if (!Orders.instance) {
       Orders.instance = new Orders();
     }
     return Orders.instance;
-  }
+  };
 
-  public getOrder(orderId: string): Order | null {
-    return this.getAllOrders().get(orderId) ?? null;
-  }
+  public getOrder = (orderId: string): Order | null =>
+    this.getAllOrders().get(orderId) ?? null;
 
-  public getAllOrdersInProgress(): Map<string, Order> {
-    return this.listOfOrderInProgress;
-  }
+  public getAllOrdersInProgress = (): Map<string, Order> =>
+    this.listOfOrderInProgress;
 
-  public getAllOrdersInQueue(): Map<string, Order> {
-    return this.listOfOrderInQueue;
-  }
+  public getAllOrdersInQueue = (): Map<string, Order> =>
+    this.listOfOrderInQueue;
 
-  public getAllOrders(): Map<string, Order> {
-    return new Map<string, Order>([
+  public getAllOrders = (): Map<string, Order> =>
+    new Map<string, Order>([
       ...this.listOfOrderInProgress,
       ...this.listOfOrderInQueue,
     ]);
-  }
 
-  public addNewOrder({
+  public addNewOrder = ({
     chefAssigned,
     waiterAssigned,
     tableAssigned,
@@ -46,7 +42,7 @@ export class Orders {
     discount,
     ingredientsCosts,
     margin,
-  }: OrderDto): Order {
+  }: OrderDto): Order => {
     Validator.validatePizzasNoInOrder(pizzasOrdered.length);
     Validator.validateDiscount(discount);
     Validator.validateNumberMoreOrEqualZero(ingredientsCosts);
@@ -73,15 +69,12 @@ export class Orders {
     }
 
     return newOrder;
-  }
+  };
 
-  private calculateTheFinalPrice(
+  private calculateTheFinalPrice = (
     discount: number,
     ingredientsCosts: number,
     margin: number
-  ): number {
-    return (
-      ingredientsCosts + margin - (discount / 100) * (ingredientsCosts + margin)
-    );
-  }
+  ): number =>
+    ingredientsCosts + margin - (discount / 100) * (ingredientsCosts + margin);
 }

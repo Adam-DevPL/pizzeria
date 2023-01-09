@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { Validator } from "../Validator/Validator";
-import { PizzaDto, PizzaType } from "./IPizza";
+import { PizzaDto, PizzaType } from "./Pizza.types";
 import { Pizza } from "./Pizza";
 
 export class Pizzas {
@@ -10,28 +10,26 @@ export class Pizzas {
 
   private constructor() {}
 
-  public static getInstance(): Pizzas {
+  public static getInstance = (): Pizzas => {
     if (!Pizzas.instance) {
       Pizzas.instance = new Pizzas();
     }
     return Pizzas.instance;
-  }
+  };
 
-  public findPizzaByName(pizzaName: PizzaType): Pizza | null {
-    return this.listOfPizzasReceipes.get(pizzaName) ?? null;
-  }
+  public findPizzaByName = (pizzaName: PizzaType): Pizza | null =>
+    this.listOfPizzasReceipes.get(pizzaName) ?? null;
 
-  public getAllReceipes(): Map<PizzaType, Pizza> {
-    return this.listOfPizzasReceipes;
-  }
+  public getAllReceipes = (): Map<PizzaType, Pizza> =>
+    this.listOfPizzasReceipes;
 
-  public addPizzaReceipe({ pizzaName, ingredients }: PizzaDto): Pizza {
+  public addPizzaReceipe = ({ pizzaName, ingredients }: PizzaDto): Pizza => {
     Validator.validateNumberOfIngredients(ingredients.length);
 
     const findPizzaReceipe: Pizza | null = this.findPizzaByName(pizzaName);
 
     if (findPizzaReceipe) {
-      throw new Error(`Pizza receipe ${PizzaType[pizzaName]} already exists`)
+      throw new Error(`Pizza receipe ${PizzaType[pizzaName]} already exists`);
     }
 
     const newId = uuid();
@@ -39,15 +37,14 @@ export class Pizzas {
     this.listOfPizzasReceipes.set(newPizzaReceipe.name, newPizzaReceipe);
 
     return newPizzaReceipe;
-  }
+  };
 
-  public removePizzaReceipe(pizzaType: PizzaType): boolean {
-    return this.getAllReceipes().delete(pizzaType);
-  }
+  public removePizzaReceipe = (pizzaType: PizzaType): boolean =>
+    this.getAllReceipes().delete(pizzaType);
 
-  public getAllPizzasFromOrder(
+  public getAllPizzasFromOrder = (
     pizzasOrdered: PizzaType[]
-  ): Map<PizzaType, Pizza> {
+  ): Map<PizzaType, Pizza> => {
     let listOfPizzas: Map<PizzaType, Pizza> = new Map<PizzaType, Pizza>();
     let foundPizza: Pizza | null = null;
     pizzasOrdered.forEach((pizzaOrdered) => {
@@ -57,5 +54,5 @@ export class Pizzas {
       }
     });
     return listOfPizzas;
-  }
+  };
 }

@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 import { Utils } from "../Utils/Utils";
 
 import { Validator } from "../Validator/Validator";
-import { VoucherDto, WeekDay } from "./IVoucher";
+import { VoucherDto, WeekDay } from "./Voucher.types";
 import { Voucher } from "./Voucher";
 
 export class Vouchers {
@@ -11,19 +11,17 @@ export class Vouchers {
 
   private costructor() {}
 
-  public static getInstance(): Vouchers {
+  public static getInstance = (): Vouchers => {
     if (!Vouchers.instance) {
       Vouchers.instance = new Vouchers();
     }
 
     return Vouchers.instance;
-  }
+  };
 
-  public getAllVouchers(): Map<string, Voucher> {
-    return this.listOfVouchers;
-  }
+  public getAllVouchers = (): Map<string, Voucher> => this.listOfVouchers;
 
-  public addVoucher({ name, discount, weekDay }: VoucherDto): Voucher {
+  public addVoucher = ({ name, discount, weekDay }: VoucherDto): Voucher => {
     Validator.validateName(name);
     Validator.validateDiscount(discount);
 
@@ -40,9 +38,9 @@ export class Vouchers {
     this.listOfVouchers.set(newId, newVoucher);
 
     return newVoucher;
-  }
+  };
 
-  public calcDiscount(voucherName: string): number {
+  public calcDiscount = (voucherName: string): number => {
     Validator.validateName(voucherName);
 
     const foundVoucher: Voucher | null = this.findVoucherByName(
@@ -58,13 +56,13 @@ export class Vouchers {
     }
 
     return foundVoucher.discount;
-  }
+  };
 
-  private findVoucherByName(voucherName: string): Voucher | null {
+  private findVoucherByName = (voucherName: string): Voucher | null => {
     const foundVoucher: Voucher | undefined = [...this.getAllVouchers()]
       .map((value) => value[1])
       .find((voucher) => voucher.name === voucherName);
 
     return foundVoucher ?? null;
-  }
+  };
 }

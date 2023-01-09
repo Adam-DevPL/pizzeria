@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { table } from "console";
-import { TableDto } from "../ITable";
+import { TableDto } from "../Table.types";
 import { Table } from "../Table";
-import { Tables } from "../Tables";
+import { Tables } from "../Table.service";
 
 describe("Table", () => {
   describe("Adding new table to the Pizzeria", () => {

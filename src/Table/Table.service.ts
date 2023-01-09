@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 
 import { Validator } from "../Validator/Validator";
-import { TableDto } from "./ITable";
+import { TableDto } from "./Table.types";
 import { Table } from "./Table";
 
 export class Tables {
@@ -11,29 +11,25 @@ export class Tables {
 
   private constructor() {}
 
-  public static getInstance(): Tables {
+  public static getInstance = (): Tables => {
     if (!Tables.instance) {
       Tables.instance = new Tables();
     }
     return Tables.instance;
-  }
+  };
 
-  public getAllFreeTables(): Map<string, Table> {
-    return this.listOfFreeTables;
-  }
+  public getAllFreeTables = (): Map<string, Table> => this.listOfFreeTables;
 
-  public getAllOccupiedTables(): Map<string, Table> {
-    return this.listOfOccupiedTables;
-  }
+  public getAllOccupiedTables = (): Map<string, Table> =>
+    this.listOfOccupiedTables;
 
-  public getAllTables(): Map<string, Table> {
-    return new Map<string, Table>([
+  public getAllTables = (): Map<string, Table> =>
+    new Map<string, Table>([
       ...this.listOfFreeTables,
       ...this.listOfOccupiedTables,
     ]);
-  }
 
-  public addNewTable({ tableNumber, numberOfSeats }: TableDto): Table {
+  public addNewTable = ({ tableNumber, numberOfSeats }: TableDto): Table => {
     Validator.validateNumberMoreOrEqualZero(tableNumber);
     Validator.validateNumberMoreOrEqualZero(numberOfSeats);
 
@@ -48,13 +44,12 @@ export class Tables {
     this.listOfFreeTables.set(newId, newTable);
 
     return newTable;
-  }
+  };
 
-  public removeTable(tableId: string): boolean {
-    return this.listOfFreeTables.delete(tableId);
-  }
+  public removeTable = (tableId: string): boolean =>
+    this.listOfFreeTables.delete(tableId);
 
-  public changeStatusOfTable(tableId: string): boolean {
+  public changeStatusOfTable = (tableId: string): boolean => {
     let findTable: Table | null = this.getSingleTable(tableId);
 
     if (!findTable) {
@@ -72,9 +67,9 @@ export class Tables {
     }
 
     return true;
-  }
+  };
 
-  public findFreeTable(seatsNo: number): Table | null {
+  public findFreeTable = (seatsNo: number): Table | null => {
     Validator.validateNumberMoreOrEqualZero(seatsNo);
 
     const foundTable: Table | undefined = [...this.getAllTables()]
@@ -86,9 +81,9 @@ export class Tables {
     }
 
     return foundTable;
-  }
+  };
 
-  private findTableByNumber(tableNo: number): Table | null {
+  private findTableByNumber = (tableNo: number): Table | null => {
     Validator.validateNumberMoreOrEqualZero(tableNo);
 
     const tmpTable: Table | undefined = [...this.getAllTables()]
@@ -96,9 +91,8 @@ export class Tables {
       .find((table) => table.tableNumber === tableNo);
 
     return tmpTable ?? null;
-  }
+  };
 
-  private getSingleTable(tableId: string): Table | null {
-    return this.getAllTables().get(tableId) ?? null;
-  }
+  private getSingleTable = (tableId: string): Table | null =>
+    this.getAllTables().get(tableId) ?? null;
 }

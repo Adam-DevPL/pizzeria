@@ -1,4 +1,4 @@
-import { IVoucher, WeekDay } from "./IVoucher";
+import { IVoucher, WeekDay } from "./Voucher.types";
 
 export class Voucher implements IVoucher {
   readonly id: string;

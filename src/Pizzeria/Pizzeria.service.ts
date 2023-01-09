@@ -1,27 +1,23 @@
 import { Employee } from "../Employees/Employee";
-import { Employees } from "../Employees/Employees";
-import { EmployeeDto, Role } from "../Employees/IEmployee";
-import {
-  IngredientDto,
-  IngredientsBase,
-  ReceipeIngredient,
-} from "../Ingredients/IIngredient";
+import { Employees } from "../Employees/Employee.service";
+import { EmployeeDto, Role } from "../Employees/Employee.types";
+import { IngredientDto } from "../Ingredients/Ingredient.types";
 import { Ingredient } from "../Ingredients/Ingredient";
-import { Ingredients } from "../Ingredients/Ingredients";
-import { OrderDto, OrderStatus } from "../Order/IOrder";
+import { Ingredients } from "../Ingredients/Ingredient.service";
+import { OrderDto, OrderStatus } from "../Order/Order.types";
 import { Order } from "../Order/Order";
-import { Orders } from "../Order/Orders";
-import { PizzaDto, PizzaType } from "../Pizzas/IPizza";
+import { Orders } from "../Order/Order.service";
+import { PizzaDto, PizzaType } from "../Pizzas/Pizza.types";
 import { Pizza } from "../Pizzas/Pizza";
-import { Pizzas } from "../Pizzas/Pizzas";
-import { TableDto } from "../Table/ITable";
+import { Pizzas } from "../Pizzas/Pizza.service";
+import { TableDto } from "../Table/Table.types";
 import { Table } from "../Table/Table";
-import { Tables } from "../Table/Tables";
+import { Tables } from "../Table/Table.service";
 import { Validator } from "../Validator/Validator";
-import { VoucherDto, WeekDay } from "../Voucher/IVoucher";
+import { VoucherDto, WeekDay } from "../Voucher/Voucher.types";
 import { Voucher } from "../Voucher/Voucher";
-import { Vouchers } from "../Voucher/Vouchers";
-import { IPizzeria, NewOrderDto, PizzeriaResponse } from "./IPizzeria";
+import { Vouchers } from "../Voucher/Voucher.service";
+import { IPizzeria, NewOrderDto, PizzeriaResponse } from "./Pizzeria.types";
 
 export class Pizzeria implements IPizzeria {
   private ingredients: Ingredients;
@@ -30,7 +26,7 @@ export class Pizzeria implements IPizzeria {
   private vouchers: Vouchers;
   private orders: Orders;
   private pizzas: Pizzas;
-  private _margin: number = 10;
+  private _marginAddedToPizzaInOrder: number = 10;
 
   constructor() {
     this.ingredients = Ingredients.getInstance();
@@ -52,14 +48,14 @@ export class Pizzeria implements IPizzeria {
   }
 
   public get margin(): number {
-    return this._margin;
+    return this._marginAddedToPizzaInOrder;
   }
 
   public set margin(value: number) {
-    this._margin = value;
+    this._marginAddedToPizzaInOrder = value;
   }
 
-  public hireNewEmployee(newEmployee: EmployeeDto): PizzeriaResponse {
+  public hireNewEmployee = (newEmployee: EmployeeDto): PizzeriaResponse => {
     try {
       this.employees.addNewEmployee(newEmployee);
 
@@ -70,9 +66,9 @@ export class Pizzeria implements IPizzeria {
     } catch (error: any) {
       return { isSuccess: false, message: error.message };
     }
-  }
+  };
 
-  public purchaseNewTable(newTable: TableDto): PizzeriaResponse {
+  public purchaseNewTable = (newTable: TableDto): PizzeriaResponse => {
     try {
       this.tables.addNewTable(newTable);
       return {
@@ -82,9 +78,11 @@ export class Pizzeria implements IPizzeria {
     } catch (error: any) {
       return { isSuccess: false, message: error.message };
     }
-  }
+  };
 
-  public purchaseIngredients(IngredientDto: IngredientDto): PizzeriaResponse {
+  public purchaseIngredients = (
+    IngredientDto: IngredientDto
+  ): PizzeriaResponse => {
     try {
       const newIngredient: Ingredient | null =
         this.ingredients.purchaseIngredients(IngredientDto);
@@ -95,9 +93,9 @@ export class Pizzeria implements IPizzeria {
     } catch (error: any) {
       return { isSuccess: false, message: error.message };
     }
-  }
+  };
 
-  public addNewVoucher(newVoucher: VoucherDto): PizzeriaResponse {
+  public addNewVoucher = (newVoucher: VoucherDto): PizzeriaResponse => {
     try {
       const voucher: Voucher = this.vouchers.addVoucher(newVoucher);
       return {
@@ -107,33 +105,34 @@ export class Pizzeria implements IPizzeria {
     } catch (error: any) {
       return { isSuccess: false, message: error.message };
     }
-  }
+  };
 
-  public createPizza(pizzaDto: PizzaDto): PizzeriaResponse {
+  public createPizza = (pizzaDto: PizzaDto): PizzeriaResponse => {
     try {
       this.pizzas.addPizzaReceipe(pizzaDto);
       return {
         isSuccess: true,
-        message: `Receipe for ${PizzaType[pizzaDto.pizzaName]} added successfuly`,
+        message: `Receipe for ${
+          PizzaType[pizzaDto.pizzaName]
+        } added successfuly`,
       };
     } catch (error: any) {
       return { isSuccess: false, message: error.message };
     }
-  }
+  };
 
-  public getOrder(orderId: string): Order | null {
-    return this.orders.getOrder(orderId) ?? null;
-  }
+  public getOrder = (orderId: string): Order | null =>
+    this.orders.getOrder(orderId) ?? null;
 
-  public makeNewOrder({
+  public makeNewOrder = ({
     seatsNo,
     pizzasOrdered,
     voucherName = "",
-  }: NewOrderDto): PizzeriaResponse {
+  }: NewOrderDto): PizzeriaResponse => {
     try {
       Validator.validateNumberMoreOrEqualZero(seatsNo);
       Validator.validatePizzasNoInOrder(pizzasOrdered.length);
-      
+
       const assignWaiter: Employee | null = this.employees.findEmployeeByRole(
         Role.Waiter
       );
@@ -211,9 +210,9 @@ export class Pizzeria implements IPizzeria {
         message: error.message,
       };
     }
-  }
+  };
 
-  public assignChefIfFree(orderId: string): PizzeriaResponse {
+  public assignChefIfFree = (orderId: string): PizzeriaResponse => {
     const foundOrder: Order | null = this.orders.getOrder(orderId);
     if (!foundOrder) {
       return { isSuccess: false, message: "Order not found!" };
@@ -231,5 +230,5 @@ export class Pizzeria implements IPizzeria {
       isSuccess: true,
       message: "There is free chef. Your order will proceed",
     };
-  }
+  };
 }

@@ -2,10 +2,10 @@ import { expect } from "chai";
 import {
   IngredientsBase,
   ReceipeIngredient,
-} from "../../Ingredients/IIngredient";
-import { PizzaDto, PizzaType } from "../IPizza";
+} from "../../Ingredients/Ingredient.types";
+import { PizzaDto, PizzaType } from "../Pizza.types";
 import { Pizza } from "../Pizza";
-import { Pizzas } from "../Pizzas";
+import { Pizzas } from "../Pizza.service";
 
 describe("Pizza module", () => {
   describe("add new pizza receipe", () => {

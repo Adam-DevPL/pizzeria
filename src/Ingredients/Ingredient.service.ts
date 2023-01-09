@@ -1,14 +1,11 @@
 import { v4 as uuid } from "uuid";
-import { IPizza } from "../Pizzas/IPizza";
 import { Pizza } from "../Pizzas/Pizza";
 import { Validator } from "../Validator/Validator";
 import {
-  IIngredient,
   IngredientDto,
   IngredientsBase,
-  PropertyName,
   ReceipeIngredient,
-} from "./IIngredient";
+} from "./Ingredient.types";
 import { Ingredient } from "./Ingredient";
 
 export class Ingredients {
@@ -17,27 +14,26 @@ export class Ingredients {
 
   private constructor() {}
 
-  public static getInstance(): Ingredients {
+  public static getInstance = (): Ingredients => {
     if (!Ingredients.instance) {
       Ingredients.instance = new Ingredients();
     }
     return Ingredients.instance;
-  }
+  };
 
-  public findIngredientByName(
+  public findIngredientByName = (
     ingredientName: IngredientsBase
-  ): Ingredient | null {
-    return this.listOfIngredients.get(ingredientName) ?? null;
-  }
+  ): Ingredient | null => this.listOfIngredients.get(ingredientName) ?? null;
 
-  public getAllIngredients(): Map<IngredientsBase, Ingredient> {
-    return this.listOfIngredients;
-  }
+  public getAllIngredients = (): Map<IngredientsBase, Ingredient> =>
+    this.listOfIngredients;
 
-  public compareIngredientsWithStock(ingredients: IngredientsBase[]): {
+  public compareIngredientsWithStock = (
+    ingredients: IngredientsBase[]
+  ): {
     ingredientsFound: Map<IngredientsBase, Ingredient>;
     ingredientsNotFound: IngredientsBase[];
-  } {
+  } => {
     const ingredientsFound: Map<IngredientsBase, Ingredient> = new Map();
     const ingredientsNotFound: IngredientsBase[] = [];
 
@@ -51,13 +47,13 @@ export class Ingredients {
       }
     });
     return { ingredientsFound, ingredientsNotFound };
-  }
+  };
 
-  public purchaseIngredients({
+  public purchaseIngredients = ({
     name,
     price,
     quantity = 1,
-  }: IngredientDto): Ingredient | null {
+  }: IngredientDto): Ingredient | null => {
     Validator.validatePriceIfMoreThenZero(price);
     Validator.validateQuantityIfMoreThenZero(quantity);
 
@@ -77,9 +73,9 @@ export class Ingredients {
     );
     this.listOfIngredients.set(newIngredient.name, newIngredient);
     return newIngredient;
-  }
+  };
 
-  public checkQuantityOfIngredientsForPizza(pizza: Pizza): boolean {
+  public checkQuantityOfIngredientsForPizza = (pizza: Pizza): boolean => {
     let isOk = true;
     let listOfIngredients: IngredientsBase[] = pizza.ingredients.map(
       (ingredient) => ingredient.name
@@ -99,9 +95,9 @@ export class Ingredients {
     });
 
     return isOk;
-  }
+  };
 
-  public calculateIngredientsCosts(ingredients: ReceipeIngredient[]) {
+  public calculateIngredientsCosts = (ingredients: ReceipeIngredient[]) => {
     const ingredientsBase = ingredients.map((ingredient) => ingredient.name);
     const foundIngredientsInStorage =
       this.compareIngredientsWithStock(ingredientsBase);

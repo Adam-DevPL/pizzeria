@@ -1,7 +1,7 @@
 import "mocha";
 import { expect } from "chai";
-import { Employees } from "../Employees";
-import { EmployeeDto, Role } from "../IEmployee";
+import { Employees } from "../Employee.service";
+import { EmployeeDto, Role } from "../Employee.types";
 import { Employee } from "../Employee";
 
 describe("Employees", () => {
@@ -100,9 +100,11 @@ describe("Employees", () => {
       const isSuccess = employee
         ? employees.changeStatusOfEmployee(employee.id)
         : false;
+      const findEmployeeInOccupiedList: Employee | undefined = employees.getAllOccupiedEmployees().get(employee.id);
 
       //then
       expect(isSuccess).to.true;
+      expect(findEmployeeInOccupiedList).to.not.undefined;
     });
 
     it("Falsy - employee wasn't found", () => {
