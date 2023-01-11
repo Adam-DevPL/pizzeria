@@ -20,32 +20,49 @@ function lookForIngredient(
   );
 }
 
+function formBaseData(): Ingredients {
+  const ingredients = new Ingredients();
+  let ingredientOlivesDto: IngredientDto = {
+    name: IngredientsBase.Olives,
+    price: 4,
+    quantity: 1,
+  };
+  let ingredientAnanasDto: IngredientDto = {
+    name: IngredientsBase.Ananas,
+    price: 4,
+    quantity: 1,
+  };
+  ingredients.purchaseIngredients(ingredientOlivesDto);
+  ingredients.purchaseIngredients(ingredientAnanasDto);
+  return ingredients;
+}
+
 describe("Ingredients", () => {
   describe("Get ingredients with price from the storage", () => {
-    beforeEach(() => {
-      const ingredients = Ingredients.getInstance();
-      let ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.Olives,
-        price: 4,
-        quantity: 1,
-      };
-      let ingredientAnanasDto: IngredientDto = {
-        name: IngredientsBase.Ananas,
-        price: 4,
-        quantity: 1,
-      };
-      ingredients.purchaseIngredients(ingredientOlivesDto);
-      ingredients.purchaseIngredients(ingredientAnanasDto);
-    });
+    // beforeEach(() => {
+    //   const ingredients = Ingredients.getInstance();
+    //   let ingredientOlivesDto: IngredientDto = {
+    //     name: IngredientsBase.Olives,
+    //     price: 4,
+    //     quantity: 1,
+    //   };
+    //   let ingredientAnanasDto: IngredientDto = {
+    //     name: IngredientsBase.Ananas,
+    //     price: 4,
+    //     quantity: 1,
+    //   };
+    //   ingredients.purchaseIngredients(ingredientOlivesDto);
+    //   ingredients.purchaseIngredients(ingredientAnanasDto);
+    // });
 
-    afterEach(() => {
-      const ingredients = Ingredients.getInstance();
-      ingredients.getAllIngredients().clear();
-    });
+    // afterEach(() => {
+    //   const ingredients = Ingredients.getInstance();
+    //   ingredients.getAllIngredients().clear();
+    // });
 
     it("Truthy - you get all ingredients from the storage of Pizzeria", () => {
       //given
-      const ingredients: Ingredients = Ingredients.getInstance();
+      const ingredients: Ingredients = formBaseData();
 
       //when
       const ingredientsWeWant: IngredientsBase[] = [
@@ -73,7 +90,7 @@ describe("Ingredients", () => {
 
     it("Falsy - you get some of the ingredients form the storage", () => {
       //given
-      const ingredients = Ingredients.getInstance();
+      const ingredients: Ingredients = formBaseData();
 
       //when
       const ingredientsWeWant: IngredientsBase[] = [
@@ -108,7 +125,7 @@ describe("Ingredients", () => {
 
     it("Falsy - you get none of the ingredients", () => {
       //given
-      const ingredients = Ingredients.getInstance();
+      const ingredients: Ingredients = formBaseData();
 
       //when
       const ingredientsWeWant: IngredientsBase[] = [
@@ -137,14 +154,14 @@ describe("Ingredients", () => {
   });
 
   describe("Purchasing ingredients", () => {
-    beforeEach(() => {
-      const ingredients = Ingredients.getInstance();
-      ingredients.getAllIngredients().clear();
-    });
+    // beforeEach(() => {
+    //   const ingredients = Ingredients.getInstance();
+    //   ingredients.getAllIngredients().clear();
+    // });
 
     it("Truthy - add new ingredient", () => {
       //given
-      const ingredients = Ingredients.getInstance();
+      const ingredients = new Ingredients();
       let ingredientPotatoDto: IngredientDto = {
         name: IngredientsBase.Potato,
         price: 4,
@@ -164,7 +181,7 @@ describe("Ingredients", () => {
 
     it("Truthy - increase quantity of the existing ingredient", () => {
       //given
-      const ingredients = Ingredients.getInstance();
+      const ingredients = new Ingredients();
       let ingredientPotatoDto: IngredientDto = {
         name: IngredientsBase.Potato,
         price: 4,
@@ -188,7 +205,7 @@ describe("Ingredients", () => {
 
     it("Falsy - the price of ingredient is less or equal to zero", () => {
       //given
-      const ingredients = Ingredients.getInstance();
+      const ingredients = new Ingredients();
       let ingredientPotatoDto: IngredientDto = {
         name: IngredientsBase.Potato,
         price: -1,
@@ -203,7 +220,7 @@ describe("Ingredients", () => {
 
     it("Falsy - the quantity of ingredient is less then zero", () => {
       //given
-      const ingredients = Ingredients.getInstance();
+      const ingredients = new Ingredients();
       let ingredientPotatoDto: IngredientDto = {
         name: IngredientsBase.Potato,
         price: 1,
@@ -218,30 +235,30 @@ describe("Ingredients", () => {
   });
 
   describe("Calculating costs of ingredients", () => {
-    beforeEach(() => {
-      const ingredients = Ingredients.getInstance();
-      let ingredientOlivesDto: IngredientDto = {
-        name: IngredientsBase.Olives,
-        price: 4,
-        quantity: 1,
-      };
-      let ingredientAnanasDto: IngredientDto = {
-        name: IngredientsBase.Ananas,
-        price: 4,
-        quantity: 1,
-      };
-      ingredients.purchaseIngredients(ingredientOlivesDto);
-      ingredients.purchaseIngredients(ingredientAnanasDto);
-    });
+    // beforeEach(() => {
+    //   const ingredients = new Ingredients();
+    //   let ingredientOlivesDto: IngredientDto = {
+    //     name: IngredientsBase.Olives,
+    //     price: 4,
+    //     quantity: 1,
+    //   };
+    //   let ingredientAnanasDto: IngredientDto = {
+    //     name: IngredientsBase.Ananas,
+    //     price: 4,
+    //     quantity: 1,
+    //   };
+    //   ingredients.purchaseIngredients(ingredientOlivesDto);
+    //   ingredients.purchaseIngredients(ingredientAnanasDto);
+    // });
 
-    afterEach(() => {
-      const ingredients = Ingredients.getInstance();
-      ingredients.getAllIngredients().clear();
-    });
+    // afterEach(() => {
+    //   const ingredients = Ingredients.getInstance();
+    //   ingredients.getAllIngredients().clear();
+    // });
 
     it("Truthy - all ingredients were found and the costs was return", () => {
       //given
-      const ingredients = Ingredients.getInstance();
+      const ingredients = formBaseData();
 
       const ingredientsNeedeForPizza: ReceipeIngredient[] = [
         { name: IngredientsBase.Ananas, quantity: 1 },
@@ -260,7 +277,7 @@ describe("Ingredients", () => {
 
     it("Falsy - some ingredients for pizza weren't found, can't calculate the costs, return 0", () => {
       //given
-      const ingredients = Ingredients.getInstance();
+      const ingredients = formBaseData();
 
       const ingredientsNeedeForPizza: ReceipeIngredient[] = [
         { name: IngredientsBase.Ananas, quantity: 1 },

@@ -3,17 +3,28 @@ import { VoucherDto, WeekDay } from "../Voucher.types";
 import { Voucher } from "../Voucher";
 import { Vouchers } from "../Voucher.service";
 
+const formBaseData = (): Vouchers => {
+  const vouchers = new Vouchers();
+  const voucherDto: VoucherDto = {
+    name: "test",
+    discount: 10,
+    weekDay: null,
+  };
+  vouchers.addVoucher(voucherDto);
+  return vouchers;
+};
+
 describe("Voucher module", () => {
   describe("Adding a new voucher to the base", () => {
-    beforeEach(() => {
-      //given
-      const vouchers = Vouchers.getInstance();
-      vouchers.getAllVouchers().clear();
-    });
+    // beforeEach(() => {
+    //   //given
+    //   const vouchers = Vouchers.getInstance();
+    //   vouchers.getAllVouchers().clear();
+    // });
 
     it("Truthy - added new voucher successfully", () => {
       //given
-      const vouchers = Vouchers.getInstance();
+      const vouchers = new Vouchers();
 
       //when
       const voucherDto: VoucherDto = {
@@ -30,7 +41,7 @@ describe("Voucher module", () => {
 
     it("Falsy - voucher exist in database", () => {
       //given
-      const vouchers = Vouchers.getInstance();
+      const vouchers = new Vouchers();
       const voucherDto: VoucherDto = {
         name: "special",
         discount: 15,
@@ -47,7 +58,7 @@ describe("Voucher module", () => {
 
     it("Falsy - throw error when name is empty or discount less then zero or greater then 100", () => {
       //given
-      const vouchers = Vouchers.getInstance();
+      const vouchers = new Vouchers();
 
       //when
       const voucherDtoNoName: VoucherDto = {
@@ -80,21 +91,21 @@ describe("Voucher module", () => {
   });
 
   describe("Calculate amount of discount", () => {
-    beforeEach(() => {
-      //given
-      const vouchers = Vouchers.getInstance();
-      vouchers.getAllVouchers().clear();
-      const voucherDto: VoucherDto = {
-        name: "test",
-        discount: 10,
-        weekDay: null,
-      };
-      vouchers.addVoucher(voucherDto);
-    });
+    // beforeEach(() => {
+    //   //given
+    //   const vouchers = Vouchers.getInstance();
+    //   vouchers.getAllVouchers().clear();
+    //   const voucherDto: VoucherDto = {
+    //     name: "test",
+    //     discount: 10,
+    //     weekDay: null,
+    //   };
+    //   vouchers.addVoucher(voucherDto);
+    // });
 
     it("Truthy - get proper discount based on voucher", () => {
       //given
-      const vouchers = Vouchers.getInstance();
+      const vouchers = formBaseData();
 
       //when
       const amountOfDiscount: number = vouchers.calcDiscount("test");
@@ -105,7 +116,7 @@ describe("Voucher module", () => {
 
     it("Falsy - voucher doesn't exist in database", () => {
       //given
-      const vouchers = Vouchers.getInstance();
+      const vouchers = formBaseData();
 
       //when
       const amountOfDiscount = vouchers.calcDiscount("failure");

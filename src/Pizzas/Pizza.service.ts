@@ -3,19 +3,11 @@ import { v4 as uuid } from "uuid";
 import { Validator } from "../Validator/Validator";
 import { PizzaDto, PizzaType } from "./Pizza.types";
 import { Pizza } from "./Pizza";
+import { Injectable } from "../Injector/Injector.service";
 
+@Injectable()
 export class Pizzas {
-  private static instance: Pizzas;
   private listOfPizzasReceipes: Map<PizzaType, Pizza> = new Map();
-
-  private constructor() {}
-
-  public static getInstance = (): Pizzas => {
-    if (!Pizzas.instance) {
-      Pizzas.instance = new Pizzas();
-    }
-    return Pizzas.instance;
-  };
 
   public findPizzaByName = (pizzaName: PizzaType): Pizza | null =>
     this.listOfPizzasReceipes.get(pizzaName) ?? null;

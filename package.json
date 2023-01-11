@@ -21,6 +21,8 @@
   },
   "dependencies": {
     "prettier": "^2.7.1",
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^2.4.1",
     "uuid": "^9.0.0"
   }
 }

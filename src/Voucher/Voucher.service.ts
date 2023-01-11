@@ -2,22 +2,13 @@ import { v4 as uuid } from "uuid";
 import { Utils } from "../Utils/Utils";
 
 import { Validator } from "../Validator/Validator";
-import { VoucherDto, WeekDay } from "./Voucher.types";
+import { VoucherDto } from "./Voucher.types";
 import { Voucher } from "./Voucher";
+import { Injectable } from "../Injector/Injector.service";
 
+@Injectable()
 export class Vouchers {
-  private static instance: Vouchers;
   private listOfVouchers: Map<string, Voucher> = new Map();
-
-  private costructor() {}
-
-  public static getInstance = (): Vouchers => {
-    if (!Vouchers.instance) {
-      Vouchers.instance = new Vouchers();
-    }
-
-    return Vouchers.instance;
-  };
 
   public getAllVouchers = (): Map<string, Voucher> => this.listOfVouchers;
 
