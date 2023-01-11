@@ -9,19 +9,19 @@ import { Pizzas } from "../Pizza.service";
 
 describe("Pizza module", () => {
   describe("add new pizza receipe", () => {
-    beforeEach(() => {
-      const pizzas = Pizzas.getInstance();
-      pizzas.getAllReceipes().clear();
-    });
+    // beforeEach(() => {
+    //   const pizzas = Pizzas.getInstance();
+    //   pizzas.getAllReceipes().clear();
+    // });
 
-    afterEach(() => {
-      const pizzas = Pizzas.getInstance();
-      pizzas.getAllReceipes().clear();
-    })
+    // afterEach(() => {
+    //   const pizzas = Pizzas.getInstance();
+    //   pizzas.getAllReceipes().clear();
+    // })
 
     it("Truthy - added new pizza receipe successfully", () => {
       //given
-      const pizzas = Pizzas.getInstance();
+      const pizzas = new Pizzas();
       const margharita = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
         { name: IngredientsBase.Ananas, quantity: 1 },
@@ -48,7 +48,7 @@ describe("Pizza module", () => {
 
     it("Falsy - can't add receipe if exist in db", () => {
       //given
-      const pizzas = Pizzas.getInstance();
+      const pizzas = new Pizzas();
       const margharita = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
         { name: IngredientsBase.Ananas, quantity: 1 },
@@ -67,7 +67,7 @@ describe("Pizza module", () => {
 
     it("Error - not enaugh ingredients to create new pizz receipe", () => {
       //given
-      const pizzas = Pizzas.getInstance();
+      const pizzas = new Pizzas();
       const margharita = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
         { name: IngredientsBase.Ananas, quantity: 1 },
@@ -86,14 +86,14 @@ describe("Pizza module", () => {
   });
 
   describe("remove pizza receipe", () => {
-    beforeEach(() => {
-      const pizzas = Pizzas.getInstance();
-      pizzas.getAllReceipes().clear();
-    });
+    // beforeEach(() => {
+    //   const pizzas = Pizzas.getInstance();
+    //   pizzas.getAllReceipes().clear();
+    // });
 
     it("Success - pizza receipe successfully removed", () => {
       //given
-      const pizzas: Pizzas = Pizzas.getInstance();
+      const pizzas = new Pizzas();
       const margharita = PizzaType.Margharita;
       const ingredientsForPizza: ReceipeIngredient[] = [
         { name: IngredientsBase.Ananas, quantity: 1 },
@@ -115,7 +115,7 @@ describe("Pizza module", () => {
 
     it("Failure - pizza can't be removed - not existing", () => {
       //given
-      const pizzas: Pizzas = Pizzas.getInstance();
+      const pizzas = new Pizzas();
       const margharita = PizzaType.Margharita;
 
       //when
@@ -127,14 +127,15 @@ describe("Pizza module", () => {
   });
 
   describe("get all pizza's receipe based on ordered pizzas", () => {
-    beforeEach(() => {
-      const pizzas = Pizzas.getInstance();
-      pizzas.getAllReceipes().clear();
-    });
+    // beforeEach(() => {
+    //   const pizzas = Pizzas.getInstance();
+    //   pizzas.getAllReceipes().clear();
+    // });
 
     it("Order with two pizzas, return receipes for these 2 pizzas", () => {
       //given
-      const pizzas = Pizzas.getInstance();
+      const pizzas = new Pizzas();
+
       const margharita = PizzaType.Margharita;
       const ingredientsForMargharita: ReceipeIngredient[] = [
         { name: IngredientsBase.Tomato, quantity: 1 },

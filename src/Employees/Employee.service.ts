@@ -1,21 +1,13 @@
 import { Validator } from "../Validator/Validator";
-import { EmployeeDto, IEmployee, Role } from "./Employee.types";
+import { EmployeeDto, Role } from "./Employee.types";
 import { v4 as uuid } from "uuid";
 import { Employee } from "./Employee";
+import { Injectable } from "../Injector/Injector.service";
 
+@Injectable()
 export class Employees {
-  private static instance: Employees;
   private listOfFreeEmployees: Map<string, Employee> = new Map();
   private listOfOccupiedEmployees: Map<string, Employee> = new Map();
-
-  private constructor() {}
-
-  public static getInstance = (): Employees => {
-    if (!Employees.instance) {
-      Employees.instance = new Employees();
-    }
-    return Employees.instance;
-  };
 
   public getAllEmployees = (): Map<string, Employee> =>
     new Map([...this.listOfFreeEmployees, ...this.listOfOccupiedEmployees]);
@@ -74,7 +66,7 @@ export class Employees {
     }
 
     return false;
-  }
+  };
 
   private findEmployeeByName = (employeeName: string): Employee | null => {
     const foundEmployee: Employee | undefined = [...this.getAllEmployees()]
@@ -82,5 +74,5 @@ export class Employees {
       .find((employee) => employee.name === employeeName);
 
     return foundEmployee ?? null;
-  }
+  };
 }

@@ -3,20 +3,12 @@ import { v4 as uuid } from "uuid";
 import { Validator } from "../Validator/Validator";
 import { TableDto } from "./Table.types";
 import { Table } from "./Table";
+import { Injectable } from "../Injector/Injector.service";
 
+@Injectable()
 export class Tables {
-  private static instance: Tables;
   private listOfFreeTables: Map<string, Table> = new Map();
   private listOfOccupiedTables: Map<string, Table> = new Map();
-
-  private constructor() {}
-
-  public static getInstance = (): Tables => {
-    if (!Tables.instance) {
-      Tables.instance = new Tables();
-    }
-    return Tables.instance;
-  };
 
   public getAllFreeTables = (): Map<string, Table> => this.listOfFreeTables;
 

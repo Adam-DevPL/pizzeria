@@ -7,19 +7,11 @@ import {
   ReceipeIngredient,
 } from "./Ingredient.types";
 import { Ingredient } from "./Ingredient";
+import { Injectable } from "../Injector/Injector.service";
 
+@Injectable()
 export class Ingredients {
-  private static instance: Ingredients;
   private listOfIngredients: Map<IngredientsBase, Ingredient> = new Map();
-
-  private constructor() {}
-
-  public static getInstance = (): Ingredients => {
-    if (!Ingredients.instance) {
-      Ingredients.instance = new Ingredients();
-    }
-    return Ingredients.instance;
-  };
 
   public findIngredientByName = (
     ingredientName: IngredientsBase
@@ -113,5 +105,5 @@ export class Ingredients {
           (this.findIngredientByName(value.name) as Ingredient).price,
       0
     );
-  }
+  };
 }

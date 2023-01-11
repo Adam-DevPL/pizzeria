@@ -18,23 +18,20 @@ import { VoucherDto, WeekDay } from "../Voucher/Voucher.types";
 import { Voucher } from "../Voucher/Voucher";
 import { Vouchers } from "../Voucher/Voucher.service";
 import { IPizzeria, NewOrderDto, PizzeriaResponse } from "./Pizzeria.types";
+import { Injectable } from "../Injector/Injector.service";
 
+@Injectable()
 export class Pizzeria implements IPizzeria {
-  private ingredients: Ingredients;
-  private employees: Employees;
-  private tables: Tables;
-  private vouchers: Vouchers;
-  private orders: Orders;
-  private pizzas: Pizzas;
   private _marginAddedToPizzaInOrder: number = 10;
 
-  constructor() {
-    this.ingredients = Ingredients.getInstance();
-    this.employees = Employees.getInstance();
-    this.tables = Tables.getInstance();
-    this.vouchers = Vouchers.getInstance();
-    this.orders = Orders.getInstance();
-    this.pizzas = Pizzas.getInstance();
+  constructor(
+    private ingredients: Ingredients,
+    private employees: Employees,
+    private tables: Tables,
+    private vouchers: Vouchers,
+    private orders: Orders,
+    private pizzas: Pizzas
+  ) {
     this.addNewVoucher({
       name: "10yo",
       discount: 10,

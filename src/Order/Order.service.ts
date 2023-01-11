@@ -3,20 +3,12 @@ import { v4 as uuid } from "uuid";
 import { Validator } from "../Validator/Validator";
 import { OrderDto, OrderStatus } from "./Order.types";
 import { Order } from "./Order";
+import { Injectable } from "../Injector/Injector.service";
 
+@Injectable()
 export class Orders {
-  private static instance: Orders;
   private listOfOrderInProgress: Map<string, Order> = new Map();
   private listOfOrderInQueue: Map<string, Order> = new Map();
-
-  private constructor() {}
-
-  public static getInstance = (): Orders => {
-    if (!Orders.instance) {
-      Orders.instance = new Orders();
-    }
-    return Orders.instance;
-  };
 
   public getOrder = (orderId: string): Order | null =>
     this.getAllOrders().get(orderId) ?? null;
