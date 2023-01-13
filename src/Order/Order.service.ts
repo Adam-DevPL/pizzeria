@@ -3,10 +3,9 @@ import { v4 as uuid } from "uuid";
 import { Validator } from "../Validator/Validator";
 import { OrderDto, OrderStatus } from "./Order.types";
 import { Order } from "./Order";
-import { Injectable } from "../Injector/Injector.service";
+import { IOrders } from "./Orders.interface";
 
-@Injectable()
-export class Orders {
+export class Orders implements IOrders {
   private listOfOrderInProgress: Map<string, Order> = new Map();
   private listOfOrderInQueue: Map<string, Order> = new Map();
 

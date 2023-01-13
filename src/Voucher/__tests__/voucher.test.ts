@@ -16,12 +16,6 @@ const formBaseData = (): Vouchers => {
 
 describe("Voucher module", () => {
   describe("Adding a new voucher to the base", () => {
-    // beforeEach(() => {
-    //   //given
-    //   const vouchers = Vouchers.getInstance();
-    //   vouchers.getAllVouchers().clear();
-    // });
-
     it("Truthy - added new voucher successfully", () => {
       //given
       const vouchers = new Vouchers();
@@ -91,18 +85,6 @@ describe("Voucher module", () => {
   });
 
   describe("Calculate amount of discount", () => {
-    // beforeEach(() => {
-    //   //given
-    //   const vouchers = Vouchers.getInstance();
-    //   vouchers.getAllVouchers().clear();
-    //   const voucherDto: VoucherDto = {
-    //     name: "test",
-    //     discount: 10,
-    //     weekDay: null,
-    //   };
-    //   vouchers.addVoucher(voucherDto);
-    // });
-
     it("Truthy - get proper discount based on voucher", () => {
       //given
       const vouchers = formBaseData();

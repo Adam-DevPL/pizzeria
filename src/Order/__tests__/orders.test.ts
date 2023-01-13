@@ -2,12 +2,7 @@ import { expect } from "chai";
 import { Employee } from "../../Employees/Employee";
 import { Employees } from "../../Employees/Employee.service";
 import { EmployeeDto, Role } from "../../Employees/Employee.types";
-import {
-  IngredientsBase,
-  ReceipeIngredient,
-} from "../../Ingredients/Ingredient.types";
-import { PizzaDto, PizzaType } from "../../Pizzas/Pizza.types";
-import { Pizzas } from "../../Pizzas/Pizza.service";
+import { PizzaType } from "../../Pizzas/Pizza.types";
 import { TableDto } from "../../Table/Table.types";
 import { Table } from "../../Table/Table";
 import { Tables } from "../../Table/Table.service";
@@ -32,46 +27,6 @@ function formTablesData(): Tables {
 }
 
 describe("Orders module", () => {
-  // describe("adding new order", () => {
-  // beforeEach(() => {
-  //   const orders = Orders.getInstance();
-  //   const employees: Employees = Employees.getInstance();
-  //   const tables: Tables = Tables.getInstance();
-  //   const pizzas: Pizzas = Pizzas.getInstance();
-  //   const chefDto: EmployeeDto = { name: "Adam", role: Role.Chef };
-  //   const waiterDto: EmployeeDto = { name: "Dawid", role: Role.Waiter };
-  //   employees.addNewEmployee(chefDto);
-  //   employees.addNewEmployee(waiterDto);
-
-  //   const tableDto: TableDto = { tableNumber: 1, numberOfSeats: 4 };
-  //   tables.addNewTable(tableDto);
-
-  //   const ingredientsReceipe: ReceipeIngredient[] = [
-  //     { name: IngredientsBase.Tomato, quantity: 4 },
-  //     { name: IngredientsBase.Paprika, quantity: 4 },
-  //     { name: IngredientsBase.Paprika, quantity: 4 },
-  //   ];
-  //   const pizzaDto: PizzaDto = {
-  //     pizzaName: PizzaType.Margharita,
-  //     ingredients: ingredientsReceipe,
-  //   };
-  //   pizzas.addPizzaReceipe(pizzaDto);
-  // });
-
-  // afterEach(() => {
-  //   const orders = Orders.getInstance();
-  //   const employees: Employees = Employees.getInstance();
-  //   const tables: Tables = Tables.getInstance();
-  //   const pizzas: Pizzas = Pizzas.getInstance();
-  //   orders.getAllOrdersInProgress().clear();
-  //   orders.getAllOrdersInQueue().clear();
-  //   employees.getAllFreeEmployees().clear();
-  //   employees.getAllOccupiedEmployees().clear();
-  //   tables.getAllFreeTables().clear();
-  //   tables.getAllOccupiedTables().clear();
-  //   pizzas.getAllReceipes().clear();
-  // });
-
   it("Success - adding new order to the list in progress", () => {
     //given
     const orders = new Orders();
@@ -103,7 +58,7 @@ describe("Orders module", () => {
   it("Success - adding new order to the list in queue", () => {
     //given
     const orders = new Orders();
-    const employees: Employees = formEmployeesData()
+    const employees: Employees = formEmployeesData();
     const tables: Tables = formTablesData();
 
     employees.removeEmployee(
@@ -234,4 +189,3 @@ describe("Orders module", () => {
     }).to.throw(Error);
   });
 });
-// });

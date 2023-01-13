@@ -4,10 +4,9 @@ import { Utils } from "../Utils/Utils";
 import { Validator } from "../Validator/Validator";
 import { VoucherDto } from "./Voucher.types";
 import { Voucher } from "./Voucher";
-import { Injectable } from "../Injector/Injector.service";
+import { IVouchers } from "./Vouchers.interface";
 
-@Injectable()
-export class Vouchers {
+export class Vouchers implements IVouchers {
   private listOfVouchers: Map<string, Voucher> = new Map();
 
   public getAllVouchers = (): Map<string, Voucher> => this.listOfVouchers;

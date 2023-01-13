@@ -3,10 +3,9 @@ import { v4 as uuid } from "uuid";
 import { Validator } from "../Validator/Validator";
 import { PizzaDto, PizzaType } from "./Pizza.types";
 import { Pizza } from "./Pizza";
-import { Injectable } from "../Injector/Injector.service";
+import { IPizzas } from "./Pizzas.interface";
 
-@Injectable()
-export class Pizzas {
+export class Pizzas implements IPizzas {
   private listOfPizzasReceipes: Map<PizzaType, Pizza> = new Map();
 
   public findPizzaByName = (pizzaName: PizzaType): Pizza | null =>

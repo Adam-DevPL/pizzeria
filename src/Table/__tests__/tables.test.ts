@@ -1,17 +1,10 @@
 import { expect } from "chai";
-import { table } from "console";
 import { TableDto } from "../Table.types";
 import { Table } from "../Table";
 import { Tables } from "../Table.service";
 
 describe("Table", () => {
   describe("Adding new table to the Pizzeria", () => {
-    // beforeEach(() => {
-    //   const tables = Tables.getInstance();
-    //   tables.getAllFreeTables().clear();
-    //   tables.getAllOccupiedTables().clear();
-    // });
-
     it("Truthy - added table successfully", () => {
       //given
       const tables: Tables = new Tables();
@@ -66,12 +59,6 @@ describe("Table", () => {
   });
 
   describe("Removing table from the local", () => {
-    // beforeEach(() => {
-    //   const tables = Tables.getInstance();
-    //   tables.getAllFreeTables().clear();
-    //   tables.getAllOccupiedTables().clear();
-    // });
-
     it("Truthy - table removed successfully", () => {
       //given
       const tables: Tables = new Tables();
@@ -100,12 +87,6 @@ describe("Table", () => {
   });
 
   describe("Changing status of the table - is it free or not?", () => {
-    // beforeEach(() => {
-    //   const tables = Tables.getInstance();
-    //   tables.getAllFreeTables().clear();
-    //   tables.getAllOccupiedTables().clear();
-    // });
-
     it("Truthy - change status from free to oposite", () => {
       //given
       const tables: Tables = new Tables();
@@ -137,12 +118,6 @@ describe("Table", () => {
   });
 
   describe("Finding first free table with ordered number of seats", () => {
-    // beforeEach(() => {
-    //   const tables = Tables.getInstance();
-    //   tables.getAllFreeTables().clear();
-    //   tables.getAllOccupiedTables().clear();
-    // });
-
     it("Truthy - found table with 4 seats", () => {
       //given
       const tables: Tables = new Tables();
