@@ -18,20 +18,38 @@ import { VoucherDto, WeekDay } from "../Voucher/Voucher.types";
 import { Voucher } from "../Voucher/Voucher";
 import { Vouchers } from "../Voucher/Voucher.service";
 import { IPizzeria, NewOrderDto, PizzeriaResponse } from "./Pizzeria.types";
-import { Injectable } from "../Injector/Injector.service";
+import { IIngredients } from "../Ingredients/Ingredients.interface";
+import { IEmployees } from "../Employees/Employees.interface";
+import { ITables } from "../Table/Tables.interface";
+import { IVouchers } from "../Voucher/Vouchers.interface";
+import { IOrders } from "../Order/Orders.interface";
+import { IPizzas } from "../Pizzas/Pizzas.interface";
 
-@Injectable()
 export class Pizzeria implements IPizzeria {
   private _marginAddedToPizzaInOrder: number = 10;
 
+  private readonly ingredients: IIngredients;
+  private readonly employees: IEmployees;
+  private readonly tables: ITables;
+  private readonly vouchers: IVouchers;
+  private readonly orders: IOrders;
+  private readonly pizzas: IPizzas;
+
   constructor(
-    private ingredients: Ingredients,
-    private employees: Employees,
-    private tables: Tables,
-    private vouchers: Vouchers,
-    private orders: Orders,
-    private pizzas: Pizzas
+    ingredients: IIngredients,
+    employees: IEmployees,
+    tables: ITables,
+    vouchers: IVouchers,
+    orders: IOrders,
+    pizzas: IPizzas
   ) {
+    this.ingredients = ingredients;
+    this.employees = employees;
+    this.tables = tables;
+    this.vouchers = vouchers;
+    this.orders = orders;
+    this.pizzas = pizzas;
+
     this.addNewVoucher({
       name: "10yo",
       discount: 10,

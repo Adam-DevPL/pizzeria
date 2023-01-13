@@ -7,10 +7,9 @@ import {
   ReceipeIngredient,
 } from "./Ingredient.types";
 import { Ingredient } from "./Ingredient";
-import { Injectable } from "../Injector/Injector.service";
+import { IIngredients } from "./Ingredients.interface";
 
-@Injectable()
-export class Ingredients {
+export class Ingredients implements IIngredients {
   private listOfIngredients: Map<IngredientsBase, Ingredient> = new Map();
 
   public findIngredientByName = (
@@ -89,7 +88,9 @@ export class Ingredients {
     return isOk;
   };
 
-  public calculateIngredientsCosts = (ingredients: ReceipeIngredient[]) => {
+  public calculateIngredientsCosts = (
+    ingredients: ReceipeIngredient[]
+  ): number => {
     const ingredientsBase = ingredients.map((ingredient) => ingredient.name);
     const foundIngredientsInStorage =
       this.compareIngredientsWithStock(ingredientsBase);

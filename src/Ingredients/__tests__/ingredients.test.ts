@@ -39,27 +39,6 @@ function formBaseData(): Ingredients {
 
 describe("Ingredients", () => {
   describe("Get ingredients with price from the storage", () => {
-    // beforeEach(() => {
-    //   const ingredients = Ingredients.getInstance();
-    //   let ingredientOlivesDto: IngredientDto = {
-    //     name: IngredientsBase.Olives,
-    //     price: 4,
-    //     quantity: 1,
-    //   };
-    //   let ingredientAnanasDto: IngredientDto = {
-    //     name: IngredientsBase.Ananas,
-    //     price: 4,
-    //     quantity: 1,
-    //   };
-    //   ingredients.purchaseIngredients(ingredientOlivesDto);
-    //   ingredients.purchaseIngredients(ingredientAnanasDto);
-    // });
-
-    // afterEach(() => {
-    //   const ingredients = Ingredients.getInstance();
-    //   ingredients.getAllIngredients().clear();
-    // });
-
     it("Truthy - you get all ingredients from the storage of Pizzeria", () => {
       //given
       const ingredients: Ingredients = formBaseData();
@@ -154,11 +133,6 @@ describe("Ingredients", () => {
   });
 
   describe("Purchasing ingredients", () => {
-    // beforeEach(() => {
-    //   const ingredients = Ingredients.getInstance();
-    //   ingredients.getAllIngredients().clear();
-    // });
-
     it("Truthy - add new ingredient", () => {
       //given
       const ingredients = new Ingredients();
@@ -235,27 +209,6 @@ describe("Ingredients", () => {
   });
 
   describe("Calculating costs of ingredients", () => {
-    // beforeEach(() => {
-    //   const ingredients = new Ingredients();
-    //   let ingredientOlivesDto: IngredientDto = {
-    //     name: IngredientsBase.Olives,
-    //     price: 4,
-    //     quantity: 1,
-    //   };
-    //   let ingredientAnanasDto: IngredientDto = {
-    //     name: IngredientsBase.Ananas,
-    //     price: 4,
-    //     quantity: 1,
-    //   };
-    //   ingredients.purchaseIngredients(ingredientOlivesDto);
-    //   ingredients.purchaseIngredients(ingredientAnanasDto);
-    // });
-
-    // afterEach(() => {
-    //   const ingredients = Ingredients.getInstance();
-    //   ingredients.getAllIngredients().clear();
-    // });
-
     it("Truthy - all ingredients were found and the costs was return", () => {
       //given
       const ingredients = formBaseData();

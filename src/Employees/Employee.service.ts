@@ -2,10 +2,9 @@ import { Validator } from "../Validator/Validator";
 import { EmployeeDto, Role } from "./Employee.types";
 import { v4 as uuid } from "uuid";
 import { Employee } from "./Employee";
-import { Injectable } from "../Injector/Injector.service";
+import { IEmployees } from "./Employees.interface";
 
-@Injectable()
-export class Employees {
+export class Employees implements IEmployees {
   private listOfFreeEmployees: Map<string, Employee> = new Map();
   private listOfOccupiedEmployees: Map<string, Employee> = new Map();
 

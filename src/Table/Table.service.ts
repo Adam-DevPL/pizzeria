@@ -3,10 +3,9 @@ import { v4 as uuid } from "uuid";
 import { Validator } from "../Validator/Validator";
 import { TableDto } from "./Table.types";
 import { Table } from "./Table";
-import { Injectable } from "../Injector/Injector.service";
+import { ITables } from "./Tables.interface";
 
-@Injectable()
-export class Tables {
+export class Tables implements ITables {
   private listOfFreeTables: Map<string, Table> = new Map();
   private listOfOccupiedTables: Map<string, Table> = new Map();
 

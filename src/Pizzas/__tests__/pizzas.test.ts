@@ -9,16 +9,6 @@ import { Pizzas } from "../Pizza.service";
 
 describe("Pizza module", () => {
   describe("add new pizza receipe", () => {
-    // beforeEach(() => {
-    //   const pizzas = Pizzas.getInstance();
-    //   pizzas.getAllReceipes().clear();
-    // });
-
-    // afterEach(() => {
-    //   const pizzas = Pizzas.getInstance();
-    //   pizzas.getAllReceipes().clear();
-    // })
-
     it("Truthy - added new pizza receipe successfully", () => {
       //given
       const pizzas = new Pizzas();
@@ -86,11 +76,6 @@ describe("Pizza module", () => {
   });
 
   describe("remove pizza receipe", () => {
-    // beforeEach(() => {
-    //   const pizzas = Pizzas.getInstance();
-    //   pizzas.getAllReceipes().clear();
-    // });
-
     it("Success - pizza receipe successfully removed", () => {
       //given
       const pizzas = new Pizzas();
@@ -127,11 +112,6 @@ describe("Pizza module", () => {
   });
 
   describe("get all pizza's receipe based on ordered pizzas", () => {
-    // beforeEach(() => {
-    //   const pizzas = Pizzas.getInstance();
-    //   pizzas.getAllReceipes().clear();
-    // });
-
     it("Order with two pizzas, return receipes for these 2 pizzas", () => {
       //given
       const pizzas = new Pizzas();

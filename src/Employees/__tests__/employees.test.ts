@@ -6,12 +6,6 @@ import { Employee } from "../Employee";
 
 describe("Employees", () => {
   describe("adding new employee", () => {
-    // beforeEach(() => {
-    //   const employees = new Employees();
-    //   employees.getAllFreeEmployees().clear();
-    //   employees.getAllOccupiedEmployees().clear();
-    // });
-
     it("Truthy", () => {
       //given
       const employees = new Employees();
@@ -49,12 +43,6 @@ describe("Employees", () => {
   });
 
   describe("deleting employee", () => {
-    // beforeEach(() => {
-    //   const employees = Employees.getInstance();
-    //   employees.getAllFreeEmployees().clear();
-    //   employees.getAllOccupiedEmployees().clear();
-    // });
-
     it("Truthy - employee deleted", () => {
       //given
       const employees = new Employees();
@@ -84,12 +72,6 @@ describe("Employees", () => {
   });
 
   describe("changing status of the employee", () => {
-    // beforeEach(() => {
-    //   const employees = new Employees();
-    //   employees.getAllFreeEmployees().clear();
-    //   employees.getAllOccupiedEmployees().clear();
-    // });
-
     it("Truthy - change status of the employee from free to occupied", () => {
       //given
       const employees = new Employees();
@@ -120,12 +102,6 @@ describe("Employees", () => {
   });
 
   describe("finding employee by the role", () => {
-    // beforeEach(() => {
-    //   const employees = Employees.getInstance();
-    //   employees.getAllFreeEmployees().clear();
-    //   employees.getAllOccupiedEmployees().clear();
-    // });
-
     it("Truthy - finding employee who is the chef", () => {
       //given
       const employees = new Employees();
